@@ -55,7 +55,6 @@ namespace _Scripts.Views
             QuantumEvent.Subscribe<EventActionChanged>(this, OnActionChanged);
             QuantumEvent.Subscribe<EventActionChangedWithSpeed>(this, OnActionChangedWithSpeed);
             QuantumEvent.Subscribe<EventActorHitted>(this, OnActorHitted);
-            QuantumEvent.Subscribe<EventActorDeath>(this, OnActorDeath);
             QuantumEvent.Subscribe<EventPlayCasterEffect>(this, OnPlayCasterEffect);
             QuantumEvent.Subscribe<EventBuffStateChanged>(this, OnBuffStateChanged);
         }
@@ -64,16 +63,9 @@ namespace _Scripts.Views
         {
             _initializing = true;
         
-            try
-            {
-                await OnInit(game);
-                OnAfterInit();
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError(e.Message);
-                return;
-            }
+            await OnInit(game);
+            OnAfterInit();
+            
             _initialized = true;
             _initializing = false;
         }
@@ -256,7 +248,16 @@ namespace _Scripts.Views
             ActorModel.Animator.SetTrigger(trigger);
             _animationSpeed.SetActionSpeed(speed);
         }
-        
+
+        public void OnEntityDestroyed(QuantumGame game)
+        {
+            OnEntityDestroyedInternal(game);
+        }
+
+        protected virtual void OnEntityDestroyedInternal(QuantumGame game)
+        {
+        }
+
         public override void OnUpdateView(QuantumGame game)
         {
             if (EntityView.EntityRef == EntityRef.None)
@@ -279,20 +280,6 @@ namespace _Scripts.Views
         }
         
         protected virtual void OnUpdateViewAfterInit(QuantumGame game)
-        {
-        }
-        
-        private unsafe void OnActorDeath(EventActorDeath callback)
-        {
-            if (EntityView.EntityRef.Equals(callback.Victim) == false)
-            {
-                return;
-            }
-
-            OnActorDeathInternal(callback);
-        }
-
-        protected virtual void OnActorDeathInternal(EventActorDeath callback)
         {
         }
 

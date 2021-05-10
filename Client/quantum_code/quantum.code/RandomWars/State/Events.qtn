@@ -68,16 +68,10 @@ event ActorHitted {
     HitColor HitColor;
 }
 
-event ActorDeath {
-    entity_ref Victim;
-    Int32 VictimTeam;
-}
-
 event PlayCasterEffect {
     entity_ref Caster;
     QString<64> AssetName;
 }
-
 
 event BuffStateChanged {
     entity_ref Entity;

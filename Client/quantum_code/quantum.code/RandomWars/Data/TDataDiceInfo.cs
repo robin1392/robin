@@ -129,8 +129,9 @@ namespace RandomWarsResource.Data
 		public int skillIndex { get; set; }
 		public bool attackType { get; set; }
 		public string botData { get; set; }
-		public FP attackHitEvent;
-		public FP attackAniLength;
+		public FP attackHitEvent { get; set; }
+		public FP attackAniLength { get; set; }
+		public FP colliderRadius { get; set; }
 
 
 		public int PK()
@@ -182,6 +183,7 @@ namespace RandomWarsResource.Data
 				botData = cols[36].Replace("{#$}", ",");
 				attackHitEvent = ParseUtil.ToFP(cols[37], FP._1);
 				attackAniLength = ParseUtil.ToFP(cols[38], FP._1);
+				colliderRadius = ParseUtil.ToFP(cols[39], FP._0_20 + FP._0_10);
 			}
 		}
 	}

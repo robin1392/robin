@@ -48,6 +48,7 @@ namespace Quantum.Editor {
       public Quantum.FireAttack[] FireAttack = {};
       public Quantum.RangeAttack[] RangeAttack = {};
       public Quantum.SetNearestEnemyToTarget[] SetNearestEnemyToTarget = {};
+      public Quantum.MoveStraight[] MoveStraight = {};
       public Quantum.SeekNearestEnemy[] SeekNearestEnemy = {};
       public Quantum.BTSelector[] BTSelector = {};
       public Quantum.BTSequence[] BTSequence = {};

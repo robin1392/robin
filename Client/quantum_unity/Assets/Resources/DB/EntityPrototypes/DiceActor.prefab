@@ -117,7 +117,7 @@ MonoBehaviour:
       IsSetFromSourceCollider: 0
     Layer: 0
     CallbackFlags:
-      Value: 0
+      Value: 4095
   PhysicsBody:
     IsEnabled: 1
     Version2D: 2
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BindBehaviour: 1
-  ManualDiposal: 0
+  ManualDiposal: 1
   GameObjectNameIsEntityRef: 1
   ErrorCorrectionRateMin: 3.3
   ErrorCorrectionRateMax: 10
@@ -208,7 +208,19 @@ MonoBehaviour:
       m_Calls: []
   OnEntityDestroyed:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1943579530012203166}
+        m_TargetAssemblyTypeName: _Scripts.Views.ActorView, Assembly-CSharp
+        m_MethodName: OnEntityDestroyed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &9094153712155304808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,28 +237,6 @@ MonoBehaviour:
     Owner:
       _index: 0
     Team: 0
-    Health:
-      RawValue: 0
-    MaxHealth:
-      RawValue: 0
-    Power:
-      RawValue: 0
-    AttackSpeed:
-      RawValue: 0
-    MoveSpeed:
-      RawValue: 0
-    Effect:
-      RawValue: 0
-    EffectDurationTime:
-      RawValue: 0
-    EffectProbability:
-      RawValue: 0
-    EffectRangeValue:
-      RawValue: 0
-    Range:
-      RawValue: 0
-    SearchRange:
-      RawValue: 0
 --- !u!114 &1943579530012203166
 MonoBehaviour:
   m_ObjectHideFlags: 0

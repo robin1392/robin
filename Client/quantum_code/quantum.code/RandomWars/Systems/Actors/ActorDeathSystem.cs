@@ -20,7 +20,6 @@ namespace Quantum.Actors
             if (filter.Hittable->Health <= FP._0)
             {
                 f.Destroy(filter.Entity);
-                f.Events.ActorDeath(filter.Entity, filter.Actor->Team);
             }
         }
     }

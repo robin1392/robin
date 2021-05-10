@@ -32,10 +32,15 @@ namespace Quantum
                 {
                     continue;
                 }
-                
-                if (p.Frame.Unsafe.TryGetPointer(hits[i].Entity, out Actor* target))
+
+                if (f.Has<Hittable>(hits[i].Entity) == false)
                 {
-                    if (actor.Team == target->Team)
+                    continue;
+                }
+
+                if (f.TryGet(hits[i].Entity, out Actor target))
+                {
+                    if (actor.Team == target.Team)
                     {
                         continue;
                     }
@@ -45,7 +50,7 @@ namespace Quantum
                     continue;
                 }
                 
-                if (p.Frame.TryGet(hits[i].Entity, out Transform2D targetTransform))
+                if (f.TryGet(hits[i].Entity, out Transform2D targetTransform))
                 {
                     var distanceSquared = FPVector2.DistanceSquared(targetTransform.Position, transform.Position); 
                     if (distanceSquared < nearestDistanceSquared)

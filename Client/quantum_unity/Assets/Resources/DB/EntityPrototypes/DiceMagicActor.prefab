@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 7372665011992461858}
   - component: {fileID: 1402718890428716666}
   - component: {fileID: 9094153712155304808}
-  - component: {fileID: 823538386675823470}
-  - component: {fileID: 7421754532585714678}
+  - component: {fileID: 1943579530012203166}
+  - component: {fileID: 757636810806438274}
   m_Layer: 0
-  m_Name: TowerActor
+  m_Name: DiceMagicActor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,10 +55,10 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
-    IsTrigger: 0
+    IsTrigger: 1
     Material:
       Id:
-        Value: 0
+        Value: 1
     SourceCollider: {fileID: 0}
     IsEnabled: 1
     Shape2D:
@@ -67,7 +67,7 @@ MonoBehaviour:
         Id:
           Value: 0
       CircleRadius:
-        RawValue: 131072
+        RawValue: 19660
       EdgeExtent:
         RawValue: 0
       BoxExtents:
@@ -120,17 +120,17 @@ MonoBehaviour:
       Value: 4095
   PhysicsBody:
     IsEnabled: 0
-    Version2D: 0
-    Version3D: 0
+    Version2D: 2
+    Version3D: 1
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
     Mass:
-      RawValue: 65536
+      RawValue: 6553600
     Drag:
-      RawValue: 32768
+      RawValue: 6553600
     AngularDrag:
-      RawValue: 32768
+      RawValue: 6553600
     CenterOfMass2D:
       X:
         RawValue: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
       Z:
         RawValue: 0
   NavMeshPathfinder:
-    IsEnabled: 1
+    IsEnabled: 0
     NavMeshAgentConfig:
       Id:
         Value: 2
@@ -209,7 +209,7 @@ MonoBehaviour:
   OnEntityDestroyed:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7421754532585714678}
+      - m_Target: {fileID: 1943579530012203166}
         m_TargetAssemblyTypeName: _Scripts.Views.ActorView, Assembly-CSharp
         m_MethodName: OnEntityDestroyed
         m_Mode: 0
@@ -237,7 +237,7 @@ MonoBehaviour:
     Owner:
       _index: 0
     Team: 0
---- !u!114 &823538386675823470
+--- !u!114 &1943579530012203166
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,25 +246,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 1398317403032931231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f26a754feed34f9b8466573e57fad02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prototype:
-    _empty_prototype_dummy_field_: 0
---- !u!114 &7421754532585714678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1398317403032931231}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5107f980a4392464b9cf999f0b68729b, type: 3}
+  m_Script: {fileID: 11500000, guid: e65f3d53e67574d068422aec1814ef45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ActorModel: {fileID: 0}
   EntityView: {fileID: 1402718890428716666}
+--- !u!114 &757636810806438274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1398317403032931231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2bfbcce52d2944379e695b9221524b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    DiceInfoId: 0
+    DiceScale: 0
+    IngameUpgradeLevel: 0
+    OutgameUpgradeLevel: 0
+    FieldIndex: 0
 --- !u!114 &-4062502850953598902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,13 +279,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d5baec4de8d2754a864a680181831e8, type: 3}
-  m_Name: TowerActorEntityView
+  m_Name: DiceMagicActorEntityView
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/EntityPrototypes/TowerActor|EntityView
+      Path: Resources/DB/EntityPrototypes/DiceMagicActor|EntityView
       Guid:
-        Value: 113376184449356048
+        Value: 3778242397429002653
   Parent: {fileID: 1402718890428716666}
 --- !u!114 &6180675146522355254
 MonoBehaviour:
@@ -293,11 +297,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0120b722c3ca5454da1240b65656905f, type: 3}
-  m_Name: TowerActorEntityPrototype
+  m_Name: DiceMagicActorEntityPrototype
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/EntityPrototypes/TowerActor|EntityPrototype
+      Path: Resources/DB/EntityPrototypes/DiceMagicActor|EntityPrototype
       Guid:
-        Value: 1238589939366458485
+        Value: 2653971731682338270
   Parent: {fileID: 7372665011992461858}

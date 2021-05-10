@@ -50,6 +50,9 @@ component Guardian {
 component Tower {
 }
 
+component StoneBall {
+}
+
 enum ActorType { Dice, Boss, Guardian, Tower }
 enum DiceType { Minion, Magic, Installation, Hero }
 

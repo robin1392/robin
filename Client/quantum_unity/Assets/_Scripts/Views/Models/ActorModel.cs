@@ -21,6 +21,6 @@ public class ActorModel : PoolableObject
     public void Initialize(bool isAlly)
     {
         RendererEffect.Reset();
-        ObjectHealthBar.SetColor(isAlly);
+        ObjectHealthBar?.SetColor(isAlly);
     }
 }

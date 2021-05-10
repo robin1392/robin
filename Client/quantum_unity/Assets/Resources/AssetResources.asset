@@ -96,6 +96,11 @@ MonoBehaviour:
         Id:
           Value: 426341838882919159
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 480081060986110877
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboardInitializer
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SeekNearestEnemy_3
       AssetRef:
         Id:
@@ -246,6 +251,11 @@ MonoBehaviour:
         Id:
           Value: 1968430923585034685
       ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboard
+      AssetRef:
+        Id:
+          Value: 2017646831098626593
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboard
     - Path: Resources/DB/EntityPrototypes/DiceActor|EntityPrototype
       AssetRef:
         Id:
@@ -321,6 +331,11 @@ MonoBehaviour:
         Id:
           Value: 2600365732021726587
       ResourcePath: DB/BattleMap_Navmesh
+    - Path: Resources/DB/EntityPrototypes/DiceMagicActor|EntityPrototype
+      AssetRef:
+        Id:
+          Value: 2653971731682338270
+      ResourcePath: DB/EntityPrototypes/DiceMagicActor
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|ApproachToTarget_0
       AssetRef:
         Id:
@@ -391,6 +406,11 @@ MonoBehaviour:
         Id:
           Value: 3701004514816895721
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+    - Path: Resources/DB/EntityPrototypes/DiceMagicActor|EntityView
+      AssetRef:
+        Id:
+          Value: 3778242397429002653
+      ResourcePath: DB/EntityPrototypes/DiceMagicActor
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_1
       AssetRef:
         Id:
@@ -416,6 +436,16 @@ MonoBehaviour:
         Id:
           Value: 4050719712139043392
       ResourcePath: DB/EntityPrototypes/DiceActor
+    - Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall|MoveStraight_0
+      AssetRef:
+        Id:
+          Value: 4257055594729025786
+      ResourcePath: DB/CircuitExport/BT_Assets/Magic_StoneBall
+    - Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall
+      AssetRef:
+        Id:
+          Value: 4302647276457842047
+      ResourcePath: DB/CircuitExport/BT_Assets/Magic_StoneBall
     - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboard
       AssetRef:
         Id:

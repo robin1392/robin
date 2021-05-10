@@ -70,21 +70,15 @@ namespace _Scripts.Views
             
             UI_InGamePopup.Get().ShowLowHPEffect(true);
         }
-        
-        protected override unsafe void OnActorDeathInternal(EventActorDeath callback)
+
+        protected override void OnEntityDestroyedInternal(QuantumGame game)
         {
-            var f = callback.Game.Frames.Verified;
-            var localPlayer = callback.Game.GetLocalPlayers()[0];
-            var isEnemy = f.Global->Players[localPlayer].Team == callback.VictimTeam;
-            
             _healthBarImage?.transform.parent.gameObject.SetActive(false);
             _healthBarImage = null;
             _healthBarText = null;
             
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate("Effect_Bomb", transform.position, Quaternion.identity).Forget();
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate("Effect_TowerDestroyed", transform.position, Quaternion.identity).Forget();
-            
-            ActorModel.transform.SetParent(null);
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_TOWER_EXPLOSION);
         }

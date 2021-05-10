@@ -26,7 +26,7 @@ namespace Quantum
             var f = p.Frame;
             var e = p.Entity;
             var startTime = f.DeltaTime * p.Frame.Number;
-            p.BtAgent->SetFPData(f, startTime, StartTimeIndex.Index);
+            p.BtAgent->SetFPData(f, startTime, StartTimeIndex.Index);  
             p.BtAgent->SetIntData(f, 0, HitIndex.Index);
 
             var actor = f.Get<Attackable>(e);
@@ -72,7 +72,7 @@ namespace Quantum
                         {
                             continue;
                         }
-                        
+
                         if (f.TryGet(hitEntity, out Actor targetActor))
                         {
                             if (actor.Team == targetActor.Team)
@@ -85,10 +85,12 @@ namespace Quantum
                             continue;
                         }
 
-                        f.Unsafe.TryGetPointer(hitEntity, out Hittable* targetHittable);
-                        targetHittable->Health -= attackable.Effect;
-                        f.Events.ActorHitted(p.Entity, target, HitColor.Fire);
-                        f.Events.PlayCasterEffect(p.Entity, "Effect_FireBomb");
+                        if (f.Unsafe.TryGetPointer(hitEntity, out Hittable* targetHittable))
+                        {
+                            targetHittable->Health -= attackable.Effect;
+                            f.Events.ActorHitted(p.Entity, target, HitColor.Fire);
+                            f.Events.PlayCasterEffect(p.Entity, "Effect_FireBomb");   
+                        }
                     }
 
                     bb->Set(p.Frame, IsEnemyTargetAttacked.Key, true);

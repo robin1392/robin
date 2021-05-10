@@ -5,11 +5,16 @@ using RandomWarsResource.Data;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Dice = Quantum.Dice;
+using StoneBall = Quantum.StoneBall;
 
 namespace _Scripts.Views
 {
     public class DiceActorView : ActorView
     {
+        private string DeathEffect;
+        private Vector3 DeathEffectLocalPosition;
+        private Global.E_SOUND DeathSound = Global.E_SOUND.SFX_MINION_DEATH;
+            
         protected override async UniTask OnInit(QuantumGame game)
         {
             var f = game.Frames.Verified;
@@ -35,7 +40,19 @@ namespace _Scripts.Views
             else if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC ||
                      diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
             {
-                // await SpawnMagicAndInstallation();
+                await SpawnMagicAndInstallation(diceInfo, isLocalPlayerActor, dice.FieldIndex, actor.Team, !isEnemy);
+            }
+            
+            if (f.Has<StoneBall>(EntityView.EntityRef))
+            {
+                DeathEffect = "Effect_Bomb";
+                DeathEffectLocalPosition = Vector3.zero;
+            }
+            else
+            {
+                DeathEffect = isEnemy ? "Effect_Death_blue" : "Effect_Death_red";
+                DeathSound = Global.E_SOUND.SFX_MINION_DEATH;
+                DeathEffectLocalPosition = ActorModel.HitPosition.localPosition;
             }
         }
 
@@ -55,6 +72,13 @@ namespace _Scripts.Views
             }
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
+        }
+        
+        private async UniTask SpawnMagicAndInstallation(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
+        {
+            ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
+            ActorModel.Initialize(isAlly);
+            ActorModel.transform.SetParent(transform, false);
         }
 
         async UniTask ShowSpawnLine(TDataDiceInfo diceInfo, ActorModel actorModel, int fieldIndex, int team)
@@ -81,17 +105,13 @@ namespace _Scripts.Views
                 lr.endColor = FileHelper.GetColor(diceInfo.color);
             }
         }
-
-        protected override unsafe void OnActorDeathInternal(EventActorDeath callback)
+        
+        protected override void OnEntityDestroyedInternal(QuantumGame game)
         {
-            var f = callback.Game.Frames.Verified;
-            var localPlayer = callback.Game.GetLocalPlayers()[0];
-            var isEnemy = f.Global->Players[localPlayer].Team == callback.VictimTeam;
+            SoundManager.instance.Play(DeathSound);
             
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
-            
-            ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(isEnemy ? "Effect_Death_blue" : "Effect_Death_red",
-                ActorModel.HitPosition.position, Quaternion.identity).Forget();
+            ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(DeathEffect,
+                transform.position + DeathEffectLocalPosition, Quaternion.identity).Forget();
             
             Pool.Push(ActorModel);
             ActorModel = null;
@@ -101,6 +121,7 @@ namespace _Scripts.Views
                 Pool.Push(kvp.Value);
             }
             _dicEffectPool.Clear();
+            Destroy(gameObject);
         }
 
 

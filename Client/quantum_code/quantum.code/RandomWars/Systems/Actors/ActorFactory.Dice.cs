@@ -16,6 +16,8 @@ namespace Quantum.Actors
                     $"다이스정보 {spec.DataId}가 없습니다. {spec.Owner} ");
                 return;
             }
+            
+            var entity = f.Create(prototype);
 
             var diceScale = spec.DiceScale;
             var spawnCount = diceInfo.spawnMultiply;
@@ -57,11 +59,21 @@ namespace Quantum.Actors
                 {
                     spawnPosition = GetRandomPlayerFieldPosition(f);
                 }
+                else if(diceInfo.id == 1014)
+                {
+                    if (spec.Team == GameConstants.BottomCamp)
+                    {
+                        spawnPosition.Y = f.Context.FieldPositions.GetBottomPlayerPosition().Y;
+                    }
+                    if (spec.Team == GameConstants.TopCamp)
+                    {
+                        spawnPosition.Y = f.Context.FieldPositions.GetTopPlayerPosition().Y;
+                    }
+                    
+                    f.Add<StoneBall>(entity);
+                }
 
                 var rotation = GetSpawnRotation(spec.Team);
-                
-                var entity = f.Create(prototype);
-                
                 var dice = f.Unsafe.GetPointer<Dice>(entity);
                 dice->DiceInfoId = spec.DataId;
                 dice->DiceScale = spec.DiceScale;
@@ -73,10 +85,33 @@ namespace Quantum.Actors
                 actor->Owner = spec.Owner;
                 actor->Team = spec.Team;
 
-                f.Add<Hittable>(entity);
-                var hittable = f.Unsafe.GetPointer<Hittable>(entity);
-                hittable->MaxHealth = stat.maxHealth;
-                hittable->Health = stat.maxHealth;
+                f.Add<Movable>(entity);
+                var movable = f.Unsafe.GetPointer<Movable>(entity);
+                movable->MoveSpeed = diceInfo.moveSpeed * f.Global->SuddenDeathMoveSpeedFactor;
+                
+                var collider2D= f.Get<PhysicsCollider2D>(entity);
+                var scale = FP._1;
+                if (diceInfo.id == 1014)
+                {
+                    scale = FPMath.Lerp(FP._1, FP._1_50, (diceScale - FP._1) / FP._5);
+                }
+                collider2D.Shape.Circle.Radius = scale * diceInfo.colliderRadius;
+                
+                //TODO: 프로토타입을 분리한다.
+                
+                if ((DiceType) diceInfo.castType != DiceType.Magic)
+                {
+                    f.Add<Hittable>(entity);
+                    var hittable = f.Unsafe.GetPointer<Hittable>(entity);
+                    hittable->MaxHealth = stat.maxHealth;
+                    hittable->Health = stat.maxHealth;    
+                    
+                    f.Add<Buff>(entity);
+                    var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
+                    body->FreezeRotation = false;
+                    var steering = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
+                    steering->MaxSpeed = movable->MoveSpeed;
+                }
                 
                 f.Add<Attackable>(entity);
                 var attackable = f.Unsafe.GetPointer<Attackable>(entity);
@@ -90,27 +125,14 @@ namespace Quantum.Actors
                 attackable->EffectRangeValue = diceInfo.effectRangeValue;
                 attackable->AttackHitEvent = diceInfo.attackHitEvent;
                 attackable->AttackAniLength = diceInfo.attackAniLength;
-                
-                f.Add<Movable>(entity);
-                var movable = f.Unsafe.GetPointer<Movable>(entity);
-                movable->MoveSpeed = diceInfo.moveSpeed * f.Global->SuddenDeathMoveSpeedFactor;
-                
-                f.Add<Buff>(entity);
 
                 var transform = f.Unsafe.GetPointer<Transform2D>(entity);
                 transform->Position = spawnPosition;
                 transform->Rotation = rotation;
-                
-                var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
-                body->FreezeRotation = false;
-                
-                var steering = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
-                steering->MaxSpeed = movable->MoveSpeed;
 
                 f.Events.ActionChanged(entity, ActionStateType.Idle);
 
                 BTHelper.SetupBT(f, entity, diceInfo.botData);
-                
                 var bb = f.Unsafe.GetPointer<AIBlackboardComponent>(entity);
                 bb->Set(f, "CanAct", true);
             }

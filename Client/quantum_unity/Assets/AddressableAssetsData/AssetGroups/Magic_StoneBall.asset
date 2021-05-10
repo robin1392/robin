@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Magic_StoneBall
+  m_EditorClassIdentifier: 
+  m_GroupName: Magic_StoneBall
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 881d280f4b5414d8db1d4ee8f2f480f4
+  m_SerializeEntries:
+  - m_GUID: 337f830c4e63c499ab0df3f6f6ab1cc6
+    m_Address: Magic_StoneBall
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6921a49996ac641c6810bd40b2fb6d4f
+    m_Address: Effect_Stone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4af8268aff9574c219328fea611018d8, type: 2}
+    - {fileID: 11400000, guid: 2a676c5e6c7524f9181d13f75320007a, type: 2}

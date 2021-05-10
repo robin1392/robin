@@ -2683,7 +2683,7 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
-  public unsafe partial struct Tower : Quantum.IComponent {
+  public unsafe partial struct StoneBall : Quantum.IComponent {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
     [FieldOffset(0)]
@@ -2691,6 +2691,22 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 337;
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (StoneBall*)ptr;
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Tower : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    private fixed Byte _alignment_padding_[4];
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 347;
         return hash;
       }
     }
@@ -2737,6 +2753,7 @@ namespace Quantum {
         ComponentTypeId.Add<Quantum.Projectile>(Quantum.Projectile.Serialize, null, null, ComponentFlags.None);
         ComponentTypeId.Add<Quantum.RWPlayer>(Quantum.RWPlayer.Serialize, null, null, ComponentFlags.None);
         ComponentTypeId.Add<Quantum.Sp>(Quantum.Sp.Serialize, null, null, ComponentFlags.None);
+        ComponentTypeId.Add<Quantum.StoneBall>(Quantum.StoneBall.Serialize, null, null, ComponentFlags.None);
         ComponentTypeId.Add<Quantum.Tower>(Quantum.Tower.Serialize, null, null, ComponentFlags.None);
       });
     }
@@ -2816,6 +2833,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.RWPlayer>();
       BuildSignalsArrayOnComponentAdded<Quantum.Sp>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Sp>();
+      BuildSignalsArrayOnComponentAdded<Quantum.StoneBall>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.StoneBall>();
       BuildSignalsArrayOnComponentAdded<Quantum.Tower>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Tower>();
       BuildSignalsArrayOnComponentAdded<Transform2D>();
@@ -2878,7 +2897,7 @@ namespace Quantum {
       }
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 20;
+      public const Int32 EVENT_TYPE_COUNT = 19;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return EventLocalPlayerOnly.ID;
@@ -2913,7 +2932,6 @@ namespace Quantum {
           case EventActionChangedWithSpeed.ID: return typeof(EventActionChangedWithSpeed);
           case EventActionChanged.ID: return typeof(EventActionChanged);
           case EventActorHitted.ID: return typeof(EventActorHitted);
-          case EventActorDeath.ID: return typeof(EventActorDeath);
           case EventPlayCasterEffect.ID: return typeof(EventPlayCasterEffect);
           case EventBuffStateChanged.ID: return typeof(EventBuffStateChanged);
           default: throw new System.ArgumentOutOfRangeException("eventID");
@@ -3019,13 +3037,6 @@ namespace Quantum {
         ev.Attacker = Attacker;
         ev.Victim = Victim;
         ev.HitColor = HitColor;
-        _f.AddEvent(ev);
-        return ev;
-      }
-      public EventActorDeath ActorDeath(EntityRef Victim, Int32 VictimTeam) {
-        var ev = _f.Context.AcquireEvent<EventActorDeath>(EventActorDeath.ID);
-        ev.Victim = Victim;
-        ev.VictimTeam = VictimTeam;
         _f.AddEvent(ev);
         return ev;
       }
@@ -3450,14 +3461,14 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventActorDeath : EventBase {
+  public unsafe partial class EventPlayCasterEffect : EventBase {
     public new const Int32 ID = 17;
-    public EntityRef Victim;
-    public Int32 VictimTeam;
-    protected EventActorDeath(Int32 id, EventFlags flags) : 
+    public EntityRef Caster;
+    public QString64 AssetName;
+    protected EventPlayCasterEffect(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventActorDeath() : 
+    public EventPlayCasterEffect() : 
         base(17, EventFlags.Server|EventFlags.Client) {
     }
     public new QuantumGame Game {
@@ -3471,20 +3482,20 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked {
         var hash = 109;
-        hash = hash * 31 + Victim.GetHashCode();
-        hash = hash * 31 + VictimTeam.GetHashCode();
+        hash = hash * 31 + Caster.GetHashCode();
+        hash = hash * 31 + AssetName.GetHashCode();
         return hash;
       }
     }
   }
-  public unsafe partial class EventPlayCasterEffect : EventBase {
+  public unsafe partial class EventBuffStateChanged : EventBase {
     public new const Int32 ID = 18;
-    public EntityRef Caster;
-    public QString64 AssetName;
-    protected EventPlayCasterEffect(Int32 id, EventFlags flags) : 
+    public EntityRef Entity;
+    public Int32 BuffState;
+    protected EventBuffStateChanged(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventPlayCasterEffect() : 
+    public EventBuffStateChanged() : 
         base(18, EventFlags.Server|EventFlags.Client) {
     }
     public new QuantumGame Game {
@@ -3498,33 +3509,6 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked {
         var hash = 113;
-        hash = hash * 31 + Caster.GetHashCode();
-        hash = hash * 31 + AssetName.GetHashCode();
-        return hash;
-      }
-    }
-  }
-  public unsafe partial class EventBuffStateChanged : EventBase {
-    public new const Int32 ID = 19;
-    public EntityRef Entity;
-    public Int32 BuffState;
-    protected EventBuffStateChanged(Int32 id, EventFlags flags) : 
-        base(id, flags) {
-    }
-    public EventBuffStateChanged() : 
-        base(19, EventFlags.Server|EventFlags.Client) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
-    }
-    public override Int32 GetHashCode() {
-      unchecked {
-        var hash = 127;
         hash = hash * 31 + Entity.GetHashCode();
         hash = hash * 31 + BuffState.GetHashCode();
         return hash;
@@ -3687,6 +3671,9 @@ namespace Quantum {
     public virtual void Visit(Prototypes.Sp_Prototype prototype) {
       VisitFallback(prototype);
     }
+    public virtual void Visit(Prototypes.StoneBall_Prototype prototype) {
+      VisitFallback(prototype);
+    }
     public virtual void Visit(Prototypes.Tower_Prototype prototype) {
       VisitFallback(prototype);
     }
@@ -3805,6 +3792,7 @@ namespace Quantum {
       Register(typeof(Quantum.RWPlayer), Quantum.RWPlayer.SIZE);
       Register(typeof(Quantum.Sp), Quantum.Sp.SIZE);
       Register(typeof(Quantum.StateType), 4);
+      Register(typeof(Quantum.StoneBall), Quantum.StoneBall.SIZE);
       Register(typeof(Quantum.Tower), Quantum.Tower.SIZE);
       Register(typeof(Transform2D), Transform2D.SIZE);
       Register(typeof(Transform2DVertical), Transform2DVertical.SIZE);
@@ -4683,6 +4671,24 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Prototype(typeof(StoneBall))]
+  public unsafe sealed partial class StoneBall_Prototype : ComponentPrototype<StoneBall> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref StoneBall result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+      StoneBall component = default;
+      Materialize((Frame)f, ref component, in context);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref StoneBall result, in PrototypeMaterializationContext context) {
+      MaterializeUser(frame, ref result, in context);
+    }
+    public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
+      ((ComponentPrototypeVisitor)visitor).Visit(this);
+    }
+  }
+  [System.SerializableAttribute()]
   [Prototype(typeof(Tower))]
   public unsafe sealed partial class Tower_Prototype : ComponentPrototype<Tower> {
     [HideInInspector()]
@@ -4748,6 +4754,8 @@ namespace Quantum.Prototypes {
     [ArrayLength(0, 1)]
     public List<Prototypes.Sp_Prototype> Sp;
     [ArrayLength(0, 1)]
+    public List<Prototypes.StoneBall_Prototype> StoneBall;
+    [ArrayLength(0, 1)]
     public List<Prototypes.Tower_Prototype> Tower;
     partial void CollectGen(List<ComponentPrototype> target) {
       Collect(AIBlackboardComponent, target);
@@ -4773,6 +4781,7 @@ namespace Quantum.Prototypes {
       Collect(Projectile, target);
       Collect(RWPlayer, target);
       Collect(Sp, target);
+      Collect(StoneBall, target);
       Collect(Tower, target);
     }
     public unsafe partial class StoreVisitor {
@@ -4844,6 +4853,9 @@ namespace Quantum.Prototypes {
       }
       public override void Visit(Prototypes.Sp_Prototype prototype) {
         Storage.Store(prototype, ref Storage.Sp);
+      }
+      public override void Visit(Prototypes.StoneBall_Prototype prototype) {
+        Storage.Store(prototype, ref Storage.StoneBall);
       }
       public override void Visit(Prototypes.Tower_Prototype prototype) {
         Storage.Store(prototype, ref Storage.Tower);

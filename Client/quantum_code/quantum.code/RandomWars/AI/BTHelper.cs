@@ -39,6 +39,11 @@ namespace Quantum
                 {
                     continue;
                 }
+
+                if (f.Has<Hittable>(hitEntity) == false)
+                {
+                    continue;
+                }
                 
                 if (f.TryGet(hitEntity, out Actor target))
                 {

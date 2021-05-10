@@ -44,7 +44,7 @@ MonoBehaviour:
     </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
     </Data>\n      </Data>\n    </Node>\n    <Key>14cb9bb4-63df-4ee7-82c2-5038e6c81792</Key>\n   
     <Node>\n      <Id>14cb9bb4-63df-4ee7-82c2-5038e6c81792</Id>\n      <Name>CanAct</Name>\n     
-    <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Comment></Comment>\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
     <Parent>$blackboardRef</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>0</Flags>\n     
     <Position>-259|281||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"2\">\n        <Slot>\n          <Id>$keyOut</Id>\n          <Name>Key</Name>\n         
@@ -735,7 +735,7 @@ MonoBehaviour:
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
     <Key>f9c6a707-e9cb-4ce2-9047-fed6d4cfc151</Key>\n    <Node>\n      <Id>f9c6a707-e9cb-4ce2-9047-fed6d4cfc151</Id>\n     
-    <Name>CanAct</Name>\n      <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Name>CanAct</Name>\n      <Comment></Comment>\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
     <Parent>$decorator/CanAct</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
     <Flags>0</Flags>\n      <Position>179|263||0</Position>\n      <StaticIn Count=\"6\">\n       
     <Slot>\n          <Id>$exec</Id>\n          <Name></Name>\n          <Value />\n         

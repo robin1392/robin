@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Quantum.Actors;
+using Quantum.Combat;
 using Quantum.Core;
 
 namespace Quantum
@@ -63,6 +64,7 @@ namespace Quantum
                 new ProjectileSystem(),
                 new UpdateFronzenSystem(),
                 new UpdateBuffStateSystem(),
+                new StoneBallTriggerSystem(),
                 new ActorDeathSystem()
             };
             

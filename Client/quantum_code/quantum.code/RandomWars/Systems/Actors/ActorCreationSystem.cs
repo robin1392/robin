@@ -9,6 +9,7 @@ namespace Quantum.Actors
     public unsafe class ActorCreationSystem : SystemMainThreadFilter<ActorCreationFilter>
     {
         private static readonly string DICE_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceActor|EntityPrototype"; 
+        private static readonly string DICE_MAGIC_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceMagicActor|EntityPrototype";
         private static readonly string TOWER_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/TowerActor|EntityPrototype";
         
         public override void Update(Frame f, ref ActorCreationFilter filter)
@@ -34,8 +35,18 @@ namespace Quantum.Actors
         {
             if (actorCreation.ActorType == ActorType.Dice)
             {
-                var actorPrototype = f.FindAsset<EntityPrototype>(DICE_ACTOR_PROTOTYPE);
-                ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);
+                f.Context.TableData.DiceInfo.GetData(actorCreation.DataId, out var data);
+                if (data.castType == (int)DiceType.Magic)
+                {
+                    var actorPrototype = f.FindAsset<EntityPrototype>(DICE_MAGIC_ACTOR_PROTOTYPE);
+                    ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);    
+                }
+                else
+                {
+                    var actorPrototype = f.FindAsset<EntityPrototype>(DICE_ACTOR_PROTOTYPE);
+                    ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);
+                }
+                
             }
             else if (actorCreation.ActorType == ActorType.Tower)
             {
