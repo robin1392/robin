@@ -26,6 +26,11 @@ namespace ED
 
         private void OnFieldDiceMerged(EventFieldDiceMerged callback)
         {
+            if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+            {
+                return;
+            }
+            
             if(TutorialManager.isTutorial)
             {
                 TutorialManager.MergeComplete();
@@ -69,6 +74,11 @@ namespace ED
 
         private void OnFieldDiceCreated(EventFieldDiceCreated callback)
         {
+            if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+            {
+                return;
+            }
+            
             var fieldIndex = callback.FieldIndex;
             UpdateSlot(fieldIndex, callback.Game.Frames.Predicted, callback.Player);
 

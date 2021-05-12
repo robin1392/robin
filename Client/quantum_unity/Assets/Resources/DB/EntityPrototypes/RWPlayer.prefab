@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7477186808776223421}
   - component: {fileID: 8957547982499186406}
   - component: {fileID: 1625275302325985576}
-  - component: {fileID: 4739844576734263279}
   - component: {fileID: 8736177764060040973}
   - component: {fileID: 1889224670090977973}
   - component: {fileID: 7033322826510439809}
@@ -85,20 +84,21 @@ MonoBehaviour:
       RotationOffset:
         RawValue: 0
       UserTag: 0
-      CompoundShapes: []
       IsPersistent: 1
+      CompoundShapes: []
+      IsSetFromSourceCollider: 0
     Shape3D:
       ShapeType: 0
       SphereRadius:
         RawValue: 0
-      BoxExtents:
+      PositionOffset:
         X:
           RawValue: 0
         Y:
           RawValue: 0
         Z:
           RawValue: 0
-      PositionOffset:
+      BoxExtents:
         X:
           RawValue: 0
         Y:
@@ -113,14 +113,16 @@ MonoBehaviour:
         Z:
           RawValue: 0
       UserTag: 0
-      CompoundShapes: []
       IsPersistent: 1
+      CompoundShapes: []
+      IsSetFromSourceCollider: 0
     Layer: 0
     CallbackFlags:
       Value: 0
   PhysicsBody:
     IsEnabled: 0
-    Version: 0
+    Version2D: 0
+    Version3D: 0
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
@@ -154,6 +156,8 @@ MonoBehaviour:
         X:
           RawValue: 0
         Y:
+          RawValue: 0
+        Z:
           RawValue: 0
       NavMesh:
         Reference: {fileID: 0}
@@ -206,23 +210,6 @@ MonoBehaviour:
   OnEntityDestroyed:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4739844576734263279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126035099459881491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acd9179eb4b8c4603b6a4d55b9297ff5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prototype:
-    PlayerRef:
-      _index: 0
-    Team: 0
-    DiceCreationCount: 0
 --- !u!114 &8736177764060040973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,20 +226,20 @@ MonoBehaviour:
     GuardianId: 0
     Dices:
     - DiceId: 0
-      outGameLevel: 0
-      inGameLevel: 0
+      OutGameLevel: 0
+      InGameLevel: 0
     - DiceId: 0
-      outGameLevel: 0
-      inGameLevel: 0
+      OutGameLevel: 0
+      InGameLevel: 0
     - DiceId: 0
-      outGameLevel: 0
-      inGameLevel: 0
+      OutGameLevel: 0
+      InGameLevel: 0
     - DiceId: 0
-      outGameLevel: 0
-      inGameLevel: 0
+      OutGameLevel: 0
+      InGameLevel: 0
     - DiceId: 0
-      outGameLevel: 0
-      inGameLevel: 0
+      OutGameLevel: 0
+      InGameLevel: 0
 --- !u!114 &1889224670090977973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,35 +255,35 @@ MonoBehaviour:
   Prototype:
     Dices:
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
     - DiceScale: 0
-      DeckDiceIndex: 0
+      DeckIndex: 0
 --- !u!114 &7033322826510439809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +313,7 @@ MonoBehaviour:
   Prototype:
     CurrentSp: 0
     CommingSp: 0
+    CommingSpGrade: 0
 --- !u!114 &4046952533268578702
 MonoBehaviour:
   m_ObjectHideFlags: 0

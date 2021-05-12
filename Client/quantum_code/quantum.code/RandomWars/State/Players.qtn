@@ -9,7 +9,7 @@ struct FieldDice {
     Int32 DeckIndex; 
 }
 
-component RWPlayer {
+struct RWPlayer {
     player_ref PlayerRef;
     Int32 Team;
     entity_ref EntityRef;

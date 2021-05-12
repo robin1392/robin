@@ -92,21 +92,5 @@ namespace Quantum.Prototypes.Unity {
       return result;
     }
   }
-  [Quantum.Prototypes.PrototypeAttribute(typeof(Quantum.RWPlayer))]
-  [System.SerializableAttribute()]
-  public class RWPlayer_Prototype : Quantum.PrototypeAdapter<Quantum.Prototypes.RWPlayer_Prototype> {
-    public Quantum.PlayerRef PlayerRef;
-    public System.Int32 Team;
-    [Quantum.LocalReference]
-    public global::EntityPrototype EntityRef;
-
-    public sealed override Quantum.Prototypes.RWPlayer_Prototype Convert(EntityPrototypeConverter converter) {
-      var result = new Quantum.Prototypes.RWPlayer_Prototype();
-      result.PlayerRef = this.PlayerRef;
-      result.Team = this.Team;
-      converter.Convert(this.EntityRef, out result.EntityRef);
-      return result;
-    }
-  }
 
 }

@@ -9,19 +9,19 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
     
     public void OnPlayerDataSet(Frame f, PlayerRef playerRef)
     {
-        Log.Debug($"OnPlayerDataSet {playerRef}");
         if (DoesPlayerExist(f, playerRef)) return;
 
         var playerPrototype = f.FindAsset<EntityPrototype>(PLAYER_PROTOTYPE);
         var entity = f.Create(playerPrototype);
 
         var playerData =  f.GetPlayerData(playerRef);
-
+     
+        Log.Debug($"OnPlayerDataSet {playerRef} Nick:{playerData.Nickname} Bot:{playerData.IsBot}");
         if (playerData.IsBot)
         {
             f.Add<PlayerBot>(entity);
         }
-        
+
         var deck = f.Unsafe.GetPointer<Deck>(entity);
         deck->GuardianId = playerData.GuardianId;
         for (var i =0; i < playerData.DeckDiceIds.Length; ++i)
@@ -66,9 +66,10 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
 
     private bool DoesPlayerExist(Frame f, PlayerRef playerRef)
     {
-        foreach (var player in f.GetComponentIterator<RWPlayer>())
+        for (var i = 0; i < f.Global->Players.Length; ++i)
         {
-            if (player.Component.PlayerRef == playerRef)
+            var player = f.Global->Players[i];
+            if (player.PlayerRef == playerRef)
             {
                 Log.Debug($"DoesPlayerExist {playerRef}");
                 return true;

@@ -78,9 +78,11 @@ public class RWQuantumRunnerDebug : QuantumCallbacks
             game.Frames.Verified.Context.SetData(quantumTableDataContainer);
             game.Frames.Verified.Context.SetFieldPositions(FieldManager.Get().ToFieldPositions());
 
+            var index = 0;
             foreach (var lp in game.GetLocalPlayers())
             {
-                game.SendPlayerData(lp, Players[0]);
+                game.SendPlayerData(lp, Players[index]);
+                index++;
             }
         }
     }

@@ -1,6 +1,26 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-825222985626607574
+--- !u!114 &-6516507031980283158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8855c9d30cb964cacb930f9ae6f0cc7b, type: 3}
+  m_Name: CreateFieldDice_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|CreateFieldDice_1
+      Guid:
+        Value: 721558538462694544
+    Label: CreateFieldDice
+    Id: 4
+    Services: []
+--- !u!114 &-5398356745000691143
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,25 +30,51 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_0
+  m_Name: BTSequence_1
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_1
       Guid:
-        Value: 1639148361529984408
+        Value: 3348043989919191723
     Label: BTSequence
-    Id: 1
+    Id: 2
     Children:
     - Id:
-        Value: 2945378863020580011
+        Value: 4112369645216673158
+    - Id:
+        Value: 2616973255297814896
     Services: []
     TopmostDecorator:
       Id:
         Value: 0
     CurrentChildIndex:
-      Index: 0
+      Index: 1
     IsDynamic: 0
+--- !u!114 &-4832033947443766013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
+  m_Name: WaitLeaf_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
+      Guid:
+        Value: 4112369645216673158
+    Label: WaitLeaf
+    Id: 3
+    Services: []
+    Duration:
+      RawValue: 65536
+    EndTimeIndex:
+      Index: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50,10 +96,10 @@ MonoBehaviour:
     Id: 0
     Child:
       Id:
-        Value: 1639148361529984408
+        Value: 3348043989919191723
     AbortType: 0
-    NodesAmount: 3
---- !u!114 &2214897173352532454
+    NodesAmount: 6
+--- !u!114 &4039500382520334118
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,18 +108,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
-  m_Name: WaitLeaf_0
+  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
+  m_Name: BTSelector_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSelector_0
       Guid:
-        Value: 2945378863020580011
-    Label: WaitLeaf
-    Id: 2
+        Value: 2616973255297814896
+    Label: BTSelector
+    Id: 1
+    Children:
+    - Id:
+        Value: 721558538462694544
+    - Id:
+        Value: 2845381998208219777
     Services: []
-    Duration:
-      RawValue: 65470464
-    EndTimeIndex:
-      Index: 1
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 0
+    IsDynamic: 0
+--- !u!114 &6334101426069697135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa11cbfa8bd754b82a66dbcf49a3724c, type: 3}
+  m_Name: MergeFieldDiceRandom_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|MergeFieldDiceRandom_2
+      Guid:
+        Value: 2845381998208219777
+    Label: MergeFieldDiceRandom
+    Id: 5
+    Services: []

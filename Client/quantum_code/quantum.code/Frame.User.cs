@@ -129,5 +129,19 @@ namespace Quantum {
           int index = localPlayer;
           return Global->Players[index].Team != actor.Team;
       }
+
+      public RWPlayer* GetRWPlayer(EntityRef entityRef)
+      {
+          for (var i = 0; i < Global->Players.Length; ++i)
+          {
+              var player = Global->Players.GetPointer(i);
+              if (player->EntityRef == entityRef)
+              {
+                  return player;
+              }
+          }
+
+          return null;
+      }
   }
 }

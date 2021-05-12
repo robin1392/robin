@@ -16,12 +16,12 @@ namespace Quantum
                 if (command != null)
                 {
                     var player = f.Global->Players.GetPointer(playerID);
-                    CreateRandomFieldDice(f, command, player);
+                    CreateRandomFieldDice(f, player);
                 }
             }
         }
         
-        public static void CreateRandomFieldDice(Frame f, CreateRandomFieldDiceCommand command, RWPlayer* player)
+        public static void CreateRandomFieldDice(Frame f, RWPlayer* player)
         {
             var selectedFieldIndex = GetEmptyFieldIndexByRandom(f, player);
             if (selectedFieldIndex == EmptyFieldNotExist)

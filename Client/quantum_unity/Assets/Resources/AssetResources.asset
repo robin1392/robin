@@ -136,6 +136,11 @@ MonoBehaviour:
         Id:
           Value: 645885985248832243
       ResourcePath: DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|CreateFieldDice_1
+      AssetRef:
+        Id:
+          Value: 721558538462694544
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_2
       AssetRef:
         Id:
@@ -221,11 +226,6 @@ MonoBehaviour:
         Id:
           Value: 1608803669783788075
       ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
-      AssetRef:
-        Id:
-          Value: 1639148361529984408
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_2
       AssetRef:
         Id:
@@ -361,6 +361,11 @@ MonoBehaviour:
         Id:
           Value: 2600365732021726587
       ResourcePath: DB/BattleMap_Navmesh
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSelector_0
+      AssetRef:
+        Id:
+          Value: 2616973255297814896
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/EntityPrototypes/DiceMagicActor|EntityPrototype
       AssetRef:
         Id:
@@ -376,16 +381,16 @@ MonoBehaviour:
         Id:
           Value: 2781149729288231892
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|MergeFieldDiceRandom_2
+      AssetRef:
+        Id:
+          Value: 2845381998208219777
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_1
       AssetRef:
         Id:
           Value: 2938550178492902555
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
-      AssetRef:
-        Id:
-          Value: 2945378863020580011
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboard
       AssetRef:
         Id:
@@ -411,6 +416,11 @@ MonoBehaviour:
         Id:
           Value: 3293891577608515523
       ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_1
+      AssetRef:
+        Id:
+          Value: 3348043989919191723
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/EntityPrototypes/DiceInstallationActor|EntityPrototype
       AssetRef:
         Id:
@@ -486,6 +496,11 @@ MonoBehaviour:
         Id:
           Value: 4050719712139043392
       ResourcePath: DB/EntityPrototypes/DiceMinionActor
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
+      AssetRef:
+        Id:
+          Value: 4112369645216673158
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboardInitializer
       AssetRef:
         Id:

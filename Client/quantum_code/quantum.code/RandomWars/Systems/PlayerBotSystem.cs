@@ -23,6 +23,11 @@ namespace Quantum
 
         public override void Update(Frame f, ref PlayerBotFilter filter)
         {
+            if (f.Global->State != StateType.Play && f.Global->State != StateType.Countdown)
+            {
+                return;
+            }
+            
             filter.BtAgent->Update(f, filter.BtAgent, filter.BlackboardComponent, filter.EntityRef);
         }
     }

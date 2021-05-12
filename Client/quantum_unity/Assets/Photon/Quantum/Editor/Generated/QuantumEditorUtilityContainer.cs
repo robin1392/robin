@@ -44,6 +44,8 @@ namespace Quantum.Editor {
       public Quantum.IsTargetOutOfRange[] IsTargetOutOfRange = {};
       public Quantum.ApproachToTarget[] ApproachToTarget = {};
       public Quantum.Attack[] Attack = {};
+      public Quantum.CreateFieldDice[] CreateFieldDice = {};
+      public Quantum.MergeFieldDiceRandom[] MergeFieldDiceRandom = {};
       public Quantum.MineBomb[] MineBomb = {};
       public Quantum.FindEnemy[] FindEnemy = {};
       public Quantum.FireAttack[] FireAttack = {};
