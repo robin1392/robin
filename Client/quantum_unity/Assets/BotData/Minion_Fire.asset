@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Minion_Fire
   m_EditorClassIdentifier: 
   Xml: "<?xml version=\"1.0\" encoding=\"utf-16\"?>\n<Document>\n  <Id>f711e486-e817-49f4-be3d-742c97b0f8ce</Id>\n 
-    <Version>1</Version>\n  <Meta>false</Meta>\n  <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n 
-    <DebugKey>dc038136-6136-4ce7-a9b1-6738c3c9db8f</DebugKey>\n  <Flags>0</Flags>\n 
+    <Version>1</Version>\n  <Meta>false</Meta>\n  <Graph>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</Graph>\n 
+    <DebugKey>439d1d3f-d85a-47ea-96a5-3d998fe8d92e</DebugKey>\n  <Flags>0</Flags>\n 
     <Parent>$bt</Parent>\n  <Error Count=\"0\" />\n  <Comments Count=\"0\" />\n 
     <HiddenActionsDecisions Count=\"0\" />\n  <Vars Count=\"3\">\n    <Key>2d4f08e7-5286-4442-9136-89f96a019c4a</Key>\n   
     <Var>\n      <Id>2d4f08e7-5286-4442-9136-89f96a019c4a</Id>\n      <Name>Target</Name>\n     
@@ -398,9 +398,11 @@ MonoBehaviour:
     </StaticIn>\n      <StaticOut Count=\"1\">\n        <Slot>\n          <Id>$exec</Id>\n         
     <Name></Name>\n          <Value />\n          <Type>$exec</Type>\n          <Mode>Out</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
-    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
-    <Key>890b7327-da52-4861-8348-c1ef8d683e8a</Key>\n    <Node>\n      <Id>890b7327-da52-4861-8348-c1ef8d683e8a</Id>\n     
-    <Name>FindTarget</Name>\n      <Comment></Comment>\n      <Graph>eef82218-13d8-41c3-9218-b1a2e496eaab</Graph>\n     
+    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"1\">\n       
+    <Data>\n          <Name>Guid</Name>\n          <Value Type=\"System.Int64, mscorlib\">2001141529029422080</Value>\n       
+    </Data>\n      </Data>\n    </Node>\n    <Key>890b7327-da52-4861-8348-c1ef8d683e8a</Key>\n   
+    <Node>\n      <Id>890b7327-da52-4861-8348-c1ef8d683e8a</Id>\n      <Name>FindTarget</Name>\n     
+    <Comment></Comment>\n      <Graph>eef82218-13d8-41c3-9218-b1a2e496eaab</Graph>\n     
     <Parent>$servicesRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
     <Position>0|-5||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"1\">\n        <Slot>\n          <Id>$servicesList</Id>\n          <Name>Services</Name>\n         
@@ -806,7 +808,7 @@ MonoBehaviour:
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>IntervalInSec</Id>\n         
     <Name>IntervalInSec</Name>\n          <Value Type=\"Photon.Deterministic.FP,
-    PhotonDeterministic\">32768</Value>\n          <Type>Photon.Deterministic.FP,
+    PhotonDeterministic\">131072</Value>\n          <Type>Photon.Deterministic.FP,
     PhotonDeterministic</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>Id</Id>\n         
     <Name>Id</Name>\n          <Value Type=\"@int32\">0</Value>\n          <Type>@int32</Type>\n         
@@ -1017,5 +1019,5 @@ MonoBehaviour:
   DocumentId: f711e486-e817-49f4-be3d-742c97b0f8ce
   DocumentNameOverride: 
   History: []
-  LastCompiledHistoryID: 
-  IsOutdated: 1
+  LastCompiledHistoryID: 131d032a-e5db-4862-a294-0967be6bc11b
+  IsOutdated: 0

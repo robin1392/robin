@@ -26,6 +26,12 @@ MonoBehaviour:
         Id:
           Value: 2
       EnableNavigationCallbacks: 0
+      HeightThresholdForWaypoints:
+        RawValue: 65536
+      HeightThresholdForAvoidance:
+        RawValue: 65536
+      VelocityObstacleTruncationFactor:
+        RawValue: 72089
     Physics:
       Gravity:
         X:
@@ -45,6 +51,13 @@ MonoBehaviour:
         RawValue: 0
       MinAngularIntegration:
         RawValue: 0
+      SimplexMinBitShift: 0
+      SimplexMaxBitShift: 2
+      ShapeCastMaxIterations: 16
+      ShapeCastHardTolerance:
+        RawValue: 3275
+      ShapeCastSoftTolerance:
+        RawValue: 6553
       AllowSleeping: 0
       SleepTimeSec:
         RawValue: 32768
@@ -52,6 +65,15 @@ MonoBehaviour:
         RawValue: 1310
       AngularSleepToleranceInRad:
         RawValue: 2286
+      AllowCCD: 0
+      CCDLinearVelocityThreshold:
+        RawValue: 196608
+      CCDAngularVelocityThreshold:
+        RawValue: 196608
+      CCDDistanceTolerance:
+        RawValue: 65
+      MaxTimeOfImpactIterations: 16
+      MaxRootFindingIterations: 32
       DefaultEntriesCapacity: 2048
       DefaultStaticsCapacity: 1024
       DefaultQueriesCapacity: 1024

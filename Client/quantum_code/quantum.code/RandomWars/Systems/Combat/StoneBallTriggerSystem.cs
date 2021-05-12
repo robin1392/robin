@@ -33,10 +33,10 @@ namespace Quantum.Combat
             {
                 if (otherActor.Team != actor.Team)
                 {
-                    if (frame.Unsafe.TryGetPointer(other, out Hittable* hittable))
+                    if (frame.Unsafe.TryGetPointer(other, out Health* hittable))
                     {
                         var attackable = frame.Get<Attackable>(stoneBall);
-                        hittable->Health -= attackable.Power;
+                        hittable->Value -= attackable.Power;
 
                         frame.Events.PlayCasterEffect(stoneBall, "Effect_Stone");
                     }

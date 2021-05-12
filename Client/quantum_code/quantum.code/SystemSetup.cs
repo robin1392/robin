@@ -51,6 +51,12 @@ namespace Quantum
             {
                 gameStateSystems.Add(new BattleModeSystem());
             }
+            
+            var creation = new List<SystemBase>
+            {
+                new ActorCreationSystem(),
+                new ProjectileCreationSystem(),
+            };
 
             var logicSystem = new List<SystemBase>
             {
@@ -61,6 +67,7 @@ namespace Quantum
                 
                 new ActorSystem(),
                 new PlayerInitSystem(),
+                
                 new ProjectileSystem(),
                 new UpdateFronzenSystem(),
                 new UpdateBuffStateSystem(),
@@ -70,12 +77,7 @@ namespace Quantum
                 new DestroyActorByHpSystem(),
                 new DestroyByComponent()
             };
-            
-            var actorSystem = new List<SystemBase>
-            {
-                new ActorCreationSystem(),
-            };
-            
+
             var devSystem = new List<SystemBase>
             {
                 new CreateActorCommandSystem(),
@@ -84,8 +86,8 @@ namespace Quantum
             return coreSystems
                 .Concat(commandSystems)
                 .Concat(gameStateSystems)
+                .Concat(creation)
                 .Concat(logicSystem)
-                .Concat(actorSystem)
                 .Concat(devSystem)
                 .ToArray();
         }

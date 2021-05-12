@@ -59,9 +59,9 @@ namespace Quantum.Prototypes.Unity {
       return result;
     }
   }
-  [Quantum.Prototypes.PrototypeAttribute(typeof(Quantum.Projectile))]
+  [Quantum.Prototypes.PrototypeAttribute(typeof(Quantum.ProjectileSpec))]
   [System.SerializableAttribute()]
-  public class Projectile_Prototype : Quantum.PrototypeAdapter<Quantum.Prototypes.Projectile_Prototype> {
+  public class ProjectileSpec_Prototype : Quantum.PrototypeAdapter<Quantum.Prototypes.ProjectileSpec_Prototype> {
     public Quantum.PlayerRef Owner;
     public System.Int32 Team;
     public Photon.Deterministic.FP Power;
@@ -77,8 +77,8 @@ namespace Quantum.Prototypes.Unity {
     public Quantum.Prototypes.DebuffType_Prototype Debuff;
     public Photon.Deterministic.FP DebuffDuration;
 
-    public sealed override Quantum.Prototypes.Projectile_Prototype Convert(EntityPrototypeConverter converter) {
-      var result = new Quantum.Prototypes.Projectile_Prototype();
+    public sealed override Quantum.Prototypes.ProjectileSpec_Prototype Convert(EntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.ProjectileSpec_Prototype();
       result.Owner = this.Owner;
       result.Team = this.Team;
       result.Power = this.Power;

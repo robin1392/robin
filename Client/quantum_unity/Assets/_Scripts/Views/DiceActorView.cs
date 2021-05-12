@@ -120,8 +120,8 @@ namespace _Scripts.Views
         
         protected override void OnEntityDestroyedInternal(QuantumGame game)
         {
-            
             PlaySound(DeathSound).Forget();
+            
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(DeathEffect,
                 transform.position + DeathEffectLocalPosition, Quaternion.identity).Forget();
             
@@ -211,12 +211,12 @@ namespace _Scripts.Views
 
         protected override void OnUpdateViewAfterInit(QuantumGame game)
         {
-            var f = game.Frames.Verified;
+            var f = game.Frames.PredictedPrevious;
             var e = EntityView.EntityRef;
 
-            if (f.TryGet(e, out Hittable hittable))
+            if (f.TryGet(e, out Health health))
             {
-                ActorModel.image_HealthBar.fillAmount = (hittable.Health / hittable.MaxHealth).AsFloat;    
+                ActorModel.image_HealthBar.fillAmount = (health.Value / health.MaxValue).AsFloat;    
             }
 
             TiltActorModel();

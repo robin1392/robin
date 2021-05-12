@@ -4,5 +4,5 @@
 // </auto-generated>
 
 [UnityEngine.DisallowMultipleComponent()]
-public sealed partial class EntityComponentProjectile : EntityComponentBase<Quantum.Prototypes.Projectile_Prototype> {
+public sealed partial class EntityComponentProjectileCreation : EntityComponentBase<Quantum.Prototypes.ProjectileCreation_Prototype> {
 }

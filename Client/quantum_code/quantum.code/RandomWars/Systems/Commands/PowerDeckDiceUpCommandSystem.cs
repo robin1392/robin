@@ -25,21 +25,21 @@ namespace Quantum
             var deckDice = deck->Dices.GetPointer(deckIndex);
 
             var sp = f.Unsafe.GetPointer<Sp>(player->EntityRef);
-            var powerUpCost = f.GetPowerUpCost(deckDice->inGameLevel);
+            var powerUpCost = f.GetPowerUpCost(deckDice->InGameLevel);
             if (sp->CurrentSp < powerUpCost)
             {
                 Log.Error($"덱 주사위 업그레이드를 위한 SP가 모자랍니다.: player:{player->PlayerRef}, deckIndex:{deckIndex}");
                 return;
             }
             
-            if (deckDice->inGameLevel >= GameConstants.MaxIngameUpgradeLevel)
+            if (deckDice->InGameLevel >= GameConstants.MaxIngameUpgradeLevel)
             {
                 Log.Error($"덱 주사위 레벨이 최대치입니다.: player:{player->PlayerRef}, deckIndex:{deckIndex}");
                 return;
             }
 
             sp->CurrentSp -= powerUpCost;
-            deckDice->inGameLevel += 1;
+            deckDice->InGameLevel += 1;
 
             f.Events.PoweredDeckDiceUp(player->PlayerRef, deckIndex);
             f.Events.SpDecreased(player->PlayerRef);

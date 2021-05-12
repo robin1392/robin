@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
 using Photon.Deterministic;
@@ -80,6 +81,14 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
         command.DiceScale = diceScale;
         command.FieldIndex = FieldIndex;
         command.Position = Position;
+
+        TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo);
+        SpawnAsync(diceInfo.prefabName, QuantumRunner.Default.Game.GetLocalPlayers()[playerIndex], command).Forget();
+    }
+    
+    async UniTask SpawnAsync(string resource, int playerIndex, CreateActorCommand command)
+    {
+        await PreloadedResourceManager.Preload(new []{resource});
         _game.SendCommand(QuantumRunner.Default.Game.GetLocalPlayers()[playerIndex], command);
     }
     

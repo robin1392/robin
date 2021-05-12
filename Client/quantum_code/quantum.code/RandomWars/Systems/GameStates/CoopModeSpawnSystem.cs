@@ -3,9 +3,9 @@ using RandomWarsResource.Data;
 
 namespace Quantum
 {
-    public unsafe class CoopModeSpawnSystem : SystemSignalsOnly, ISignalSpawnByWave
+    public unsafe class CoopModeSpawnSystem : SystemSignalsOnly, ISignalOnWave
     {
-        public void SpawnByWave(Frame f, int wave)
+        public void OnWave(Frame f, int wave)
         {
             Log.Debug($"CoopModeSpawnSystem Spawn {wave}");
         }

@@ -26,8 +26,11 @@ component Movable{
 }
 
 component Hittable {
-    FP Health;
-    FP MaxHealth;
+}
+
+component Health {
+    FP Value;
+    FP MaxValue;
 }
 
 component Dice {
@@ -59,6 +62,7 @@ component Mine {
     FP SpawnVertical;
     FP SpawnTime;
     FP ArriveTime;
+    Boolean Arrived;
 }
 
 component Trigger {

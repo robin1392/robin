@@ -275,7 +275,11 @@ namespace ED
                 AssetNames.EffectHalfDamage,
                 AssetNames.TowerBlue,
                 AssetNames.TowerRed,
-                AssetNames.EffectSpawnLine
+                AssetNames.EffectSpawnLine,
+                AssetNames.EffectIceFreeze,
+                AssetNames.IceBullet,
+                AssetNames.ProjectileWind,
+                AssetNames.DiceStateIceEffect,
             };
 
             var diceInfos = TableManager.Get().DiceInfo;

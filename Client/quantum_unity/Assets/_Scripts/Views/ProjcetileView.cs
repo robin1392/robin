@@ -35,8 +35,10 @@ namespace _Scripts.Views
 
         public override void OnUpdateView(QuantumGame game)
         {
-            if (EntityView.EntityRef == EntityRef.None)
+            if (_isEntityDestroyed && _isProjectileDestroyed)
             {
+                EntityView.EntityRef = EntityRef.None;
+                Destroy(gameObject);
                 return;
             }
 
@@ -44,12 +46,6 @@ namespace _Scripts.Views
             {
                 Init(game);
                 return;
-            }
-            
-            if (_isEntityDestroyed && _isProjectileDestroyed)
-            {
-                EntityView.EntityRef = EntityRef.None;
-                Destroy(gameObject);
             }
 
             if (_isProjectileDestroyed)
@@ -84,9 +80,22 @@ namespace _Scripts.Views
         void Init(QuantumGame game)
         {
             var f = game.Frames.Verified;
-            var projectile = f.Get<Projectile>(EntityView.EntityRef);
+            if (f.Exists(EntityView.EntityRef) == false)
+            {
+                _isEntityDestroyed = true;
+                _isProjectileDestroyed = true;
+                return;
+            }
+
+            var projectile = f.Get<ProjectileSpec>(EntityView.EntityRef);
             _target = _viewUpdater.GetView(projectile.Defender)?.transform;
             if (_target == null)
+            {
+                _isProjectileDestroyed = true;
+                return;
+            }
+            
+            if (f.Exists(projectile.Defender) == false)
             {
                 _isProjectileDestroyed = true;
                 return;

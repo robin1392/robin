@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4573255581272932295
+--- !u!114 &-8885022268371028392
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,18 +9,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2acbf6d9a0cba4a509c596154b622d11, type: 3}
-  m_Name: Bomb_2
+  m_Script: {fileID: 11500000, guid: 42f768b8f173d495bbc5e9467fdfcba7, type: 3}
+  m_Name: MoveMine_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|Bomb_2
+      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_0
       Guid:
-        Value: 4348564519081363271
-    Label: Bomb
-    Id: 4
+        Value: 2528243776276982912
+    Label: MoveMine
+    Id: 2
     Services: []
---- !u!114 &-897090716681473554
+--- !u!114 &-4242595867921783826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa53b5ed797b64f5fa3d78aacedbc076, type: 3}
+  m_Name: MineBomb_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MineBomb_1
+      Guid:
+        Value: 2352424855132428427
+    Label: MineBomb
+    Id: 3
+    Services: []
+--- !u!114 &-4225651647684414588
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -36,16 +56,18 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|BTSequence_0
       Guid:
-        Value: 3292237860449011187
+        Value: 2296163346662546189
     Label: BTSequence
     Id: 1
     Children:
     - Id:
-        Value: 2371594820668352720
+        Value: 2528243776276982912
     - Id:
-        Value: 3731800361327335174
+        Value: 2070988460870852486
     - Id:
-        Value: 991464807069530820
+        Value: 3375310294725425253
+    - Id:
+        Value: 2352424855132428427
     Services: []
     TopmostDecorator:
       Id:
@@ -53,6 +75,30 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 0
     IsDynamic: 0
+--- !u!114 &-1798216361888693572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
+  m_Name: WaitLeaf_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitLeaf_2
+      Guid:
+        Value: 3375310294725425253
+    Label: WaitLeaf
+    Id: 4
+    Services: []
+    Duration:
+      RawValue: 65536
+    EndTimeIndex:
+      Index: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,35 +115,15 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine
       Guid:
-        Value: 2641794143166591750
+        Value: 3385944508653499760
     Label: 
     Id: 0
     Child:
       Id:
-        Value: 3292237860449011187
+        Value: 2296163346662546189
     AbortType: 0
-    NodesAmount: 5
---- !u!114 &2569227806816887025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42f768b8f173d495bbc5e9467fdfcba7, type: 3}
-  m_Name: MoveMine_1
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_1
-      Guid:
-        Value: 2371594820668352720
-    Label: MoveMine
-    Id: 3
-    Services: []
---- !u!114 &4843332193896422065
+    NodesAmount: 6
+--- !u!114 &9067938112631615160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,33 +133,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77331012675ba4932bd82980f107283b, type: 3}
-  m_Name: WaitForTrigger_2
+  m_Name: WaitForTrigger_3
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitForTrigger_2
+      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitForTrigger_3
       Guid:
-        Value: 3731800361327335174
+        Value: 2070988460870852486
     Label: WaitForTrigger
-    Id: 4
-    Services: []
---- !u!114 &7290881686277882741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa53b5ed797b64f5fa3d78aacedbc076, type: 3}
-  m_Name: MineBomb_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MineBomb_0
-      Guid:
-        Value: 991464807069530820
-    Label: MineBomb
-    Id: 2
+    Id: 5
     Services: []

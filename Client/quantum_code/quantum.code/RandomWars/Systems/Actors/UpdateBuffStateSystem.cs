@@ -12,11 +12,6 @@ namespace Quantum.Actors
     {
         public override void Update(Frame f, ref ActorFilter filter)
         {
-            if (f.IsVerified == false)
-            {
-                return;
-            }
-
             if (filter.Actor->BuffState != filter.Actor->BuffStateApplied)
             {
                 var cantActPrev = (filter.Actor->BuffStateApplied & (Int32)BuffType.CantAct) > 0;

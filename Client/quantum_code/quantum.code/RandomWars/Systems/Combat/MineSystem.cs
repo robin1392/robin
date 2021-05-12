@@ -12,13 +12,13 @@ namespace Quantum.Combat
     {
         public void OnTriggerEnter2D(Frame frame, TriggerInfo2D info)
         {
-            if (frame.Has<Mine>(info.Other))
+            if (frame.TryGet(info.Other, out Mine mine) && mine.Arrived)
             {
                 OnMineCollision(frame, info.Other, info.Entity, info);
                 return;
             }
 
-            if (frame.Has<Mine>(info.Entity))
+            if (frame.TryGet(info.Entity, out Mine mine2) && mine2.Arrived)
             {
                 OnMineCollision(frame, info.Entity, info.Other, info);
                 return;
@@ -37,6 +37,15 @@ namespace Quantum.Combat
                 return;
             }
 
+            if (frame.TryGet(other, out Actor otherActor))
+            {
+                var actor = frame.Get<Actor>(mine);
+                if (otherActor.Team == actor.Team)
+                {
+                    return;   
+                }
+            }
+            
             if (frame.Has<Trigger>(mine))
             {
                 return;
@@ -52,7 +61,7 @@ namespace Quantum.Combat
                 return;
             }
 
-            if (f.Get<Hittable>(filter.Entity).Health <= FP._0)
+            if (f.Get<Health>(filter.Entity).Value <= FP._0)
             {
                 f.Add<Trigger>(filter.Entity);
             }

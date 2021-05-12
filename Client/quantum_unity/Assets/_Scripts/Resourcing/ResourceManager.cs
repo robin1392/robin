@@ -60,6 +60,11 @@ public static class PreloadedResourceManager
         var root = new GameObject("Preloaded"); 
         foreach (var assetName in assetNames)
         {
+            if (_pool.ContainsKey(assetName))
+            {
+                continue;
+            }
+            
             var go = await ResourceManager.LoadGameObjectAsync(assetName, Vector3.zero, quaternion.identity);
             _pool.Add(assetName, go);
             var actorModel = go.GetComponent<ActorModel>();

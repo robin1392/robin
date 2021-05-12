@@ -1,30 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7991387965555111629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
-  m_Name: WaitLeaf_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
-      Guid:
-        Value: 1390320214648339109
-    Label: WaitLeaf
-    Id: 2
-    Services: []
-    Duration:
-      RawValue: 65470464
-    EndTimeIndex:
-      Index: 1
---- !u!114 &-806884372707266115
+--- !u!114 &-825222985626607574
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +21,7 @@ MonoBehaviour:
     Id: 1
     Children:
     - Id:
-        Value: 1390320214648339109
+        Value: 2945378863020580011
     Services: []
     TopmostDecorator:
       Id:
@@ -69,7 +45,7 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
       Guid:
-        Value: 1445850023652717355
+        Value: 322710427199495734
     Label: 
     Id: 0
     Child:
@@ -77,3 +53,27 @@ MonoBehaviour:
         Value: 1639148361529984408
     AbortType: 0
     NodesAmount: 3
+--- !u!114 &2214897173352532454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
+  m_Name: WaitLeaf_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
+      Guid:
+        Value: 2945378863020580011
+    Label: WaitLeaf
+    Id: 2
+    Services: []
+    Duration:
+      RawValue: 65470464
+    EndTimeIndex:
+      Index: 1

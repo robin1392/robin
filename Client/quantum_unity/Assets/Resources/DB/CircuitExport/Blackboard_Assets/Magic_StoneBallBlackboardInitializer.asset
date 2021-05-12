@@ -16,9 +16,9 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboardInitializer
       Guid:
-        Value: 4557411969736962716
+        Value: 2020787523344457074
     ReportMissingEntries: 1
     AIBlackboard:
       Id:
-        Value: 4107138829550610118
+        Value: 4333070302020022688
     InitialValues: []

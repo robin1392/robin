@@ -5,7 +5,7 @@ namespace Quantum.Actors
     public unsafe struct HittableFilter
     {
         public EntityRef Entity;
-        public Hittable* Hittable;
+        public Health* Health;
         public DamagePerSec* DamagePerSec;
     }
     
@@ -13,12 +13,7 @@ namespace Quantum.Actors
     {
         public override void Update(Frame f, ref HittableFilter filter)
         {
-            if (f.IsVerified == false)
-            {
-                return;
-            }
-
-            filter.Hittable->Health -= filter.DamagePerSec->Damage * f.DeltaTime;
+            filter.Health->Value -= filter.DamagePerSec->Damage * f.DeltaTime;
         }
     }
 }

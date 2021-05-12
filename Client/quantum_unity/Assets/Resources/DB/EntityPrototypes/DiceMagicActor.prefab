@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransformMode: 0
   Transform2DVertical:
-    IsEnabled: 1
+    IsEnabled: 0
     Height:
       RawValue: 0
     PositionOffset:
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0008c51fe3af00b4da5d44f02d9b3dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BindBehaviour: 1
+  BindBehaviour: 0
   ManualDiposal: 1
   GameObjectNameIsEntityRef: 1
   ErrorCorrectionRateMin: 3.3

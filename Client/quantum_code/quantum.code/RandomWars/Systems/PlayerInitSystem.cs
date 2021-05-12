@@ -29,7 +29,7 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
             var diceId = playerData.DeckDiceIds[i];
             var outGameLevel = playerData.DeckDiceOutGameLevels[i];
             deck->Dices.GetPointer(i)->DiceId = diceId;
-            deck->Dices.GetPointer(i)->outGameLevel = outGameLevel;
+            deck->Dices.GetPointer(i)->OutGameLevel = outGameLevel;
         }
         
         var field = f.Unsafe.GetPointer<Field>(entity);

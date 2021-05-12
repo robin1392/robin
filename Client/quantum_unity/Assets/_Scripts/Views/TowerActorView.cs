@@ -41,17 +41,17 @@ namespace _Scripts.Views
 
         protected override void OnUpdateViewAfterInit(QuantumGame game)
         {
-            var f = game.Frames.Verified;
+            var f = game.Frames.PredictedPrevious;
             var e = EntityView.EntityRef;
-            if(f.TryGet(e, out Hittable hittable) == false)
+            if(f.TryGet(e, out Health health) == false)
             {
                 return;
             }
             
             var actor = f.Get<Actor>(e);
-            var ratio = (hittable.Health / hittable.MaxHealth).AsFloat;
+            var ratio = (health.Value / health.MaxValue).AsFloat;
             _healthBarImage.fillAmount = ratio;
-            _healthBarText.text = $"{FPMath.CeilToInt(hittable.Health)}";
+            _healthBarText.text = $"{FPMath.CeilToInt(health.Value)}";
 
             var simulatedTr2D = f.Get<Transform2D>(e);
             var tr = transform;

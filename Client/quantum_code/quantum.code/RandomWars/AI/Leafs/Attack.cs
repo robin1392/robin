@@ -64,8 +64,8 @@ namespace Quantum
                     transform->Rotation = rotation;
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
 
-                    var targetActor = f.Unsafe.GetPointer<Hittable>(target);
-                    targetActor->Health -= actor.Power;
+                    var targetActor = f.Unsafe.GetPointer<Health>(target);
+                    targetActor->Value -= actor.Power;
                     f.Events.ActorHitted(p.Entity, target, HitColor.None);
 
                     bb->Set(p.Frame, IsEnemyTargetAttacked.Key, true);

@@ -7,26 +7,22 @@ namespace Quantum
     {
         public EntityRef Entity;
         public Projectile* Projectile;
+        public ProjectileSpec* Spec;
     }
     
     public unsafe class ProjectileSystem : SystemMainThreadFilter<ProjectileFilter>
     {
         public override void Update(Frame f, ref ProjectileFilter filter)
         {
-            if (f.IsVerified == false)
-            {
-                return;
-            }
-            
             var currentTime = f.DeltaTime * f.Number;
-            var projectile = filter.Projectile;
+            var projectile = filter.Spec;
             if (projectile->HitTime <= currentTime)
             {
-                if (f.Exists(filter.Projectile->Defender))
+                if (f.Exists(filter.Spec->Defender))
                 {
-                    var defenderEntity = filter.Projectile->Defender;
-                    var defender = f.Unsafe.GetPointer<Hittable>(defenderEntity);
-                    defender->Health -= filter.Projectile->Power;
+                    var defenderEntity = filter.Spec->Defender;
+                    var defender = f.Unsafe.GetPointer<Health>(defenderEntity);
+                    defender->Value -= filter.Spec->Power;
                     if (f.Has<NoCC>(defenderEntity) == false &&
                         projectile->Debuff == DebuffType.Freeze)
                     {
@@ -44,8 +40,8 @@ namespace Quantum
                         }
                     }
                 }
-                
-                f.Destroy(filter.Entity);
+
+                f.Add<Destroy>(filter.Entity);
             }
         }
     }

@@ -94,9 +94,9 @@ namespace Quantum
                     continue;
                 }
 
-                if (f.Unsafe.TryGetPointer(hitEntity, out Hittable* targetHittable))
+                if (f.Unsafe.TryGetPointer(hitEntity, out Health* targetHittable))
                 {
-                    targetHittable->Health -= damage;
+                    targetHittable->Value -= damage;
                     f.Events.ActorHitted(attacker, hitEntity, HitColor.None);
                 }
             }

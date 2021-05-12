@@ -240,7 +240,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         
         var deckDice = deck.Dices[callback.DeckIndex];
         TableManager.Get().DiceInfo.GetData(deckDice.DiceId, out var diceInfo);
-        arrUpgradeButtons[callback.DeckIndex].Initialize( diceInfo, deckDice.inGameLevel, callback.DeckIndex);
+        arrUpgradeButtons[callback.DeckIndex].Initialize( diceInfo, deckDice.InGameLevel, callback.DeckIndex);
         
         arrUpgradeButtons[callback.DeckIndex].OnPowerUp();
         
@@ -262,7 +262,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         {
             var deckDice = deck.Dices[i];
             TableManager.Get().DiceInfo.GetData(deckDice.DiceId, out var diceInfo);
-            arrUpgradeButtons[i].Initialize( diceInfo, deckDice.inGameLevel, i);
+            arrUpgradeButtons[i].Initialize( diceInfo, deckDice.InGameLevel, i);
         }
     }
 

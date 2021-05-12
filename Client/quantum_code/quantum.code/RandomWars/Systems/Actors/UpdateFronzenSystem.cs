@@ -13,11 +13,6 @@ namespace Quantum.Actors
     {
         public override void Update(Frame f, ref FrozenFilter filter)
         {
-            if (f.IsVerified == false)
-            {
-                return;
-            }
-
             var currentTime = f.Number * f.DeltaTime;
             if (filter.Frozen->EndTime <= currentTime)
             {

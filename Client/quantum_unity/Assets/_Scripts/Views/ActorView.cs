@@ -61,6 +61,12 @@ namespace _Scripts.Views
 
         void Init(QuantumGame game)
         {
+            var f = game.Frames.Verified;
+            if (f.Exists(EntityView.EntityRef) == false)
+            {
+                return;
+            }
+            
             OnInit(game);
             OnAfterInit();
             
@@ -105,10 +111,10 @@ namespace _Scripts.Views
             
             if (EntityView.EntityRef.Equals(callback.Attacker))
             {
-                if (ActorModel != null)
+                if (ActorModel?.ShootingPosition != null)
                 {
                     ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(
-                        "Effect_ArrowHit", 
+                        AssetNames.EffectArrowHit, 
                         ActorModel.ShootingPosition.position,
                         Quaternion.identity).Forget();
                 }
@@ -267,11 +273,6 @@ namespace _Scripts.Views
 
         public void OnEntityDestroyed(QuantumGame game)
         {
-            if (_initialized == false)
-            {
-                return;
-            }
-            
             OnEntityDestroyedInternal(game);
         }
 

@@ -1,18 +1,59 @@
 using Photon.Deterministic;
+using Quantum.Actors;
 using RandomWarsResource.Data;
 
 namespace Quantum
 {
-    public unsafe class BattleModeSystem : SystemSignalsOnly, ISignalSpawnByWave, ISignalOnPlayerDataSet
+    public unsafe class BattleModeSystem : SystemSignalsOnly, ISignalOnWave, ISignalOnPlayerDataSet
     {
         public override void OnInit(Frame f)
         {
             f.Context.SetNavmesh(f.FindAsset<NavMesh>("Resources/DB/BattleMap_Navmesh"));
         }
 
-        public void SpawnByWave(Frame f, int wave)
+        public void OnWave(Frame f, int wave)
         {
-            Log.Debug($"BattleModeSpawnSystem Spawn {wave}");
+            for (var i = 0; i < f.Global->Players.Length; ++i)
+            {
+                var rwPlayer = f.Global->Players[i];
+                CreateActorByPlayerFieldDice(f, rwPlayer);
+            }
+        }
+
+        void CreateActorByPlayerFieldDice(Frame f, RWPlayer player)
+        {
+            var playerEntity = player.EntityRef;
+            var diceInfos = f.Context.TableData.DiceInfo;
+            var field = f.Get<Field>(playerEntity);
+            var deck = f.Get<Deck>(playerEntity);
+
+            for (byte fieldIndex = 0; fieldIndex < field.Dices.Length; ++fieldIndex)
+            {
+                var fieldDice = field.Dices[fieldIndex];
+                if (fieldDice.IsEmpty)
+                {
+                    continue;
+                }
+                
+                var deckDice = deck.Dices[fieldDice.DeckIndex];
+                
+                var creationEntity = f.Create();
+                f.Add<ActorCreationSpec>(creationEntity);
+                f.Add<ActorCreation>(creationEntity);
+                var creationSpec = f.Unsafe.GetPointer<ActorCreationSpec>(creationEntity);
+                creationSpec->Owner = player.PlayerRef;
+                creationSpec->ActorType = ActorType.Dice;
+                creationSpec->DataId = deckDice.DiceId;
+                creationSpec->IngameLevel = deckDice.InGameLevel;
+                creationSpec->OutgameLevel = deckDice.OutGameLevel;
+                creationSpec->DiceScale = fieldDice.DiceScale;
+                creationSpec->Position = f.Context.FieldPositions.GetPosition(player.Team, fieldIndex);
+                creationSpec->FieldIndex = fieldIndex;
+                creationSpec->Team = player.Team;
+                
+                var creation = f.Unsafe.GetPointer<ActorCreation>(creationEntity);
+                creation->Delay = fieldIndex;
+            }
         }
 
         public void OnPlayerDataSet(Frame f, PlayerRef playerRef)

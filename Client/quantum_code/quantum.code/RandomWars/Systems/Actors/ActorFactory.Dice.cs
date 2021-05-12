@@ -62,15 +62,13 @@ namespace Quantum.Actors
                 if (diceInfo.id == 1013)
                 {
                     spawnPosition = GetBehindTowerPosition(f, spec.Team, spawnPosition);
-                    var vertical = f.Unsafe.GetPointer<Transform2DVertical>(entity);
-                    vertical->Position = FP._10;
                     f.Add<Mine>(entity);
                     var mine = f.Unsafe.GetPointer<Mine>(entity);
                     var currentTime = f.Number * f.DeltaTime;
                     mine->SpawnTime = currentTime;
                     mine->StartPosition = spawnPosition;
                     mine->Destination = GetRandomFieldPosition(f);
-                    mine->SpawnVertical = vertical->Position;
+                    mine->SpawnVertical = FP._10;
                     mine->ArriveTime = (FPVector2.Distance(mine->StartPosition, mine->Destination) / diceInfo.moveSpeed) + currentTime;
                 }
 
@@ -102,9 +100,10 @@ namespace Quantum.Actors
                 if ((DiceType) diceInfo.castType == DiceType.Minion)
                 {
                     f.Add<Hittable>(entity);
-                    var hittable = f.Unsafe.GetPointer<Hittable>(entity);
-                    hittable->MaxHealth = stat.maxHealth;
-                    hittable->Health = stat.maxHealth;
+                    f.Add<Health>(entity);
+                    var health = f.Unsafe.GetPointer<Health>(entity);
+                    health->MaxValue = stat.maxHealth;
+                    health->Value = stat.maxHealth;
                     
                     f.Add<Buff>(entity);
                     var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
@@ -115,14 +114,19 @@ namespace Quantum.Actors
                 
                 if ((DiceType) diceInfo.castType == DiceType.Installation)
                 {
-                    f.Add<Hittable>(entity);
-                    var hittable = f.Unsafe.GetPointer<Hittable>(entity);
-                    hittable->MaxHealth = stat.maxHealth;
-                    hittable->Health = stat.maxHealth;
+                    if (diceInfo.id != 1013)
+                    {
+                        f.Add<Hittable>(entity);    
+                    }
+                    
+                    f.Add<Health>(entity);
+                    var health = f.Unsafe.GetPointer<Health>(entity);
+                    health->MaxValue = stat.maxHealth;
+                    health->Value = stat.maxHealth;
                     
                     f.Add<DamagePerSec>(entity);
                     var damagePerSec = f.Unsafe.GetPointer<DamagePerSec>(entity);
-                    damagePerSec->Damage = hittable->MaxHealth / (FP._4 * FP._10);
+                    damagePerSec->Damage = health->MaxValue / f.Global->WaveTime;
                 }
 
                 f.Add<Attackable>(entity);
@@ -176,13 +180,13 @@ namespace Quantum.Actors
         {
             if (team == GameConstants.BottomCamp)
             {
-                fieldPosition.Y -= f.Context.FieldPositions.GetBottomPlayerPosition().Y;
+                fieldPosition.Y += f.Context.FieldPositions.GetBottomPlayerPosition().Y;
             }
             if (team == GameConstants.TopCamp)
             {
                 fieldPosition.Y += f.Context.FieldPositions.GetTopPlayerPosition().Y;
             }
-
+            
             return fieldPosition;
         }
 

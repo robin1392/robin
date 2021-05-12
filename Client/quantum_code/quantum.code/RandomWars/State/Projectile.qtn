@@ -1,4 +1,7 @@
 component Projectile {
+}
+
+component ProjectileSpec {
     player_ref Owner;
     Int32 Team;
     FP Power;
@@ -10,3 +13,8 @@ component Projectile {
     DebuffType Debuff;
     FP DebuffDuration;
 }
+
+component ProjectileCreation {
+}
+
+

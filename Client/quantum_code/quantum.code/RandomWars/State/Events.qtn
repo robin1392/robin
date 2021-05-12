@@ -46,8 +46,6 @@ event OnSuddenDeathStarted {
 
 signal OnSpWave(Int32 wave, Int32 spWave);
 signal OnWave(Int32 wave);
-signal SpawnByWave(Int32 wave);
-signal AddSpByWave(Int32 wave);
 
 enum ActionStateType { Idle, Walk, Attack, Skill, Freeze }
 

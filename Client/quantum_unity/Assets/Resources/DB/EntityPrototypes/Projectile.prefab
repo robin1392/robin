@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0008c51fe3af00b4da5d44f02d9b3dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BindBehaviour: 1
+  BindBehaviour: 0
   ManualDiposal: 1
   GameObjectNameIsEntityRef: 1
   ErrorCorrectionRateMin: 3.3
@@ -257,6 +257,10 @@ MonoBehaviour:
     Defender: {fileID: 0}
     Model: 
     HitEffect: 
+    Debuff:
+      Value: 0
+    DebuffDuration:
+      RawValue: 0
 --- !u!114 &-4062502850953598902
 MonoBehaviour:
   m_ObjectHideFlags: 0

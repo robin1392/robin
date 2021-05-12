@@ -1,7 +1,7 @@
 struct DeckDice {
     Int32 DiceId;
-    Int32 outGameLevel;
-    Int32 inGameLevel;
+    Int32 OutGameLevel;
+    Int32 InGameLevel;
 }
 
 struct FieldDice {

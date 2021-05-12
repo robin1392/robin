@@ -6,8 +6,6 @@ namespace Quantum
     [Serializable]
     public unsafe partial class RangeAttack : BTLeaf
     {
-        private static readonly string PROJECTILE_PROTOTYPE = "Resources/DB/EntityPrototypes/Projectile|EntityPrototype";
-        
         public AIBlackboardValueKey Target;
         public AIBlackboardValueKey IsEnemyTargetAttacked;
         public BTDataIndex StartTimeIndex;
@@ -68,9 +66,10 @@ namespace Quantum
                     transform->Rotation = rotation;
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
                     
-                    var prototype = f.FindAsset<EntityPrototype>(PROJECTILE_PROTOTYPE);
-                    var projectileEntity = f.Create(prototype);
-                    var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
+                    var projectileCreation = f.Create();
+                    f.Add<ProjectileSpec>(projectileCreation);
+                    f.Add<ProjectileCreation>(projectileCreation);
+                    var projectile = f.Unsafe.GetPointer<ProjectileSpec>(projectileCreation);
                     projectile->Owner = actor.Owner;
                     projectile->Attacker = e;
                     projectile->Defender = target;
