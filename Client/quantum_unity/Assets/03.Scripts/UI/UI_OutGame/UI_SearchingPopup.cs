@@ -52,25 +52,10 @@ public class UI_SearchingPopup : UI_Popup
 
     public void ClickSearchingCancel()
     {
-        if (NetworkManager.Get() != null)
+        if (PhotonNetwork.Instance.LocalBalancingClient.IsConnected)
         {
-            switch (NetworkManager.Get().NetMatchStep)
-            {
-                case Global.E_MATCHSTEP.MATCH_NONE:
-                    ClickSearchingCancelResult();
-                    break;
-                case Global.E_MATCHSTEP.MATCH_START:
-                    btn_Cancel.interactable = false;
-                    // 매칭 요청중이면 중단을 요청한다.
-                    NetworkManager.Get().StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
-                    break;
-                case Global.E_MATCHSTEP.MATCH_CONNECT:
-                    btn_Cancel.interactable = false;
-                    return;
-                case Global.E_MATCHSTEP.MATCH_CANCEL:
-                    btn_Cancel.interactable = false;
-                    break;
-            }
+            PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
+            ClickSearchingCancelResult();
         }
     }
 
@@ -83,7 +68,6 @@ public class UI_SearchingPopup : UI_Popup
         Close();
 
         UI_Main.Get().ShowMainUI(true);
-        // CameraGyroController.Get().FocusOut();
 
     }
     #endregion

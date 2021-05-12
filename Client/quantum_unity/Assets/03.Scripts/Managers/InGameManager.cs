@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using _Scripts.Resourcing;
@@ -12,6 +13,7 @@ using ExitGames.Client.Photon;
 using MirageTest.Scripts;
 using Quantum;
 using Quantum.Commands;
+using Quantum.Demo;
 using RandomWarsResource;
 using RandomWarsResource.Data;
 using Service.Core;
@@ -38,8 +40,6 @@ namespace ED
         public Transform ts_Lights;
         public Transform ts_StadiumTop;
 
-        public float time { get; protected set; }
-        protected DateTime pauseTime;
         #endregion
         
         
@@ -52,26 +52,9 @@ namespace ED
         
         #region unity base
 
-        public override void Awake()
-        {
-            base.Awake();
-
-            // Application.targetFrameRate = 30;
-
-#if UNITY_EDITOR
-            EditorApplication.pauseStateChanged += OnEditorAppPause;
-#endif
-        }
 
         public override void OnDestroy()
         {
-            
-#if UNITY_EDITOR
-            EditorApplication.pauseStateChanged -= OnEditorAppPause;
-#endif
-
-            DestroyManager();
-
             base.OnDestroy();
         }
 
@@ -84,9 +67,8 @@ namespace ED
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
             // PoolManager.Get().MakePool();
             
-            Debug.Log(InGameManager.Get().playType);
-            Debug.Log(NetworkManager.Get().UseLocalServer);
-            
+            Debug.Log(playType);
+
             StartManager();
 
             SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
@@ -97,24 +79,11 @@ namespace ED
 
         #region init destroy
 
-        public void DestroyManager()
-        {
-            //KZSee:
-            // arrUpgradeLevel = null;
-            //
-            // event_SP_Edit.RemoveAllListeners();
-            // event_SP_Edit = null;
-
-        }
-        
         public virtual void StartManager()
         {
-            var matchInfo = NetworkManager.Get().LastMatchInfo;
-            NetworkManager.Get().LastMatchInfo = null;
-            IsNetwork =  matchInfo != null;
-            if (IsNetwork)
+            if(PhotonNetwork.Instance.Online)
             {
-                StartMatchGame(matchInfo).Forget();
+                StartMatchGame().Forget();
             }
             else
             {
@@ -122,9 +91,6 @@ namespace ED
             }
             
             UI_InGame.Get().ViewTargetDice(playType == PLAY_TYPE.CO_OP);
-
-            //KZSee:AStarPathFinding MapScan
-            //Invoke("MapScan", 1f);
         }
 
         public void RotateTopCampObject()
@@ -133,22 +99,103 @@ namespace ED
             ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
         }
         
-        async UniTask StartMatchGame(NetworkManager.MatchInfo matchInfo)
+        async UniTask StartMatchGame()
         {
             if (TableManager.Get().Loaded == false)
             {
-                string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "Dev");
-                TableManager.Get().LoadFromFile(targetPath);
+                TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             }
             
+            CameraController.Get().UpdateCameraRotation(true);
+            
             var userInfo = UserInfoManager.Get().GetUserInfo();
-            var client = FindObjectOfType<RWNetworkClient>();
+
+            var userDeck = userInfo.GetActiveDeck;
+            var diceDeck = userDeck.Take(5).ToArray();
+            var guadianId = userDeck[5];
+
+            if ((PhotonNetwork.Instance.Online && PhotonNetwork.Instance.LocalBalancingClient.InRoom) == false)
+            {
+                UnityEngine.Debug.LogError($"연결이 끊어졌습니다.");
+                return;
+            }
+
+            var localMatchPlayer = new MatchPlayer()
+            {
+                UserId = userInfo.userID,
+                NickName = userInfo.userNickName,
+                Trophy = 0,
+                WinStreak = 0,
+                Deck = new DeckInfo(guadianId, diceDeck, userInfo.GetOutGameLevels(diceDeck)),
+                EnableAI = false
+            };
+
+            var other = PhotonNetwork.Instance.LocalBalancingClient.CurrentRoom.Players.First(p => p.Value.IsLocal == false);
+            var otherMatchPlayer = MatchPlayer.CreateFromPlayerCustomProperty(other.Value.CustomProperties);
+
+            MatchData = new MatchData(localMatchPlayer, otherMatchPlayer);
+
+            await UniTask.Yield();
             
-            client.LocalUserId = userInfo.userID;
-            client.LocalNickName = userInfo.userNickName;
-            client.PlayerSessionId = matchInfo.PlayerGameSession;
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), DelayType.Realtime);
             
-            await client.RWConnectAsync(matchInfo.ServerAddress, (ushort)matchInfo.Port);
+            UI_InGamePopup.Get().InitUIElement(localMatchPlayer, otherMatchPlayer);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(1.0f), DelayType.Realtime);
+            
+            var address = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1YZA4IzGzT26a2Kk3NmCiUpcTJdb4ZBlH-t92rIT6McMFe5b7NnQBkv0aULsov_8XjNHG56aO_GrY/pub?gid=0&single=true&output=csv";
+            var text = (await UnityWebRequest.Get(address).SendWebRequest()).downloadHandler.text;
+            Debug.Log(text);
+            Debug.Log($"DiceInfo 개발용 로드: {TableManager.Get().DiceInfo.Init(text)}");
+            
+            var preloadResources = GetPreoloadResources(MatchData);
+            await PreloadedResourceManager.Preload(preloadResources);
+
+            var quantumRunner = FindObjectOfType<RWQuantumRunnerDebug>();
+            quantumRunner.Players = new[]
+            {
+                ToRuntimePlayer(localMatchPlayer),
+            };
+
+            PhotonNetwork.Instance.Ready();
+            
+            while (PhotonNetwork.Instance._State != PhotonNetwork.State.Started)
+            {
+                await UniTask.Yield();
+            }
+            
+            var config = new RuntimeConfig();
+            config.Map.Id = PhotonNetwork.Instance.GetMapGuid();
+
+            var param = new QuantumRunner.StartParameters {
+                RuntimeConfig       = config,
+                DeterministicConfig = DeterministicSessionConfigAsset.Instance.Config,
+                GameMode            = Photon.Deterministic.DeterministicGameMode.Multiplayer,
+                PlayerCount         = PhotonNetwork.Instance.LocalBalancingClient.CurrentRoom.MaxPlayers,
+                LocalPlayerCount    = 1,
+                NetworkClient       = PhotonNetwork.Instance.LocalBalancingClient,
+            };
+
+            var clientId = ClientIdProvider.CreateClientId(ClientIdProvider.Type.PhotonUserId, PhotonNetwork.Instance.LocalBalancingClient);
+            QuantumRunner.StartGame(clientId, param);
+            
+            while (QuantumRunner.Default.Game.Frames?.Verified?.IsGameStarted() == false)
+            {
+                await UniTask.Yield();
+            }
+
+            while (QuantumRunner.Default.Game.GetLocalPlayers().Length < 1)
+            {
+                await UniTask.Yield();
+            }
+
+            CameraController.Get().UpdateCameraRotation(QuantumRunner.Default.Game.GetLocalPlayers()[0] == 0);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(1.5f), DelayType.Realtime);
+
+            UI_InGamePopup.Get().DisableStartPopup();
+            
+            Debug.LogFormat("### Starting game using map '{0}'", config.Map.Id);
         }
 
         async UniTask StartFakeGame()
@@ -195,33 +242,55 @@ namespace ED
 
             await UniTask.Delay(TimeSpan.FromSeconds(1.0f), DelayType.Realtime);
             
-            await PreloadedResouceManager.Preload(new[]
-            {
-                AssetNames.EffectStun,
-                AssetNames.EffectTaunted,
-                AssetNames.EffectIceState,
-                AssetNames.EffectHalfDamage
-            });
+            var address = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1YZA4IzGzT26a2Kk3NmCiUpcTJdb4ZBlH-t92rIT6McMFe5b7NnQBkv0aULsov_8XjNHG56aO_GrY/pub?gid=0&single=true&output=csv";
+            var text = (await UnityWebRequest.Get(address).SendWebRequest()).downloadHandler.text;
+            Debug.Log(text);
+            Debug.Log($"DiceInfo 개발용 로드: {TableManager.Get().DiceInfo.Init(text)}");
             
-            var quantumRunner = FindObjectOfType<RWQuantumRunner>();
+            var preloadResources = GetPreoloadResources(MatchData);
+            await PreloadedResourceManager.Preload(preloadResources);
+
+            var quantumRunner = FindObjectOfType<RWQuantumRunnerDebug>();
             
             quantumRunner.Players = new[]
             {
                 ToRuntimePlayer(localMatchPlayer),
                 ToRuntimePlayer(aiMatchPlayer)
             };
-
-            var address = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1YZA4IzGzT26a2Kk3NmCiUpcTJdb4ZBlH-t92rIT6McMFe5b7NnQBkv0aULsov_8XjNHG56aO_GrY/pub?gid=0&single=true&output=csv";
-            var text = (await UnityWebRequest.Get(address).SendWebRequest()).downloadHandler.text;
-            Debug.Log(text);
-            Debug.Log($"DiceInfo 개발용 로드: {TableManager.Get().DiceInfo.Init(text)}");
+            
             quantumRunner.StartWithFrame();
             
             await UniTask.Delay(TimeSpan.FromSeconds(1.0f), DelayType.Realtime);
 
             UI_InGamePopup.Get().DisableStartPopup();
         }
-        
+
+        private IEnumerable<string> GetPreoloadResources(MatchData matchData)
+        {
+            var preoloadResouces = new HashSet<string>()
+            {
+                AssetNames.EffectStun,
+                AssetNames.EffectTaunted,
+                AssetNames.EffectIceState,
+                AssetNames.EffectHalfDamage,
+                AssetNames.TowerBlue,
+                AssetNames.TowerRed,
+                AssetNames.EffectSpawnLine
+            };
+
+            var diceInfos = TableManager.Get().DiceInfo;
+            foreach (var playerInfo in matchData.PlayerInfos)
+            {
+                foreach (var deckDice in playerInfo.Deck.DiceInfos)
+                {
+                    diceInfos.GetData(deckDice.DiceId, out var diceInfo);
+                    preoloadResouces.Add(diceInfo.prefabName);
+                }
+            }
+
+            return preoloadResouces;
+        }
+
         RuntimePlayer ToRuntimePlayer(MatchPlayer matchPlayer)
         {
             return new RuntimePlayer()
@@ -381,52 +450,6 @@ namespace ED
             // playerController.RemoveAllMinionAndMagic();
             // playerController.targetPlayer.RemoveAllMinionAndMagic();
         }
-
-
-        public void OnApplicationPause(bool pauseStatus)
-        {
-            var networkManager = NetworkManager.Get();
-            if (networkManager == null)
-            {
-                return;
-            }
-            
-            //TODO: 네트워크 상태 확인 복구
-            // networkManager.PrintNetworkStatus();
-
-            if (pauseStatus)
-            {
-                pauseTime = DateTime.UtcNow;
-                print("Application Pause");
-                
-            }
-            else
-            {
-                
-                time -= (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
-                print("Application Resume : " + ((float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds));
-            }
-        }
-
-#if UNITY_EDITOR
-        // 에디터에서 테스트용도로 사용하기 위해
-        public void OnEditorAppPause(PauseState pause)
-        {
-            //TODO: 네트워크 상태 확인 복구
-            // NetworkManager.Get()?.PrintNetworkStatus();
-
-            if (pause == PauseState.Paused)
-            {
-                pauseTime = DateTime.UtcNow;
-                print("Application Pause");
-            }
-            else
-            {
-                time -= (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
-                print("Application Resume : " + ((float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds));
-            }
-        }
-#endif
         #endregion
 
         public void ShowAIField(bool isShow)

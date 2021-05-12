@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using ED;
+using Photon;
 using Template.Match.RandomwarsMatch.Common;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public class UI_MatchPopup : UI_Popup
 {
@@ -14,19 +17,18 @@ public class UI_MatchPopup : UI_Popup
     public Text text_InviteCode;
     public InputField input_InviteCode;
 
-    [Header("GameObject")] 
-    public GameObject obj_TypeButtons;
+    [Header("GameObject")] public GameObject obj_TypeButtons;
     public GameObject obj_InviteButtons;
     public GameObject obj_CreateRoom;
     public GameObject obj_JoinRoom;
 
     private PLAY_TYPE _playType;
-    private string ticketId;
     private bool isSearching;
+    private string ticketId;
 
-    public void Initialize()
+    public void Initialize(PLAY_TYPE playType)
     {
-        _playType = NetworkManager.Get().playType;
+        _playType = playType;
 
         switch (_playType)
         {
@@ -41,13 +43,7 @@ public class UI_MatchPopup : UI_Popup
 
     public override void Close()
     {
-        if (isSearching && string.IsNullOrEmpty(ticketId) == false)
-        {
-            NetworkManager.Get().StopMatchReq(ticketId);
-        }
-        
         isSearching = false;
-        
         base.Close();
     }
 
@@ -57,11 +53,11 @@ public class UI_MatchPopup : UI_Popup
     public void Click_RandomMatch()
     {
         UI_Main.Get().ShowMainUI(false);
-        
-        FirebaseManager.Get().LogEvent(_playType == PLAY_TYPE.BATTLE ? "PlayBattle":"PlayCoop");
+
+        FirebaseManager.Get().LogEvent(_playType == PLAY_TYPE.BATTLE ? "PlayBattle" : "PlayCoop");
 
         // CameraGyroController.Get().FocusIn();
-        
+
         if (UI_Main.Get().isAIMode || TutorialManager.isTutorial)
         {
             UI_Main.Get().btn_PlayBattle.interactable = false;
@@ -74,9 +70,9 @@ public class UI_MatchPopup : UI_Popup
             UI_Main.Get().btn_PlayBattle.interactable = false;
             UI_Main.Get().btn_PlayCoop.interactable = false;
             UI_Main.Get().searchingPopup.gameObject.SetActive(true);
-            Connect();
+            Connect().Forget();
         }
-        
+
         Close();
     }
 
@@ -95,13 +91,41 @@ public class UI_MatchPopup : UI_Popup
     /// </summary>
     public void Click_CreateRoom()
     {
-        var eGameMode = _playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
-        NetworkManager.session.MatchTemplate.MatchInviteReq(
-            NetworkManager.session.HttpClient,
-            (int) eGameMode,
-            UserInfoManager.Get().GetUserInfo().activateDeckIndex,
-            InviteCallback
-        );
+        CreateRoomAsync().Forget();
+    }
+
+    private bool _isRequesting = false;
+
+    async UniTask CreateRoomAsync()
+    {
+        if (_isRequesting)
+        {
+            return;
+        }
+
+        _isRequesting = true;
+
+        ticketId = await PhotonNetwork.Instance.CreateBattleRoom();
+        _isRequesting = false;
+
+        // 취소버튼 보이기
+        obj_InviteButtons.SetActive(false);
+        obj_CreateRoom.SetActive(true);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
+        // 남은시간 표시하기
+        text_InviteCode.text = $"CODE : {ticketId}";
+        
+        int t = 60;
+        while (t >= 0)
+        {
+            text_InviteRemainTime.text = $"{t}";
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
+            t--;
+        }
+
+        PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
+        ticketId = string.Empty;
+        Close();
     }
 
     /// <summary>
@@ -123,14 +147,14 @@ public class UI_MatchPopup : UI_Popup
         obj_InviteButtons.SetActive(false);
         LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
     }
-    
+
     /// <summary>
     /// 초대코드 복사하기 버튼
     /// </summary>
     public void Click_CopyCode()
     {
         ticketId.CopyToClipboard();
-        
+
         UI_ErrorMessage.Get().ShowMessage(LocalizationManager.GetLangDesc("Gameinvite_Codecopyfin"));
     }
 
@@ -139,11 +163,11 @@ public class UI_MatchPopup : UI_Popup
     /// </summary>
     public void Click_CancelCreateRoom()
     {
-        NetworkManager.session.MatchTemplate.MatchCancelReq(
-            NetworkManager.session.HttpClient,
-            ticketId,
-            CancelCreateRoomCallback
-        );
+        obj_CreateRoom.SetActive(false);
+        obj_InviteButtons.SetActive(true);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
+        ticketId = string.Empty;
+        isSearching = false;
     }
 
     /// <summary>
@@ -167,111 +191,25 @@ public class UI_MatchPopup : UI_Popup
         }
 
         ticketId = input_InviteCode.text;
-        var eGameMode = _playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
+        JoinRoomAsync().Forget();
+    }
+
+    async UniTask JoinRoomAsync()
+    {
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-        NetworkManager.session.MatchTemplate.MatchJoinReq(
-            NetworkManager.session.HttpClient,
-            ticketId,
-            (int) eGameMode,
-            UserInfoManager.Get().GetUserInfo().activateDeckIndex,
-            JoinRoomCallback
-        );
-    }
 
-    /// <summary>
-    /// 입장 요청 콜백 (성공시 MatchStatusReq 요청)
-    /// </summary>
-    /// <param name="errorCode"></param>
-    /// <returns></returns>
-    private bool JoinRoomCallback(ERandomwarsMatchErrorCode errorCode)
-    {
-        UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        if (errorCode == ERandomwarsMatchErrorCode.Success)
+        try
         {
-            isSearching = true;
-            NetworkManager.Get().OnStartMatchAck(ERandomwarsMatchErrorCode.Success, ticketId);
-            return true;
+            await PhotonNetwork.Instance.JoinBattleModeByCode(ticketId.ToUpper());
         }
-        
-        UI_ErrorMessage.Get().ShowMessage("존재하지 않는 방입니다");
-
-        return false;
-    }
-
-    /// <summary>
-    /// 방 생성 취소요청 콜백
-    /// </summary>
-    /// <param name="errorCode"></param>
-    /// <returns></returns>
-    private bool CancelCreateRoomCallback(ERandomwarsMatchErrorCode errorCode)
-    {
-        StopAllCoroutines();
-        
-        if (errorCode == ERandomwarsMatchErrorCode.Success)
+        catch (PhotonTaskNetwork.FailedToJoinRoomException e)
         {
-            isSearching = false;
-            NetworkManager.Get().StopMatchReq(ticketId);
-            ticketId = string.Empty;
-            
-            // 취소버튼 감추기
-            obj_CreateRoom.SetActive(false);
-            obj_InviteButtons.SetActive(true);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
-            return true;
+            Debug.LogError($"입장 실패 {e.ReturnCode}");
+            UI_ErrorMessage.Get().ShowMessage("존재하지 않는 방입니다");
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         }
-
-        return false;
     }
 
-    /// <summary>
-    /// 방생성 콜백 (성공시 MatchStatusReq 요청)
-    /// </summary>
-    /// <param name="errorCode"></param>
-    /// <param name="ticketId"></param>
-    /// <returns></returns>
-    private bool InviteCallback(ERandomwarsMatchErrorCode errorCode, string ticketId)
-    {
-        if (errorCode == ERandomwarsMatchErrorCode.Success)
-        {
-            this.ticketId = ticketId;
-            
-            // 취소버튼 보이기
-            obj_InviteButtons.SetActive(false);
-            obj_CreateRoom.SetActive(true);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
-            // 남은시간 표시하기
-            text_InviteCode.text = $"CODE : {ticketId}";
-
-            isSearching = true;
-            NetworkManager.Get().OnStartMatchAck(ERandomwarsMatchErrorCode.Success, ticketId);
-
-            StartCoroutine(CreateRoomRemainTime());
-            return true;
-        }
-
-        this.ticketId = string.Empty;
-        return false;
-    }
-
-    /// <summary>
-    /// 방생성 남은시간 표시 코루틴
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator CreateRoomRemainTime()
-    {
-        int t = 60;
-        var wait = new WaitForSeconds(1f);
-
-        while (t >= 0)
-        {
-            text_InviteRemainTime.text = $"{t}";
-            yield return wait;
-            t--;
-        }
-        
-        Close();
-    }
-    
     private IEnumerator AIMode(PLAY_TYPE playType)
     {
         yield return new WaitForSeconds(1f);
@@ -285,17 +223,13 @@ public class UI_MatchPopup : UI_Popup
             GameStateManager.Get().MoveInGameCoop();
         }
     }
-    
-    private void Connect()
-    {
-        if (NetworkManager.Get().UseLocalServer == true)
-        {
-            //TODO: 기능 복구
-            NetworkManager.Get().ConnectServer(_playType, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
-            return;
-        }
 
-        var eGameMode = _playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
-        NetworkManager.Get().StartMatchReq(eGameMode, UserInfoManager.Get().GetActiveDeckIndex());
+    async UniTask Connect()
+    {
+        if (_playType == PLAY_TYPE.BATTLE)
+        {
+            //TODO: 타임아웃
+            await PhotonNetwork.Instance.JoinBattleModeByMatching();
+        }
     }
 }

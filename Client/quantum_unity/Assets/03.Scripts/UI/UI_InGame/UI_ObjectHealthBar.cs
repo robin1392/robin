@@ -9,9 +9,7 @@ public class UI_ObjectHealthBar : MonoBehaviour
 {
     //public Canvas canvas;
     public static Camera camera_UI;
-
-    private RectTransform rts_HPBar;
-    private BaseEntity bs;
+    public RectTransform rts_HPBar;
 
     public Image healthBar;
     public Sprite allySprite;
@@ -57,5 +55,10 @@ public class UI_ObjectHealthBar : MonoBehaviour
     private void LateUpdate()
     {
         rts_HPBar.transform.position = transform.position;
+    }
+
+    public void ResetHpBar()
+    {
+        rts_HPBar.transform.SetParent(transform);
     }
 }

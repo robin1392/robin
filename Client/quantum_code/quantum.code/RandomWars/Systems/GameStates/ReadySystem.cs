@@ -6,7 +6,6 @@ namespace Quantum
     {
         public override void OnInit(Frame f)
         {
-            f.Global->StartDelay = FP._1;
             f.Global->State = StateType.Ready;
         }
 
@@ -17,8 +16,8 @@ namespace Quantum
                 return;
             }
 
-            f.Global->StartDelay -= f.DeltaTime;
-            if(f.Global->StartDelay < FP._0)
+            if (f.Global->Players[0].PlayerRef != PlayerRef.None &&
+                f.Global->Players[1].PlayerRef != PlayerRef.None)
             {
                 f.Global->State = StateType.Countdown;
             }

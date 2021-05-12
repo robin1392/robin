@@ -1665,6 +1665,7 @@ namespace Photon.Realtime
         /// <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
         public bool OpCreateRoom(EnterRoomParams enterRoomParams)
         {
+            Debug.Log("OpCreateRoom");
             if (!this.CheckIfOpCanBeSent(OperationCode.CreateGame, this.Server, "CreateGame"))
             {
                 return false;

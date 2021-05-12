@@ -13,7 +13,7 @@ namespace Quantum
             var transform = f.Get<Transform2D>(e);
             var attackable = f.Get<Attackable>(e);
             var actor = f.Get<Actor>(e);
-            BTHelper.DamageToCircleArea(f, transform, attackable.Range, p.Entity, actor, attackable.Effect);
+            BTHelper.DamageToCircleArea(f, transform, attackable.Range, p.Entity, actor, attackable.Power);
             f.Add<Destroy>(e);
 
             return BTStatus.Success;

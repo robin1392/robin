@@ -4,7 +4,6 @@ enum StateType { Ready, Countdown, Play, GameOver }
 
 global
 {
-    FP StartDelay;
     FP StartCountdown;
     Int32 StartCountdownInt;
     Int32 WaveTime;

@@ -1,3 +1,4 @@
+using _Scripts.Resourcing;
 using Cysharp.Threading.Tasks;
 using ED;
 using Quantum;
@@ -16,7 +17,7 @@ namespace _Scripts.Views
         private Vector3 DeathEffectLocalPosition;
         private string DeathSound;
             
-        protected override async UniTask OnInit(QuantumGame game)
+        protected override void OnInit(QuantumGame game)
         {
             var f = game.Frames.Verified;
             var actor = f.Get<Actor>(EntityView.EntityRef);
@@ -36,12 +37,12 @@ namespace _Scripts.Views
         
             if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION || diceInfo.castType == (int) DICE_CAST_TYPE.HERO)
             {
-                await SpawnMinionOrHero(diceInfo, isLocalPlayerActor, dice.FieldIndex, actor.Team, !isEnemy);
+                SpawnMinionOrHero(diceInfo, isLocalPlayerActor, dice.FieldIndex, actor.Team, !isEnemy);
             }
             else if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC ||
                      diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
             {
-                await SpawnMagicAndInstallation(diceInfo, isLocalPlayerActor, dice.FieldIndex, actor.Team, !isEnemy);
+                SpawnMagicAndInstallation(diceInfo, isLocalPlayerActor, dice.FieldIndex, actor.Team, !isEnemy);
             }
             
             if (f.Has<StoneBall>(EntityView.EntityRef))
@@ -63,27 +64,27 @@ namespace _Scripts.Views
             }
         }
 
-        private async UniTask SpawnMinionOrHero(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
+        private void SpawnMinionOrHero(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
         {
             var assetName = "Effect_SpawnMinion";
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(assetName, transform.position, Quaternion.identity).Forget();
 
-            ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
+            ActorModel = PreloadedResourceManager.LoadPoolable<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
             ActorModel.Initialize(isAlly);
             ActorModel.transform.SetParent(transform, false);
             _animationSpeed = new AnimationSpeed(ActorModel.Animator);
             
             if (isLocalPlayerActor)
             {
-                ShowSpawnLine(diceInfo, ActorModel, fieldIndex, team).Forget();
+                ShowSpawnLine(diceInfo, ActorModel, fieldIndex, team);
             }
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
         
-        private async UniTask SpawnMagicAndInstallation(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
+        private void SpawnMagicAndInstallation(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
         {
-            ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
+            ActorModel = PreloadedResourceManager.LoadPoolable<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
             ActorModel.Initialize(isAlly);
             ActorModel.transform.SetParent(transform, false);
             if (ActorModel.Animator != null)
@@ -92,7 +93,7 @@ namespace _Scripts.Views
             }
         }
 
-        async UniTask ShowSpawnLine(TDataDiceInfo diceInfo, ActorModel actorModel, int fieldIndex, int team)
+        void ShowSpawnLine(TDataDiceInfo diceInfo, ActorModel actorModel, int fieldIndex, int team)
         {
             var dicePos = UI_DiceField.Get().arrSlot[fieldIndex].transform.position;
             if ((CameraController.IsBottomOrientation && team == GameConstants.TopCamp) ||
@@ -102,8 +103,8 @@ namespace _Scripts.Views
                 dicePos.z *= -1f;
             }
 
-            var assetName = "Effect_SpawnLine";
-            var lrGo = await ResourceManager.LoadGameObjectAsync(assetName, Vector3.zero, Quaternion.identity);
+            var assetName = AssetNames.EffectSpawnLine;
+            var lrGo = PreloadedResourceManager.LoadGameObject(assetName, Vector3.zero, Quaternion.identity);
             var poolable = lrGo.GetComponent<PoolableObject>();
             poolable.AssetName = assetName;
             poolable.ReservePushBack();
@@ -119,6 +120,7 @@ namespace _Scripts.Views
         
         protected override void OnEntityDestroyedInternal(QuantumGame game)
         {
+            
             PlaySound(DeathSound).Forget();
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(DeathEffect,
                 transform.position + DeathEffectLocalPosition, Quaternion.identity).Forget();
@@ -131,7 +133,7 @@ namespace _Scripts.Views
                 Pool.Push(kvp.Value);
             }
             _dicEffectPool.Clear();
-            Destroy(gameObject);
+            base.OnEntityDestroyedInternal(game);
         }
 
         // void SpawnMagicAndInstallation()

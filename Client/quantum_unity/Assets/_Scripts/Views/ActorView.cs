@@ -17,7 +17,6 @@ namespace _Scripts.Views
         public ActorModel ActorModel;
         public EntityView EntityView;
         private EntityViewUpdater _viewUpdater;
-        protected bool _initializing = false;
         protected bool _initialized = false;
         protected AnimationSpeed _animationSpeed;
 
@@ -60,15 +59,12 @@ namespace _Scripts.Views
             QuantumEvent.Subscribe<EventPlaySound>(this, OnPlaySound);
         }
 
-        async UniTask Init(QuantumGame game)
+        void Init(QuantumGame game)
         {
-            _initializing = true;
-        
-            await OnInit(game);
+            OnInit(game);
             OnAfterInit();
             
             _initialized = true;
-            _initializing = false;
         }
 
         private void OnAfterInit()
@@ -80,7 +76,7 @@ namespace _Scripts.Views
             }
         }
 
-        protected virtual async UniTask OnInit(QuantumGame game)
+        protected virtual void OnInit(QuantumGame game)
         {
         }
 
@@ -202,7 +198,7 @@ namespace _Scripts.Views
         {
             if (_dicEffectPool.ContainsKey(buffType) == false)
             {
-                var ad = PreloadedResouceManager.LoadPoolable<PoolableObject>(resource ,GetEffectPosition(effectLocation), Quaternion.identity);
+                var ad = PreloadedResourceManager.LoadPoolable<PoolableObject>(resource ,GetEffectPosition(effectLocation), Quaternion.identity);
                 ad.transform.SetParent(transform);
                 _dicEffectPool.Add(buffType, ad);
             }
@@ -271,11 +267,18 @@ namespace _Scripts.Views
 
         public void OnEntityDestroyed(QuantumGame game)
         {
+            if (_initialized == false)
+            {
+                return;
+            }
+            
             OnEntityDestroyedInternal(game);
         }
 
         protected virtual void OnEntityDestroyedInternal(QuantumGame game)
         {
+            EntityView.EntityRef = EntityRef.None;
+            Destroy(gameObject);
         }
 
         public override void OnUpdateView(QuantumGame game)
@@ -285,15 +288,9 @@ namespace _Scripts.Views
                 return;
             }
 
-            if (_initialized == false && _initializing == false)
-            {
-                Init(game).Forget();
-                return;
-            }
-
             if (_initialized == false)
             {
-                return;
+                Init(game);
             }
 
             OnUpdateViewAfterInit(game);

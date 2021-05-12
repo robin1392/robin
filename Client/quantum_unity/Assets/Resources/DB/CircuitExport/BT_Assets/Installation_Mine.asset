@@ -1,25 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5950216536317547146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42f768b8f173d495bbc5e9467fdfcba7, type: 3}
-  m_Name: MoveMine_1
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_1
-      Guid:
-        Value: 2249749297515930696
-    Label: MoveMine
-    Id: 3
-    Services: []
 --- !u!114 &-4573255581272932295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40,7 +20,7 @@ MonoBehaviour:
     Label: Bomb
     Id: 4
     Services: []
---- !u!114 &-4312121912725965982
+--- !u!114 &-897090716681473554
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,17 +29,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42f768b8f173d495bbc5e9467fdfcba7, type: 3}
-  m_Name: MoveMine_0
+  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
+  m_Name: BTSequence_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|BTSequence_0
       Guid:
-        Value: 2163246574809578428
-    Label: MoveMine
-    Id: 2
+        Value: 3292237860449011187
+    Label: BTSequence
+    Id: 1
+    Children:
+    - Id:
+        Value: 2371594820668352720
+    - Id:
+        Value: 3731800361327335174
+    - Id:
+        Value: 991464807069530820
     Services: []
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 0
+    IsDynamic: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,10 +74,10 @@ MonoBehaviour:
     Id: 0
     Child:
       Id:
-        Value: 1702319061312290810
+        Value: 3292237860449011187
     AbortType: 0
     NodesAmount: 5
---- !u!114 &1323564693115517616
+--- !u!114 &2569227806816887025
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,31 +86,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_0
+  m_Script: {fileID: 11500000, guid: 42f768b8f173d495bbc5e9467fdfcba7, type: 3}
+  m_Name: MoveMine_1
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|BTSequence_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_1
       Guid:
-        Value: 1702319061312290810
-    Label: BTSequence
-    Id: 1
-    Children:
-    - Id:
-        Value: 2249749297515930696
-    - Id:
-        Value: 1369195072890732420
-    - Id:
-        Value: 2163246574809578428
+        Value: 2371594820668352720
+    Label: MoveMine
+    Id: 3
     Services: []
-    TopmostDecorator:
-      Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 0
-    IsDynamic: 0
---- !u!114 &2638412809629926589
+--- !u!114 &4843332193896422065
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,7 +113,27 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitForTrigger_2
       Guid:
-        Value: 1369195072890732420
+        Value: 3731800361327335174
     Label: WaitForTrigger
     Id: 4
+    Services: []
+--- !u!114 &7290881686277882741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa53b5ed797b64f5fa3d78aacedbc076, type: 3}
+  m_Name: MineBomb_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MineBomb_0
+      Guid:
+        Value: 991464807069530820
+    Label: MineBomb
+    Id: 2
     Services: []

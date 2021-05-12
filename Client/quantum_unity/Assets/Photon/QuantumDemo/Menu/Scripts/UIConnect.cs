@@ -143,7 +143,7 @@ namespace Quantum.Demo {
         if (UIMain.Client.ConnectUsingSettings(appSettings, LastUsername)) {
           Debug.Log($"Reconnecting to nameserver using reconnect info {ReconnectInformation.Instance}");
           HideScreen();
-          UIReconnecting.ShowScreen();
+          // UIReconnecting.ShowScsreen();
           return;
         }
       }

@@ -23,4 +23,12 @@ public class ActorModel : PoolableObject
         RendererEffect.Reset();
         ObjectHealthBar?.SetColor(isAlly);
     }
+
+    public void ResetHealthBar()
+    {
+        if (ObjectHealthBar != null)
+        {
+            ObjectHealthBar.ResetHpBar();
+        }
+    }
 }

@@ -51,7 +51,7 @@ public static class ResourceManager
     }
 }
 
-public static class PreloadedResouceManager
+public static class PreloadedResourceManager
 {
     private static Dictionary<string, GameObject> _pool = new Dictionary<string, GameObject>();
 
@@ -62,6 +62,11 @@ public static class PreloadedResouceManager
         {
             var go = await ResourceManager.LoadGameObjectAsync(assetName, Vector3.zero, quaternion.identity);
             _pool.Add(assetName, go);
+            var actorModel = go.GetComponent<ActorModel>();
+            if (actorModel != null)
+            {
+                actorModel.ResetHealthBar();
+            }
             go.SetActive(false);
             go.transform.SetParent(root.transform);
         }
@@ -97,7 +102,9 @@ public static class PreloadedResouceManager
             return null;
         }
 
-        return Object.Instantiate(goOrigin, position, rotation);
+        var instance = Object.Instantiate(goOrigin, position, rotation);
+        instance.SetActive(true);
+        return instance;
     }
     
     public static void LoadGameObjectAndReseveDeacivate(string assetName, Vector3 position, Quaternion rotation)

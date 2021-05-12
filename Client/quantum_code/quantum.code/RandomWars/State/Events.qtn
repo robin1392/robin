@@ -7,7 +7,7 @@ event FieldDiceMerged : LocalPlayerOnly{
     Int32 TargetFieldIndex;
 }
 
-abstract event LocalPlayerOnly  { player_ref Player; }
+abstract event LocalPlayerOnly  { local player_ref Player; }
 
 event PlayerInitialized : LocalPlayerOnly{  
 }    

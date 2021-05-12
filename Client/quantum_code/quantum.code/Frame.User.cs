@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Photon.Deterministic;
 using RandomWarsResource.Data;
 
 namespace Quantum {
   unsafe partial class Frame {
+      public bool IsGameStarted()
+      {
+          return Global->State != StateType.Ready;
+      }
+
+      
       public bool TryGetFieldDiceInfo(PlayerRef playerRef, int fieldIndex, out int diceId, out int diceScale)
       {
-          var player = Global->Players[playerRef];
+          int index = playerRef;
+          var player = Global->Players[index];
           var field = Get<Field>(player.EntityRef);
           var fieldDice = field.Dices[fieldIndex];
           
@@ -30,7 +38,8 @@ namespace Quantum {
       
       public bool HasEnouphSpToCreateFieldDice(PlayerRef playerRef)
       {
-          var player = Global->Players[playerRef];
+          int index = playerRef;
+          var player = Global->Players[index];
           var sp = Get<Sp>(player.EntityRef);
           var currentSp = sp.CurrentSp;
 
@@ -39,7 +48,8 @@ namespace Quantum {
 
       public int CreateFieldDiceCost(PlayerRef playerRef)
       {
-          var player = Global->Players[playerRef];
+          int index = playerRef;
+          var player = Global->Players[index];
           var diceCreation = Get<DiceCreation>(player.EntityRef);
           
           var tableData = Context.TableData;
@@ -60,7 +70,8 @@ namespace Quantum {
 
       public bool IsFieldFull(PlayerRef playerRef)
       {
-          var player = Global->Players[playerRef];
+          int index = playerRef;
+          var player = Global->Players[index];
           var field = Get<Field>(player.EntityRef);
           for (var i = 0; i < field.Dices.Length; ++i)
           {
@@ -115,7 +126,8 @@ namespace Quantum {
 
       public bool AreEachOtherEnemy(Actor actor, PlayerRef localPlayer)
       {
-          return Global->Players[localPlayer].Team != actor.Team;
+          int index = localPlayer;
+          return Global->Players[index].Team != actor.Team;
       }
   }
 }

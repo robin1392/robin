@@ -95,7 +95,15 @@ public class UserInfo
         private set => _arrDeck = value;
     }
 
-    public int[] GetActiveDeck => arrDeck[activateDeckIndex];
+    public int[] GetActiveDeck => new int[]
+    {
+        1007,
+        1008,
+        1009,
+        1010,
+        1013,
+        5001
+    };//arrDeck[activateDeckIndex];
 
     /// <summary>
     /// second array
@@ -366,7 +374,7 @@ public class UserInfo
 
 
 
-public class UserInfoManager : Singleton<UserInfoManager>
+public class UserInfoManager : GameObjectSingleton<UserInfoManager>
 {
     public string PrefsPostfix = "";
     
@@ -380,25 +388,9 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
     #region unity base
 
-    public override void Awake()
-    {   
-        if (UserInfoManager.Get() != null && this != UserInfoManager.Get())
-        {
-            GameObject.Destroy(this.gameObject);
-            return;
-        }
-
-        
-        base.Awake();
-        
-        InitializeUserInfo();
-    }
-
-    public override void OnDestroy()
+    protected override void OnAwake()
     {
-        DestroyUserInfo();
-        
-        base.OnDestroy();
+        InitializeUserInfo();
     }
     #endregion
 

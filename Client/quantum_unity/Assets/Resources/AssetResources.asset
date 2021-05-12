@@ -156,6 +156,11 @@ MonoBehaviour:
         Id:
           Value: 951847275674917040
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MineBomb_0
+      AssetRef:
+        Id:
+          Value: 991464807069530820
+      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetOutOfRange_2
       AssetRef:
         Id:
@@ -191,11 +196,6 @@ MonoBehaviour:
         Id:
           Value: 1312001000283887444
       ResourcePath: DB/BattleMap_Navmesh_data
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitForTrigger_2
-      AssetRef:
-        Id:
-          Value: 1369195072890732420
-      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
       AssetRef:
         Id:
@@ -261,11 +261,6 @@ MonoBehaviour:
         Id:
           Value: 1661211318170618849
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|BTSequence_0
-      AssetRef:
-        Id:
-          Value: 1702319061312290810
-      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall
       AssetRef:
         Id:
@@ -321,16 +316,6 @@ MonoBehaviour:
         Id:
           Value: 2128310092054948240
       ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_0
-      AssetRef:
-        Id:
-          Value: 2163246574809578428
-      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_1
-      AssetRef:
-        Id:
-          Value: 2249749297515930696
-      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSequence_2
       AssetRef:
         Id:
@@ -346,6 +331,11 @@ MonoBehaviour:
         Id:
           Value: 2370160004645092147
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_1
+      AssetRef:
+        Id:
+          Value: 2371594820668352720
+      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/BattleMap_mesh
       AssetRef:
         Id:
@@ -421,6 +411,11 @@ MonoBehaviour:
         Id:
           Value: 3276419372608423875
       ResourcePath: DB/CircuitExport/BT_Assets/Magic_StoneBall
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|BTSequence_0
+      AssetRef:
+        Id:
+          Value: 3292237860449011187
+      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/EntityPrototypes/DiceInstallationActor|EntityPrototype
       AssetRef:
         Id:
@@ -456,6 +451,11 @@ MonoBehaviour:
         Id:
           Value: 3701004514816895721
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitForTrigger_2
+      AssetRef:
+        Id:
+          Value: 3731800361327335174
+      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/EntityPrototypes/DiceMagicActor|EntityView
       AssetRef:
         Id:

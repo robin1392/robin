@@ -1,3 +1,4 @@
+using _Scripts.Resourcing;
 using Cysharp.Threading.Tasks;
 using ED;
 using Photon.Deterministic;
@@ -14,7 +15,7 @@ namespace _Scripts.Views
         private Image _healthBarImage;
         private Text _healthBarText;
 
-        protected override async UniTask OnInit(QuantumGame game)
+        protected override void OnInit(QuantumGame game)
         {
             var f = game.Frames.Verified;
             var actor = f.Get<Actor>(EntityView.EntityRef);
@@ -34,7 +35,7 @@ namespace _Scripts.Views
                 _healthBarText = UI_InGame.Get().text_BottomTowerHealthBar;
             }
                 
-            ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(isEnemy ? "TowerRed" : "TowerBlue", Vector3.zero, Quaternion.identity);
+            ActorModel = PreloadedResourceManager.LoadPoolable<ActorModel>(isEnemy ? AssetNames.TowerRed : AssetNames.TowerBlue, Vector3.zero, Quaternion.identity);
             ActorModel.transform.SetParent(transform, false);
         }
 
@@ -42,7 +43,11 @@ namespace _Scripts.Views
         {
             var f = game.Frames.Verified;
             var e = EntityView.EntityRef;
-            var hittable = f.Get<Hittable>(e);
+            if(f.TryGet(e, out Hittable hittable) == false)
+            {
+                return;
+            }
+            
             var actor = f.Get<Actor>(e);
             var ratio = (hittable.Health / hittable.MaxHealth).AsFloat;
             _healthBarImage.fillAmount = ratio;
@@ -53,6 +58,7 @@ namespace _Scripts.Views
             tr.position = new Vector3(simulatedTr2D.Position.X.AsFloat, 0, simulatedTr2D.Position.Y.AsFloat);
             tr.eulerAngles = new Vector3(0, simulatedTr2D.Rotation.AsFloat, 0);
             
+            //TODO: 이벤트로 뺀다.
             if (f.AreEachOtherEnemy(actor, game.GetLocalPlayers()[0]))
             {
                 return;
@@ -79,8 +85,9 @@ namespace _Scripts.Views
             
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate("Effect_Bomb", transform.position, Quaternion.identity).Forget();
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate("Effect_TowerDestroyed", transform.position, Quaternion.identity).Forget();
-
+            
             SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_TOWER_EXPLOSION);
+            base.OnEntityDestroyedInternal(game);
         }
     }
 }

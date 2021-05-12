@@ -149,7 +149,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     private unsafe void OnCommingSpGradeChanged(EventCommingSpGradeChanged callback)
     {
         var frame = callback.Game.Frames.Predicted;
-        var player = frame.Global->Players[callback.Player];
+        var index = callback.Player;
+        var player = frame.Global->Players[index];
         var sp = frame.Get<Sp>(player.EntityRef);
         
         SetSPUpgrade(sp.CommingSpGrade, frame.SpUpgradeCost(sp.CommingSpGrade));
@@ -163,7 +164,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
         
         var frame = callback.Game.Frames.Predicted;
-        var player = frame.Global->Players[callback.Player];
+        var index = callback.Player;
+        var player = frame.Global->Players[index];
         var sp = frame.Get<Sp>(player.EntityRef);
         
         SetComingSp(sp.CommingSp);
@@ -188,7 +190,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
         
         var frame = callback.Game.Frames.Predicted;
-        var player = frame.Global->Players[callback.Player];
+        var index = callback.Player;
+        var player = frame.Global->Players[index];
         var sp = frame.Get<Sp>(player.EntityRef);
         
         SetSpImmediately(sp.CurrentSp);
@@ -203,7 +206,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
         
         var frame = callback.Game.Frames.Predicted;
-        var player = frame.Global->Players[callback.Player];
+        var index = callback.Player;
+        var player = frame.Global->Players[index];
         var sp = frame.Get<Sp>(player.EntityRef);
         
         addSpAnimator.SetTrigger("Sp_Get");
@@ -230,7 +234,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
         
         var frame = callback.Game.Frames.Verified;
-        var player = frame.Global->Players[callback.Player];
+        var index = callback.Player;
+        var player = frame.Global->Players[index];
         var deck = frame.Get<Deck>(player.EntityRef);
         
         var deckDice = deck.Dices[callback.DeckIndex];
@@ -250,7 +255,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
         
         var frame = callback.Game.Frames.Verified;
-        var player = frame.Global->Players[callback.Player];
+        var index = callback.Player;
+        var player = frame.Global->Players[index];
         var deck = frame.Get<Deck>(player.EntityRef);
         for (var i = 0; i < deck.Dices.Length; ++i)
         {

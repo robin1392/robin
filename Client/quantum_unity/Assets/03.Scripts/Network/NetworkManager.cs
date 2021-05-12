@@ -67,11 +67,6 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     public PLAY_TYPE playType;
-
-    [Header("Dev Test Variable")]
-    public bool UseLocalServer;
-    public string LocalServerAddr;
-    public int LocalServerPort;
     public string UserId;
 
     public MatchInfo LastMatchInfo;

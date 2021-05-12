@@ -1704,26 +1704,26 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 520;
+    public const Int32 SIZE = 512;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(64)]
     public FP DeltaTime;
-    [FieldOffset(168)]
+    [FieldOffset(160)]
     public FrameMetaData FrameMetaData;
     [FieldOffset(40)]
     public QBoolean IsSuddenDeath;
     [FieldOffset(48)]
     public AssetRefMap Map;
-    [FieldOffset(112)]
+    [FieldOffset(104)]
     public NavMeshRegionMask NavMeshRegions;
-    [FieldOffset(224)]
+    [FieldOffset(216)]
     public PhysicsSceneSettings PhysicsSettings;
     [FieldOffset(56)]
     public BitSet6 PlayerLastConnectionState;
-    [FieldOffset(136)]
+    [FieldOffset(128)]
     [FramePrinter.FixedArrayAttribute(typeof(RWPlayer), 2)]
     private fixed Byte _Players_[32];
-    [FieldOffset(120)]
+    [FieldOffset(112)]
     public RNGSession RngSession;
     [FieldOffset(24)]
     public Int32 SpWave;
@@ -1731,19 +1731,17 @@ namespace Quantum {
     public FP StartCountdown;
     [FieldOffset(28)]
     public Int32 StartCountdownInt;
-    [FieldOffset(80)]
-    public FP StartDelay;
     [FieldOffset(44)]
     public StateType State;
-    [FieldOffset(88)]
+    [FieldOffset(80)]
     public FP SuddenDeathAttackSpeedFactor;
-    [FieldOffset(96)]
+    [FieldOffset(88)]
     public FP SuddenDeathMoveSpeedFactor;
-    [FieldOffset(192)]
+    [FieldOffset(184)]
     public BitSet256 Systems;
     [FieldOffset(32)]
     public Int32 Wave;
-    [FieldOffset(104)]
+    [FieldOffset(96)]
     public FP WaveRemainTime;
     [FieldOffset(36)]
     public Int32 WaveTime;
@@ -1775,7 +1773,6 @@ namespace Quantum {
         hash = hash * 31 + SpWave.GetHashCode();
         hash = hash * 31 + StartCountdown.GetHashCode();
         hash = hash * 31 + StartCountdownInt.GetHashCode();
-        hash = hash * 31 + StartDelay.GetHashCode();
         hash = hash * 31 + (Int32)State;
         hash = hash * 31 + SuddenDeathAttackSpeedFactor.GetHashCode();
         hash = hash * 31 + SuddenDeathMoveSpeedFactor.GetHashCode();
@@ -1800,7 +1797,6 @@ namespace Quantum {
         Quantum.BitSet6.Serialize(&p->PlayerLastConnectionState, serializer);
         FP.Serialize(&p->DeltaTime, serializer);
         FP.Serialize(&p->StartCountdown, serializer);
-        FP.Serialize(&p->StartDelay, serializer);
         FP.Serialize(&p->SuddenDeathAttackSpeedFactor, serializer);
         FP.Serialize(&p->SuddenDeathMoveSpeedFactor, serializer);
         FP.Serialize(&p->WaveRemainTime, serializer);
@@ -3105,6 +3101,7 @@ namespace Quantum {
         }
       }
       public EventFieldDiceCreated FieldDiceCreated(PlayerRef Player, Int32 FieldIndex) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventFieldDiceCreated>(EventFieldDiceCreated.ID);
         ev.Player = Player;
         ev.FieldIndex = FieldIndex;
@@ -3112,6 +3109,7 @@ namespace Quantum {
         return ev;
       }
       public EventFieldDiceMerged FieldDiceMerged(PlayerRef Player, Int32 SourceFieldIndex, Int32 TargetFieldIndex) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventFieldDiceMerged>(EventFieldDiceMerged.ID);
         ev.Player = Player;
         ev.SourceFieldIndex = SourceFieldIndex;
@@ -3120,12 +3118,14 @@ namespace Quantum {
         return ev;
       }
       public EventPlayerInitialized PlayerInitialized(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventPlayerInitialized>(EventPlayerInitialized.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
         return ev;
       }
       public EventPoweredDeckDiceUp PoweredDeckDiceUp(PlayerRef Player, Int32 DeckIndex) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventPoweredDeckDiceUp>(EventPoweredDeckDiceUp.ID);
         ev.Player = Player;
         ev.DeckIndex = DeckIndex;
@@ -3133,36 +3133,42 @@ namespace Quantum {
         return ev;
       }
       public EventSpIncreased SpIncreased(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventSpIncreased>(EventSpIncreased.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
         return ev;
       }
       public EventSpDecreased SpDecreased(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventSpDecreased>(EventSpDecreased.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
         return ev;
       }
       public EventCommingSpGradeUpgraded CommingSpGradeUpgraded(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventCommingSpGradeUpgraded>(EventCommingSpGradeUpgraded.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
         return ev;
       }
       public EventCommingSpChanged CommingSpChanged(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventCommingSpChanged>(EventCommingSpChanged.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
         return ev;
       }
       public EventCommingSpGradeChanged CommingSpGradeChanged(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventCommingSpGradeChanged>(EventCommingSpGradeChanged.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
         return ev;
       }
       public EventDiceCreationCountChanged DiceCreationCountChanged(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) return null;
         var ev = _f.Context.AcquireEvent<EventDiceCreationCountChanged>(EventDiceCreationCountChanged.ID);
         ev.Player = Player;
         _f.AddEvent(ev);

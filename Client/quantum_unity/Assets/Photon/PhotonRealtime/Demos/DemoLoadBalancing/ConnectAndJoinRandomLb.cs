@@ -38,8 +38,7 @@ namespace Photon.Realtime.Demo
             if (client != null)
             {
                 client.Service();
-
-
+                
                 Text uiText = this.StateUiText;
                 string state = client.State.ToString();
                 if (uiText != null && !uiText.text.Equals(state))

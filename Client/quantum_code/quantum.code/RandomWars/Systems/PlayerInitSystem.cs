@@ -9,6 +9,7 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
     
     public void OnPlayerDataSet(Frame f, PlayerRef playerRef)
     {
+        Log.Debug($"OnPlayerDataSet {playerRef}");
         if (DoesPlayerExist(f, playerRef)) return;
 
         var playerPrototype = f.FindAsset<EntityPrototype>(PLAYER_PROTOTYPE);
@@ -36,7 +37,7 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
         {
             field->Dices.GetPointer(i)->DeckIndex = -1;
         }
-
+        
         var rwPlayer = f.Global->Players.GetPointer(playerRef); 
         rwPlayer->PlayerRef = playerRef;
         rwPlayer->EntityRef = entity;
@@ -69,6 +70,7 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
         {
             if (player.Component.PlayerRef == playerRef)
             {
+                Log.Debug($"DoesPlayerExist {playerRef}");
                 return true;
             }
         }

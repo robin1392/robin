@@ -273,12 +273,8 @@ namespace ED
 
         void Play(PLAY_TYPE playType)
         {
-            NetworkManager.Get().playType = playType;
-
-            StopAllCoroutines();
-            
             var match = Instantiate(matchPopup.gameObject, rts_Popup).GetComponent<UI_MatchPopup>();
-            match.Initialize();
+            match.Initialize(playType);
         }
 
         public void Click_BoxButton()
@@ -318,15 +314,6 @@ namespace ED
         
         public void Click_DisconnectButton()
         {
-            StopAllCoroutines();
-            
-            //if(WebPacket.Get() != null)
-            //    WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
-            if (NetworkManager.Get() != null)
-            {
-                NetworkManager.Get().NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
-            }
-            
             btn_PlayBattle.interactable = true;
             btn_PlayCoop.interactable = true;
         }
