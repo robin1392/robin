@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _Scripts.Resourcing;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using DG.Tweening;
 using ED;
 using Quantum;
@@ -77,7 +78,8 @@ namespace _Scripts.Views
         {
             if (string.IsNullOrWhiteSpace(_animationTriggerPending) == false)
             {
-                AnimationTrigger(_animationTriggerPending, _animationSpeedPending);
+                AnimationTrigger(_animationTriggerPending);
+                SetAttackSpeed(_animationSpeedPending);
                 _animationTriggerPending = null;
             }
         }
@@ -244,31 +246,52 @@ namespace _Scripts.Views
         {
             if (EntityView.EntityRef.Equals(callback.Entity))
             {
-                AnimationTrigger(callback.State.ToString(), 1);
+                AnimationTrigger(callback.State.ToString());
             }
         }
         
+        //TODO: 기본공격 속도만 제어한다. 네이밍 수정
         private void OnActionChangedWithSpeed(EventActionChangedWithSpeed callback)
         {
             if (EntityView.EntityRef.Equals(callback.Entity))
             {
-                AnimationTrigger(callback.State.ToString(), callback.Speed.AsFloat);
+                AnimationTrigger(callback.State.ToString());
+                SetAttackSpeed(callback.Speed.AsFloat);
             }
         }
 
         private string _animationTriggerPending;
         private float _animationSpeedPending;
-        void AnimationTrigger(string trigger, float speed)
+        void AnimationTrigger(string trigger)
         {
             if (ActorModel == null)
             {
                 _animationTriggerPending = trigger;
-                _animationSpeedPending = speed;
                 return;
+            }
+
+            if (trigger == "Walk")
+            {
+                ActorModel.Animator.SetFloat("MoveSpeed", 1.0f);
+                return;
+            }
+            else
+            {
+                ActorModel.Animator.SetFloat("MoveSpeed", 0.0f);
             }
             
             ActorModel.Animator.SetTrigger(trigger);
-            _animationSpeed.SetActionSpeed(speed);
+        }
+
+        void SetAttackSpeed(float attackSpeed)
+        {
+            if (ActorModel == null)
+            {
+                _animationSpeedPending = attackSpeed;
+                return;
+            }
+            
+            ActorModel.Animator.SetFloat("AttackSpeed", attackSpeed);
         }
 
         public void OnEntityDestroyed(QuantumGame game)
