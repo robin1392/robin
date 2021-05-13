@@ -326,6 +326,11 @@ namespace _Scripts.Views
 
         protected void TiltActorModel()
         {
+            if (ActorModel == null)
+            {
+                return;
+            }
+            
             var modelTransform = ActorModel.transform;
             var tilt =  modelTransform.worldToLocalMatrix * new Vector3(20, 0, 0);
             modelTransform.transform.localPosition = new Vector3(0, 0.1f, 0);

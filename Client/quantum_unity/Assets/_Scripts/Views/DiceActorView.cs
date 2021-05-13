@@ -1,3 +1,4 @@
+using System;
 using _Scripts.Resourcing;
 using Cysharp.Threading.Tasks;
 using ED;
@@ -211,14 +212,17 @@ namespace _Scripts.Views
 
         protected override void OnUpdateViewAfterInit(QuantumGame game)
         {
-            var f = game.Frames.PredictedPrevious;
+            var f = game.Frames.Predicted;
             var e = EntityView.EntityRef;
 
             if (f.TryGet(e, out Health health))
             {
                 ActorModel.image_HealthBar.fillAmount = (health.Value / health.MaxValue).AsFloat;    
             }
+        }
 
+        private void LateUpdate()
+        {
             TiltActorModel();
         }
     }
