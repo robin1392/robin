@@ -1,5 +1,0 @@
-id,name,boxIcon,buyboxType,buyboxValue,freeOpen,openKeyValue,productId,buyLimitCnt,isUse
-int,string,string,int,int,bool,int,array_int,int,bool
-1000,일반상자,fileName.png,0,0,TRUE,1,11001|11003,0,TRUE
-2000,골드상자,fileName.png,1,1000,FALSE,2,12001|12003,0,TRUE
-3000,다이아상자,fileName.png,2,100,TRUE,3,13001|13003,0,TRUE

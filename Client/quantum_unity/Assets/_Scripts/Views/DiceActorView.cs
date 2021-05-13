@@ -74,7 +74,7 @@ namespace _Scripts.Views
             ActorModel.Initialize(isAlly);
             ActorModel.transform.SetParent(transform, false);
             _animationSpeed = new AnimationSpeed(ActorModel.Animator);
-            
+
             if (isLocalPlayerActor)
             {
                 ShowSpawnLine(diceInfo, ActorModel, fieldIndex, team);

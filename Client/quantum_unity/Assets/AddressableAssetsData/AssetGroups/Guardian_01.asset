@@ -16,19 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 780b8b3084c884036be9c7e1d4c53931
-  m_SerializeEntries:
-  - m_GUID: 9d0b9ace6ba4c4164b1ff7d70e014e02
-    m_Address: Guardian_01
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: e676367227ba6470e8174236818a0361
-    m_Address: Effect_Guardian_01_Skill
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
   m_SchemaSet:

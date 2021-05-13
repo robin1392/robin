@@ -79,8 +79,21 @@ namespace _Scripts.Views
             if (string.IsNullOrWhiteSpace(_animationTriggerPending) == false)
             {
                 AnimationTrigger(_animationTriggerPending);
-                SetAttackSpeed(_animationSpeedPending);
                 _animationTriggerPending = null;
+            }
+
+            if (ActorModel != null)
+            {
+                if (ActorModel.Animator != null)
+                {
+                    ActorModel?.Animator?.SetFloat("MoveSpeed", 1.0f);    
+                }
+            }
+            
+            if (_animationSpeedPending.HasValue)
+            {
+                SetAttackSpeed(_animationSpeedPending.Value);
+                _animationSpeedPending = null;
             }
         }
 
@@ -261,7 +274,7 @@ namespace _Scripts.Views
         }
 
         private string _animationTriggerPending;
-        private float _animationSpeedPending;
+        private float? _animationSpeedPending;
         void AnimationTrigger(string trigger)
         {
             if (ActorModel == null)
@@ -273,14 +286,15 @@ namespace _Scripts.Views
             if (trigger == "Walk")
             {
                 ActorModel.Animator.SetFloat("MoveSpeed", 1.0f);
-                return;
             }
-            else
+            else if(trigger == "Idle")
             {
                 ActorModel.Animator.SetFloat("MoveSpeed", 0.0f);
             }
-            
-            ActorModel.Animator.SetTrigger(trigger);
+            else
+            {
+                ActorModel.Animator.SetTrigger(trigger);
+            }
         }
 
         void SetAttackSpeed(float attackSpeed)

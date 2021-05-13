@@ -18,7 +18,7 @@ public class PoolableObject : MonoBehaviour
     {
         await UniTask.Delay(TimeSpan.FromSeconds(PushBackDelay));
 
-        if (gameObject == null)
+        if (this == null)
         {
             return;
         }

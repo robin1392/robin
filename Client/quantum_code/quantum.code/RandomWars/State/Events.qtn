@@ -82,3 +82,6 @@ event PlaySound {
 }
 
 signal OnTowerDestroyed(entity_ref Entity);
+
+event GameOver {
+}

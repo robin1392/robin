@@ -41,6 +41,7 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
         var rwPlayer = f.Global->Players.GetPointer(playerRef); 
         rwPlayer->PlayerRef = playerRef;
         rwPlayer->EntityRef = entity;
+        rwPlayer->NickName = playerData.Nickname;
 
         var sp = f.Unsafe.GetPointer<Sp>(entity);
 

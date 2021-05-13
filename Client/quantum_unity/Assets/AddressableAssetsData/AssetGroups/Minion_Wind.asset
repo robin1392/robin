@@ -16,19 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: cfd0dee24fc21498485fb97551f4ce7e
-  m_SerializeEntries:
-  - m_GUID: eeee8b29ac5dd47548de4193442ed4b3
-    m_Address: Minion_Wind
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: 80d65d551d0104fa89871b6ced8f99f4
-    m_Address: Projectile_Wind
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
   m_SchemaSet:

@@ -16,25 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 6fe7fc978b8a944edb6ca26b5ee7c910
-  m_SerializeEntries:
-  - m_GUID: c5b2c3f2905e247ac944cadeb5046dd5
-    m_Address: Sound_MinionDeath
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: af1d417c26d8e4c908cf28fb9e2ee6ef
-    m_Address: Sound_Explosion
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: dc4cda11b2aa94cd293418c077f3aa34
-    m_Address: Sound_MineDrop
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
   m_SchemaSet:

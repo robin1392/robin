@@ -19,7 +19,7 @@ public class GameStateInGame : BaseSceneState
         base.InitializeState(_entity);
         
         //
-        sceneName = "InGame_Battle_Mirage";
+        sceneName = "InGame_Battle_Quantum";
     }
 
     public override void OnRelease()

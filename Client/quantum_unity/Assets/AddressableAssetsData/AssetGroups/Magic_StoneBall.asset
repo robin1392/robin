@@ -16,19 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 881d280f4b5414d8db1d4ee8f2f480f4
-  m_SerializeEntries:
-  - m_GUID: 337f830c4e63c499ab0df3f6f6ab1cc6
-    m_Address: Magic_StoneBall
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: 6921a49996ac641c6810bd40b2fb6d4f
-    m_Address: Effect_Stone
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
   m_SchemaSet:

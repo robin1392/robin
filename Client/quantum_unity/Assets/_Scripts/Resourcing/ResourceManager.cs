@@ -11,7 +11,8 @@ public static class ResourceManager
 {
     public static async UniTask<AudioClip> LoadClip(string assetName)
     {
-        return await Addressables.LoadAssetAsync<AudioClip>(assetName);
+        return Resources.Load<AudioClip>(assetName);
+        //return await Addressables.LoadAssetAsync<AudioClip>(assetName);
     }
     
     public static async UniTask<TMonobehavour> LoadMonobehaviourAsync<TMonobehavour>(string assetName, Vector3 position,
@@ -39,7 +40,9 @@ public static class ResourceManager
             return go;
         }
 
-        return await Addressables.InstantiateAsync(assetName, position, rotation);
+        var prefab =  Resources.Load<GameObject>(assetName);
+        return GameObject.Instantiate(prefab, position, rotation) as GameObject;
+        // return await Addressables.InstantiateAsync(assetName, position, rotation);
     }
     
     public static async UniTask LoadGameObjectAsyncAndReseveDeacivate(string assetName, Vector3 position, Quaternion rotation)
@@ -57,7 +60,8 @@ public static class PreloadedResourceManager
 
     public static async UniTask Preload(IEnumerable<string> assetNames)
     {
-        var root = new GameObject("Preloaded"); 
+        _pool.Clear();
+        var root = new GameObject("Preloaded");
         foreach (var assetName in assetNames)
         {
             if (_pool.ContainsKey(assetName))
@@ -125,9 +129,15 @@ public static class PreloadedResourceManager
 public static class Pool
 {
     private static Dictionary<string, Stack<GameObject>> _pools = new Dictionary<string, Stack<GameObject>>();
+    private static bool _enabled = false;
 
     public static void Push(string assetName, GameObject go)
     {
+        if (_enabled == false)
+        {
+            return;    
+        }
+        
         if (_pools.TryGetValue(assetName, out var stack) == false)
         {
             stack = new Stack<GameObject>();
@@ -146,6 +156,11 @@ public static class Pool
 
     public static GameObject Pop(string assetName)
     {
+        if (_enabled == false)
+        {
+            return null;
+        }
+        
         if (_pools.TryGetValue(assetName, out var stack) == false)
         {
             return null;
@@ -159,5 +174,24 @@ public static class Pool
         var go = stack.Pop();
         go.SetActive(true);
         return go;
+    }
+
+    public static void Enable()
+    {
+        _enabled = true;
+    }
+
+    public static void Disable()
+    {
+        _enabled = false;
+        foreach (var kvp in _pools)
+        {
+            while (kvp.Value.Count > 0)
+            {
+                GameObject.Destroy(kvp.Value.Pop());    
+            }
+        }
+        
+        _pools.Clear();
     }
 }

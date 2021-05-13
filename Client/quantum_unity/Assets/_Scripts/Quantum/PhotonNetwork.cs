@@ -8,8 +8,6 @@ using ExitGames.Client.Photon;
 using Photon;
 using Photon.Realtime;
 using Quantum;
-using Quantum.Demo;
-using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Input = UnityEngine.Input;
@@ -62,7 +60,7 @@ public class PhotonNetwork : GameObjectSingleton<PhotonNetwork>, IConnectionCall
     {
         base.OnAwake();
         BattleMap = UnityDB.FindAsset<MapAsset>("Resources/DB/BattleMap");
-        
+
         var serverSettings = PhotonServerSettings.Instance;
         if (string.IsNullOrEmpty(serverSettings.AppSettings.AppIdRealtime))
         {
@@ -108,7 +106,7 @@ public class PhotonNetwork : GameObjectSingleton<PhotonNetwork>, IConnectionCall
         LocalBalancingClient.LocalPlayer.SetCustomProperties(localMatchPlayer.ToPlayerCustomProperty());
 
         Debug.Log($"~~{BattleMap.AssetObject.Guid.Value}");
-        
+
         await _photonTaskNetwork.JoinRandomOrCreateRoom((MapPropertyKey, BattleMap.AssetObject.Guid.Value), token);
         State = StateType.WaitingForPlayers;
         Debug.Log(LocalBalancingClient.CurrentRoom.Name);

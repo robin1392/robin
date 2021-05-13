@@ -85,13 +85,13 @@ namespace MirageTest.Scripts.GameMode
             GameState.state = EGameState.End;
             var victoryReport = new MatchReport();
             victoryReport.GameResult = winByDefault ?GAME_RESULT.VICTORY_BY_DEFAULT : GAME_RESULT.VICTORY;
-            victoryReport.UserId = winner.userId;
+            victoryReport.Nick = winner.userId;
             victoryReport.IsPerfect = perfect;
 
             // 패자 레포트 작성
             var defeatReport = new MatchReport();
             defeatReport.GameResult = GAME_RESULT.DEFEAT;
-            defeatReport.UserId = loser.userId;
+            defeatReport.Nick = loser.userId;
 
             Server.OnGameEnd(new List<MatchReport>() {victoryReport, defeatReport});
         }

@@ -183,7 +183,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9dd2685ea4a46a689922997f9c9761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instanceID: 0
   PrefsPostfix: 
 --- !u!4 &188081435
 Transform:
@@ -853,9 +852,6 @@ MonoBehaviour:
   instanceID: 0
   NetMatchStep: 0
   playType: 0
-  UseLocalServer: 0
-  LocalServerAddr: 
-  LocalServerPort: 0
   UserId: 
   matchSendCount: 0
   serverAddr: https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/test
@@ -935,7 +931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c875c46a300553e4d89a43dd2e99b8da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instanceID: 0
+  instanceID: 558868
   BucketUrl: https://randomdicewars-bucket.s3.ap-northeast-2.amazonaws.com
   Enviroment: Dev
 --- !u!850595691 &1664882037
@@ -2564,7 +2560,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 155.80917
+      value: 159.5
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}

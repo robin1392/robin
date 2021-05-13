@@ -2,6 +2,7 @@
 #define ENABLE_LOG
 #endif
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,6 +117,8 @@ public class FieldManager : SingletonDestroy<FieldManager>
 
     private FP ToFP_2DecimalPlace(float f)
     {
-        return ((int) (f * 100)) / FP._100;
+        var a = f * 100;
+        var b= Mathf.RoundToInt(a);
+        return b / FP._100;
     }
 }

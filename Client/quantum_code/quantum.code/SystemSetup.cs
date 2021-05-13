@@ -95,7 +95,6 @@ namespace Quantum
             }
 
             return coreSystems
-                .Concat(commandSystems)
                 .Concat(devSystem)
                 .Concat(playGroup)
                 .Concat(logicSignal)

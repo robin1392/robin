@@ -13,6 +13,13 @@ namespace Quantum
 
         public void OnWave(Frame f, int wave)
         {
+            var endWave = f.Context.TableData.VsMode.KeyValues[(int) EVsmodeKey.EndWave].value;
+            if(wave > endWave)
+            {
+                GameOver(f);
+                return;
+            }
+            
             for (var i = 0; i < f.Global->Players.Length; ++i)
             {
                 var rwPlayer = f.Global->Players[i];
@@ -83,9 +90,15 @@ namespace Quantum
             actorCreation->Team = rwPlayer->Team;
         }
 
-        public void OnTowerDestroyed(Frame f, EntityRef Entity)
+        public void OnTowerDestroyed(Frame f, EntityRef entity)
+        {
+            GameOver(f);
+        }
+
+        public void GameOver(Frame f)
         {
             f.Global->State = StateType.GameOver;
+            f.Events.GameOver();
         }
     }
 }

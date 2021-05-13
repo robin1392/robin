@@ -215,7 +215,7 @@ namespace MirageTest.Scripts.GameMode
                 report.GameResult = winLose ? GAME_RESULT.VICTORY : GAME_RESULT.DEFEAT;
                 report.IsPerfect = isPerfect;
                 report.NormalRewards.AddRange(rewards);
-                report.UserId = p.userId;
+                report.Nick = p.userId;
                 return report;
             }).ToList();
 

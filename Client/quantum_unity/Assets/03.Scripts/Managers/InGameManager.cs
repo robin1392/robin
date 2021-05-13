@@ -10,7 +10,9 @@ using System.Linq;
 using _Scripts.Resourcing;
 using Cysharp.Threading.Tasks;
 using ExitGames.Client.Photon;
+using ExitGames.Client.Photon.StructWrapping;
 using MirageTest.Scripts;
+using Photon;
 using Quantum;
 using Quantum.Commands;
 using Quantum.Demo;
@@ -56,22 +58,44 @@ namespace ED
         public override void OnDestroy()
         {
             base.OnDestroy();
+            global::Pool.Disable();
         }
 
         protected virtual void Start()
         {
+            global::Pool.Enable();
+            
+            QuantumEvent.Subscribe<EventGameOver>(listener: this, handler: OnGameOver);
             // 개발 버전이라..중간에서 실행햇을시에..
             if (DataPatchManager.Get().isDataLoadComplete == false)
                 DataPatchManager.Get().JsonDownLoad();
 
-            // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
-            // PoolManager.Get().MakePool();
-            
             Debug.Log(playType);
 
             StartManager();
 
             SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
+        }
+
+        private void OnGameOver(EventGameOver callback)
+        {
+            var reports = MatchResult.GetResult(callback.Game.Frames.Verified, MatchData);
+            var localNick = UserInfoManager.Get().GetUserInfo().userNickName;
+            var report = reports.First(r => r.Nick == localNick );
+            
+            UI_InGamePopup.Get().SetViewWaiting(false);
+            if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+            {
+                UI_InGamePopup.Get().ViewGameIndicator(false);
+            }
+        
+            UI_InGamePopup.Get().ShowLowHPEffect(false);
+            SoundManager.instance.StopBGM();
+            UI_InGame.Get().ClearUI();
+            EndGame(Global.PLAY_TYPE.BATTLE, 
+                MatchData.PlayerInfos.Find(p => p.NickName == localNick), 
+                MatchData.PlayerInfos.Find(p => p.NickName != localNick), 
+                report);
         }
 
         #endregion
@@ -200,6 +224,8 @@ namespace ED
 
         async UniTask StartFakeGame()
         {
+            PhotonNetwork.Instance.Online = false;
+            
             if (TableManager.Get().Loaded == false)
             {
                 TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
@@ -350,22 +376,20 @@ namespace ED
 
         public void MoveToMainScene()
         {
+            global::Pool.Disable();
             GameStateManager.Get().MoveMainScene();
             Time.timeScale = 1f;
         }
 
         public void DisconnectGameServer()
         {
-            if (IsNetwork)
+            if (PhotonNetwork.Instance.LocalBalancingClient.IsConnected)
             {
-                var client = FindObjectOfType<RWNetworkClient>();
-                client.Disconnect();
+                QuantumRunner.Default.Shutdown();
+                PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
             }
-            else
-            {
-                FindObjectOfType<RWNetworkServer>().FinalizeServer();
-                FindObjectOfType<RWNetworkClient>().Disconnect();
-            }
+            
+            MoveToMainScene();
         }
 
 
@@ -384,7 +408,6 @@ namespace ED
             //     SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             // }
         }
-
 
         public void EndGame(Global.PLAY_TYPE playType, MatchPlayer local, MatchPlayer other, MatchReport result)
         {

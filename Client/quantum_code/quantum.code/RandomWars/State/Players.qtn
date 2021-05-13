@@ -13,6 +13,8 @@ struct RWPlayer {
     player_ref PlayerRef;
     Int32 Team;
     entity_ref EntityRef;
+    QString<128> NickName;
+    QString<128> UserId;
 }
 
 component DiceCreation {

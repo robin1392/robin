@@ -1704,20 +1704,26 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct RWPlayer {
-    public const Int32 SIZE = 16;
+    public const Int32 SIZE = 272;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(8)]
     public EntityRef EntityRef;
+    [FieldOffset(16)]
+    public QString128 NickName;
     [FieldOffset(4)]
     public PlayerRef PlayerRef;
     [FieldOffset(0)]
     public Int32 Team;
+    [FieldOffset(144)]
+    public QString128 UserId;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 191;
         hash = hash * 31 + EntityRef.GetHashCode();
+        hash = hash * 31 + NickName.GetHashCode();
         hash = hash * 31 + PlayerRef.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
+        hash = hash * 31 + UserId.GetHashCode();
         return hash;
       }
     }
@@ -1726,15 +1732,17 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->Team);
         PlayerRef.Serialize(&p->PlayerRef, serializer);
         EntityRef.Serialize(&p->EntityRef, serializer);
+        Quantum.QString128.Serialize(&p->NickName, serializer);
+        Quantum.QString128.Serialize(&p->UserId, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 512;
+    public const Int32 SIZE = 1024;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(64)]
     public FP DeltaTime;
-    [FieldOffset(160)]
+    [FieldOffset(128)]
     public FrameMetaData FrameMetaData;
     [FieldOffset(40)]
     public QBoolean IsSuddenDeath;
@@ -1742,13 +1750,13 @@ namespace Quantum {
     public AssetRefMap Map;
     [FieldOffset(104)]
     public NavMeshRegionMask NavMeshRegions;
-    [FieldOffset(216)]
+    [FieldOffset(728)]
     public PhysicsSceneSettings PhysicsSettings;
     [FieldOffset(56)]
     public BitSet6 PlayerLastConnectionState;
-    [FieldOffset(128)]
+    [FieldOffset(184)]
     [FramePrinter.FixedArrayAttribute(typeof(RWPlayer), 2)]
-    private fixed Byte _Players_[32];
+    private fixed Byte _Players_[544];
     [FieldOffset(112)]
     public RNGSession RngSession;
     [FieldOffset(24)]
@@ -1763,7 +1771,7 @@ namespace Quantum {
     public FP SuddenDeathAttackSpeedFactor;
     [FieldOffset(88)]
     public FP SuddenDeathMoveSpeedFactor;
-    [FieldOffset(184)]
+    [FieldOffset(152)]
     public BitSet256 Systems;
     [FieldOffset(32)]
     public Int32 Wave;
@@ -1776,7 +1784,7 @@ namespace Quantum {
     private fixed Byte _input_[24];
     public FixedArray<RWPlayer> Players {
       get {
-        fixed (byte* p = _Players_) { return new FixedArray<RWPlayer>(p, 16, 2); }
+        fixed (byte* p = _Players_) { return new FixedArray<RWPlayer>(p, 272, 2); }
       }
     }
     public FixedArray<Input> input {
@@ -1828,9 +1836,9 @@ namespace Quantum {
         FP.Serialize(&p->WaveRemainTime, serializer);
         NavMeshRegionMask.Serialize(&p->NavMeshRegions, serializer);
         RNGSession.Serialize(&p->RngSession, serializer);
-        FixedArray<RWPlayer>.Serialize(p->Players, serializer, Quantum.RWPlayer.Serialize);
         FrameMetaData.Serialize(&p->FrameMetaData, serializer);
         Quantum.BitSet256.Serialize(&p->Systems, serializer);
+        FixedArray<RWPlayer>.Serialize(p->Players, serializer, Quantum.RWPlayer.Serialize);
         PhysicsSceneSettings.Serialize(&p->PhysicsSettings, serializer);
     }
   }
@@ -3105,7 +3113,7 @@ namespace Quantum {
       }
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 20;
+      public const Int32 EVENT_TYPE_COUNT = 21;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return EventLocalPlayerOnly.ID;
@@ -3143,6 +3151,7 @@ namespace Quantum {
           case EventPlayCasterEffect.ID: return typeof(EventPlayCasterEffect);
           case EventBuffStateChanged.ID: return typeof(EventBuffStateChanged);
           case EventPlaySound.ID: return typeof(EventPlaySound);
+          case EventGameOver.ID: return typeof(EventGameOver);
           default: throw new System.ArgumentOutOfRangeException("eventID");
         }
       }
@@ -3277,6 +3286,11 @@ namespace Quantum {
         var ev = _f.Context.AcquireEvent<EventPlaySound>(EventPlaySound.ID);
         ev.Actor = Actor;
         ev.AssetName = AssetName;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventGameOver GameOver() {
+        var ev = _f.Context.AcquireEvent<EventGameOver>(EventGameOver.ID);
         _f.AddEvent(ev);
         return ev;
       }
@@ -3761,6 +3775,29 @@ namespace Quantum {
         var hash = 127;
         hash = hash * 31 + Actor.GetHashCode();
         hash = hash * 31 + AssetName.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventGameOver : EventBase {
+    public new const Int32 ID = 20;
+    protected EventGameOver(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventGameOver() : 
+        base(20, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 131;
         return hash;
       }
     }
@@ -5026,11 +5063,17 @@ namespace Quantum.Prototypes {
     public PlayerRef PlayerRef;
     public Int32 Team;
     public MapEntityId EntityRef;
+    [MaxStringByteCount(126, "Unicode")]
+    public string NickName;
+    [MaxStringByteCount(126, "Unicode")]
+    public string UserId;
     partial void MaterializeUser(Frame frame, ref RWPlayer result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref RWPlayer result, in PrototypeMaterializationContext context) {
       PrototypeValidator.FindMapEntity(this.EntityRef, in context, out result.EntityRef);
+      PrototypeValidator.AssignQString(this.NickName, 128, in context, out result.NickName);
       result.PlayerRef = this.PlayerRef;
       result.Team = this.Team;
+      PrototypeValidator.AssignQString(this.UserId, 128, in context, out result.UserId);
       MaterializeUser(frame, ref result, in context);
     }
   }

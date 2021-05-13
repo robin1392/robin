@@ -264,7 +264,7 @@ public class RWNetworkServer : NetworkServer
         
         foreach (var report in matchReports)
         {
-            var playerProxy = PlayerProxies.FirstOrDefault(p => report.UserId == p.userId);
+            var playerProxy = PlayerProxies.FirstOrDefault(p => report.Nick == p.userId);
             if (playerProxy == null)
             {
                 continue;
@@ -286,7 +286,7 @@ public class RWNetworkServer : NetworkServer
             return new UserMatchResult()
             {
                 MatchResult = isVictory ? 1 : 2,
-                UserId = report.UserId,
+                UserId = report.Nick,
                 listReward = report.NormalRewards.Concat(report.PerfectRewards).Concat(report.StreakRewards).ToList(),
                 LoseReward = report.LoseReward,
             };

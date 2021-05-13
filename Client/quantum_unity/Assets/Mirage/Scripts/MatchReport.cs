@@ -7,7 +7,7 @@ namespace MirageTest.Scripts
 {
     public class MatchReport
     {
-        public string UserId;
+        public string Nick;
         public GAME_RESULT GameResult;
         public short WinStreak;
         public List<ItemBaseInfo> NormalRewards;
@@ -28,7 +28,7 @@ namespace MirageTest.Scripts
         public MatchReport()
         {
             GameResult = GAME_RESULT.NONE;
-            UserId = string.Empty;
+            Nick = string.Empty;
             NormalRewards = new List<ItemBaseInfo>();
             StreakRewards = new List<ItemBaseInfo>();
             PerfectRewards = new List<ItemBaseInfo>();

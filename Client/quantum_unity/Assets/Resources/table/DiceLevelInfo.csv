@@ -1,6 +1,0 @@
-id,name,baseLevel,~게임 내 등급
-int,string,int,
-0,NORMAL,1,노멀
-1,MAGIC,3,매직
-2,EPIC ,5,에픽
-3,LEGEND,7,레전드

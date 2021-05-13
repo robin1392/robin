@@ -237,7 +237,7 @@ namespace MirageTest.Scripts.GameMode
             GameState.state = EGameState.End;
             var victoryReport = new MatchReport();
             victoryReport.GameResult = winByDefault ?GAME_RESULT.VICTORY_BY_DEFAULT : GAME_RESULT.VICTORY;
-            victoryReport.UserId = winner.userId;
+            victoryReport.Nick = winner.userId;
             victoryReport.IsPerfect = perfect;
 
             var victoryMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == winner.userId);
@@ -336,7 +336,7 @@ namespace MirageTest.Scripts.GameMode
             // 패자 레포트 작성
             var defeatReport = new MatchReport();
             defeatReport.GameResult = GAME_RESULT.DEFEAT;
-            defeatReport.UserId = loser.userId;
+            defeatReport.Nick = loser.userId;
             defeatReport.IsPerfect = perfect;
 
             // 연승 수치 적용
@@ -403,7 +403,7 @@ namespace MirageTest.Scripts.GameMode
         {
             var result = new MatchReport();
             result.GameResult = GAME_RESULT.DEFEAT;
-            result.UserId = defeatPlayer.userId;
+            result.Nick = defeatPlayer.userId;
 
             var otherMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == other.userId);
             var defeatMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == defeatPlayer.userId);
