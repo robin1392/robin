@@ -16,7 +16,7 @@ public class GameObjectSingleton<T> : MonoBehaviour where T : MonoBehaviour
                 var t = FindObjectOfType<T>();
                 if (t == null)
                 {
-                    var go = new GameObject(nameof(T));
+                    var go = new GameObject(typeof(T).ToString());
                     t = go.AddComponent<T>();
                 }
 
@@ -31,6 +31,13 @@ public class GameObjectSingleton<T> : MonoBehaviour where T : MonoBehaviour
 
     private void Awake()
     {
+        var already = FindObjectsOfType<T>();
+        if (already.Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         DontDestroyOnLoad(gameObject);
         OnAwake();
     }

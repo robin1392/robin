@@ -30,6 +30,7 @@ public class UI_SearchingPopup : UI_Popup
     {
         btn_Cancel.interactable = true;
         dateSearchStart = DateTime.Now;
+        image_BG.DOFade(1, 0f);
         
         text_Searching.rectTransform.DOAnchorPosY(-300f, 0.4f).SetEase(Ease.OutBack).SetDelay(0.2f);
         ((RectTransform) btn_Cancel.transform).DOAnchorPosY(300f, 0.4f).SetEase(Ease.OutBack).SetDelay(0.2f);
@@ -55,8 +56,9 @@ public class UI_SearchingPopup : UI_Popup
         if (PhotonNetwork.Instance.LocalBalancingClient.IsConnected)
         {
             PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
-            ClickSearchingCancelResult();
         }
+        
+        ClickSearchingCancelResult();
     }
 
 

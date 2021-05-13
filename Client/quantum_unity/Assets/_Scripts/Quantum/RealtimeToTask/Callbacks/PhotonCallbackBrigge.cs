@@ -151,7 +151,7 @@ namespace Photon.Callbacks
             {
                 _onJoinRoomFailed.Value = (returnCode, message);
             }
-            Debug.Log($"OnJoinRoomFailed");
+            Debug.Log($"OnJoinRoomFailed {returnCode} {message}");
         }
 
         #endregion
@@ -270,7 +270,7 @@ namespace Photon.Callbacks
             {
                 _onDisconnected.Value = cause;
             }
-            Debug.Log("OnDisconnected");
+            Debug.Log($"OnDisconnected {cause}");
         }
 
         #endregion

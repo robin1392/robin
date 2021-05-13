@@ -177,7 +177,7 @@ namespace Photon
 
             if (winIndex == 3)
             {
-                throw new FailedToJoinRoomException(returnCode, message);
+                throw new FailedToJoinRoomException(returnCode2, message2);
             }
         }
 
@@ -226,6 +226,7 @@ namespace Photon
 
             var valid = _loadBalancingClient.OpCreateRoom(new EnterRoomParams()
             {
+                RoomName = roomName,
                 RoomOptions = roomOptions,
             });
             if (!valid)
@@ -589,6 +590,16 @@ namespace Photon
         {
             public InvalidRoomOperationException(string message) : base(message)
             {
+            }
+        }
+        
+        public class DisconnectedException : PhotonTaskException
+        {
+            public DisconnectCause Cause { get; }
+
+            public DisconnectedException(DisconnectCause cause) : base(cause.ToString())
+            {
+                Cause = cause;
             }
         }
 

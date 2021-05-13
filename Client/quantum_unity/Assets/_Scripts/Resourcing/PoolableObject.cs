@@ -18,6 +18,11 @@ public class PoolableObject : MonoBehaviour
     {
         await UniTask.Delay(TimeSpan.FromSeconds(PushBackDelay));
 
+        if (gameObject == null)
+        {
+            return;
+        }
+        
         if (string.IsNullOrWhiteSpace(AssetName))
         {
             Debug.LogError($"AssetName이 비어있습니다. {gameObject.name}");

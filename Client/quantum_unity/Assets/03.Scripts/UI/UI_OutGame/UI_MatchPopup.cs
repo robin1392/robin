@@ -118,12 +118,25 @@ public class UI_MatchPopup : UI_Popup
         int t = 60;
         while (t >= 0)
         {
+            if (text_InviteRemainTime == null)
+            {
+                break;
+            }
+            
             text_InviteRemainTime.text = $"{t}";
             await UniTask.Delay(TimeSpan.FromSeconds(1));
             t--;
         }
 
-        PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
+        if (PhotonNetwork.Instance.State == PhotonNetwork.StateType.SceneChanged)
+        {
+            return;
+        }
+        else
+        {
+            PhotonNetwork.Instance.LocalBalancingClient.Disconnect();    
+        }
+        
         ticketId = string.Empty;
         Close();
     }
@@ -143,6 +156,7 @@ public class UI_MatchPopup : UI_Popup
     /// </summary>
     public void Click_CancelTogether()
     {
+        PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
         obj_TypeButtons.SetActive(true);
         obj_InviteButtons.SetActive(false);
         LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
@@ -163,6 +177,7 @@ public class UI_MatchPopup : UI_Popup
     /// </summary>
     public void Click_CancelCreateRoom()
     {
+        PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
         obj_CreateRoom.SetActive(false);
         obj_InviteButtons.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
@@ -202,10 +217,10 @@ public class UI_MatchPopup : UI_Popup
         {
             await PhotonNetwork.Instance.JoinBattleModeByCode(ticketId.ToUpper());
         }
-        catch (PhotonTaskNetwork.FailedToJoinRoomException e)
+        catch (Exception e)
         {
-            Debug.LogError($"입장 실패 {e.ReturnCode}");
-            UI_ErrorMessage.Get().ShowMessage("존재하지 않는 방입니다");
+            Debug.LogError($"입장 실패 {e.Message}");
+            UI_ErrorMessage.Get().ShowMessage("잠시 후 다시 시도해주세요.");
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         }
     }
@@ -229,7 +244,16 @@ public class UI_MatchPopup : UI_Popup
         if (_playType == PLAY_TYPE.BATTLE)
         {
             //TODO: 타임아웃
-            await PhotonNetwork.Instance.JoinBattleModeByMatching();
+            try
+            {
+                await PhotonNetwork.Instance.JoinBattleModeByMatching();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"입장 실패 {e.Message}");
+                UI_ErrorMessage.Get().ShowMessage("잠시 후 다시 시도해주세요.");
+                UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+            }
         }
     }
 }

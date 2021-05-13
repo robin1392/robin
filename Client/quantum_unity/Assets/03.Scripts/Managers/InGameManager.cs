@@ -159,7 +159,7 @@ namespace ED
 
             PhotonNetwork.Instance.Ready();
             
-            while (PhotonNetwork.Instance._State != PhotonNetwork.State.Started)
+            while (PhotonNetwork.Instance.State != PhotonNetwork.StateType.Started)
             {
                 await UniTask.Yield();
             }
@@ -336,20 +336,9 @@ namespace ED
 
         public void OnClickGiveUp()
         {
-            if (IsNetwork)
-            {
-                var client = FindObjectOfType<RWNetworkClient>();
-                client.GiveUp();
-            }
-            else
-            {
-                FindObjectOfType<RWNetworkServer>().FinalizeServer();
-                FindObjectOfType<RWNetworkClient>().Disconnect();
-            }
-            
-            GameStateManager.Get().MoveMainScene();
-            
-            Time.timeScale = 1f;
+            QuantumRunner.Default.Shutdown();
+            PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
+            MoveToMainScene();
         }
 
         // 내자신이 나간다고 눌럿을때 응답 받은것
