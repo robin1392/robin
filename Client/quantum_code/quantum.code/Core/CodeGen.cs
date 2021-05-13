@@ -2919,6 +2919,7 @@ namespace Quantum {
   public unsafe partial class Frame {
     private ISignalOnSpWave[] _ISignalOnSpWaveSystems;
     private ISignalOnWave[] _ISignalOnWaveSystems;
+    private ISignalOnTowerDestroyed[] _ISignalOnTowerDestroyedSystems;
     partial void AllocGen() {
       _globals = (_globals_*)Context.Allocator.AllocAndClear(sizeof(_globals_));
     }
@@ -2967,6 +2968,7 @@ namespace Quantum {
       Initialize(this, this.SimulationConfig.Entities);
       _ISignalOnSpWaveSystems = BuildSignalsArray<ISignalOnSpWave>();
       _ISignalOnWaveSystems = BuildSignalsArray<ISignalOnWave>();
+      _ISignalOnTowerDestroyedSystems = BuildSignalsArray<ISignalOnTowerDestroyed>();
       _ComponentSignalsOnAdded = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       _ComponentSignalsOnRemoved = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       BuildSignalsArrayOnComponentAdded<Quantum.AIBlackboardComponent>();
@@ -3088,6 +3090,16 @@ namespace Quantum {
           var s = array[i];
           if (systems->IsSet(s.RuntimeIndex)) {
             s.OnWave(_f, wave);
+          }
+        }
+      }
+      public void OnTowerDestroyed(EntityRef Entity) {
+        var array = _f._ISignalOnTowerDestroyedSystems;
+        var systems = &(_f._globals->Systems);
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (systems->IsSet(s.RuntimeIndex)) {
+            s.OnTowerDestroyed(_f, Entity);
           }
         }
       }
@@ -3322,6 +3334,9 @@ namespace Quantum {
   }
   public unsafe interface ISignalOnWave : ISignal {
     void OnWave(Frame f, Int32 wave);
+  }
+  public unsafe interface ISignalOnTowerDestroyed : ISignal {
+    void OnTowerDestroyed(Frame f, EntityRef Entity);
   }
   public unsafe partial class EventFieldDiceCreated : EventLocalPlayerOnly {
     public new const Int32 ID = 0;

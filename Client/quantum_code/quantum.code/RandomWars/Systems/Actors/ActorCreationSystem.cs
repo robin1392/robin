@@ -41,7 +41,7 @@ namespace Quantum.Actors
                 if (data.castType == (int)DiceType.Magic)
                 {
                     var actorPrototype = f.FindAsset<EntityPrototype>(DICE_MAGIC_ACTOR_PROTOTYPE);
-                    ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);    
+                    ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);
                 }
                 else if (data.castType == (int)DiceType.Installation)
                 {

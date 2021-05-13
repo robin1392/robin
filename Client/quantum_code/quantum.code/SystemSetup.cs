@@ -22,8 +22,14 @@ namespace Quantum
                 new NavigationSystem(),
                 new EntityPrototypeSystem(),
             };
+            
+            var devSystem = new List<SystemBase>
+            {
+                new CreateActorCommandSystem(),
+                new BotSDKDebuggerSystem(),
+            };
 
-            var commandSystems = new SystemBase[]
+            var commandSystems = new SystemMainThread[]
             {
                 new CreateFieldDiceCommandSystem(),
                 new CreateRandomFieldDiceCommandSystem(),
@@ -31,64 +37,69 @@ namespace Quantum
                 new PowerDeckDiceUpCommandSystem(),
                 new CommingSpUpgradeCommandSystem(),
             };
-
-            var gameStateSystems = new List<SystemBase>
+            
+            var gameStateSystems = new List<SystemMainThread>
             {
                 new ReadySystem(),
                 new CountDownSystem(),
                 new UpdateWaveSystem(),
-                new SuddenDeathSystem(),
-                new SetWaveTimeSystem(),
-                new AddSpBySpWaveSystem(),
-                new UpdateCommingSpByWaveSystem(),
             };
 
-            if (gameConfig.Mode == 1)
-            {
-                gameStateSystems.Add(new CoopModeSpawnSystem());
-            }
-            else
-            {
-                gameStateSystems.Add(new BattleModeSystem());
-            }
-            
-            var creation = new List<SystemBase>
+            var creation = new List<SystemMainThread>
             {
                 new ActorCreationSystem(),
                 new ProjectileCreationSystem(),
             };
-
-            var logicSystem = new List<SystemBase>
+            
+            var logicSystem = new List<SystemMainThread>
             {
-                new BotSDKSystem(),
-                new BotSDKDebuggerSystem(),
-                
                 new PlayerBotSystem(),
-                
                 new ActorSystem(),
-                new PlayerInitSystem(),
-                
                 new ProjectileSystem(),
                 new UpdateFronzenSystem(),
                 new UpdateBuffStateSystem(),
-                new StoneBallTriggerSystem(),
                 new MineSystem(),
                 new DamagePerSecSystem(),
                 new DestroyActorByHpSystem(),
                 new DestroyByComponent()
             };
 
-            var devSystem = new List<SystemBase>
+            var play = new GamePlaySystemGroup("Play", commandSystems.Concat(gameStateSystems).Concat(creation).Concat(logicSystem).ToArray());
+            var playGroup = new List<SystemBase>
             {
-                new CreateActorCommandSystem(),
+                play    
             };
+            
+            var logicSignal = new List<SystemBase>
+            {
+                new BotSDKSystem(),
+                new PlayerInitSystem(),
+                new StoneBallTriggerSystem(),
+            };
+            
+            var gameStateSignal = new List<SystemBase>()
+            {
+                new SuddenDeathSystem(),
+                new SetWaveTimeSystem(),
+                new AddSpBySpWaveSystem(),
+                new UpdateCommingSpByWaveSystem(),
+            };
+            
+            if (gameConfig.Mode == 1)
+            {
+                gameStateSignal.Add(new CoopModeSpawnSystem());
+            }
+            else
+            {
+                gameStateSignal.Add(new BattleModeSystem());
+            }
 
             return coreSystems
                 .Concat(commandSystems)
-                .Concat(gameStateSystems)
-                .Concat(creation)
-                .Concat(logicSystem)
                 .Concat(devSystem)
+                .Concat(playGroup)
+                .Concat(logicSignal)
+                .Concat(gameStateSignal)
                 .ToArray();
         }
     }

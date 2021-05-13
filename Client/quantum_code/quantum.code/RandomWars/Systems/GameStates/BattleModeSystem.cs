@@ -4,7 +4,7 @@ using RandomWarsResource.Data;
 
 namespace Quantum
 {
-    public unsafe class BattleModeSystem : SystemSignalsOnly, ISignalOnWave, ISignalOnPlayerDataSet
+    public unsafe class BattleModeSystem : SystemSignalsOnly, ISignalOnWave, ISignalOnPlayerDataSet, ISignalOnTowerDestroyed
     {
         public override void OnInit(Frame f)
         {
@@ -81,6 +81,11 @@ namespace Quantum
             actorCreation->ActorType = ActorType.Tower;
             actorCreation->Position = position;
             actorCreation->Team = rwPlayer->Team;
+        }
+
+        public void OnTowerDestroyed(Frame f, EntityRef Entity)
+        {
+            f.Global->State = StateType.GameOver;
         }
     }
 }

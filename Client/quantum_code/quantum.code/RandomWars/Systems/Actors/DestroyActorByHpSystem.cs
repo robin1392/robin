@@ -23,6 +23,11 @@ namespace Quantum.Actors
 
             if (filter.Health->Value <= FP._0)
             {
+                if (f.Has<Tower>(filter.Entity))
+                {
+                    f.Signals.OnTowerDestroyed(filter.Entity);
+                }
+                
                 f.Destroy(filter.Entity);
             }
         }

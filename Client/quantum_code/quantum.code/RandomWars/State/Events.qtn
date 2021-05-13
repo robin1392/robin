@@ -80,3 +80,5 @@ event PlaySound {
     entity_ref Actor;
     QString<128> AssetName;
 }
+
+signal OnTowerDestroyed(entity_ref Entity);
