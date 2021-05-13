@@ -42,8 +42,7 @@ public class TutorialManager : MonoBehaviour
         }
 
         isTutorial = false;
-        
-        // StartCoroutine(TutorialCoroutine());
+        StartCoroutine(TutorialCoroutine());
     }
 
     IEnumerator TutorialCoroutine()

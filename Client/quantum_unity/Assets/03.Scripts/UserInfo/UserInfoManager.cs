@@ -425,7 +425,7 @@ public class UserInfoManager : GameObjectSingleton<UserInfoManager>
         _userInfo.SetUserId(info.UserId);
         _userInfo.SetNickName(info.UserName);
 
-        _userInfo.isEndTutorial = info.EndTutorial;
+        _userInfo.isEndTutorial = true;//info.EndTutorial;
         _userInfo.diamond = info.Diamond;
         _userInfo.gold = info.Gold;
         _userInfo.key = info.Key;
