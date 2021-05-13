@@ -13,32 +13,33 @@ namespace Quantum
             var e = p.Entity;
             var bb = p.Blackboard;
             var isEnemyTargetAttacked = bb->GetBoolean(f, IsEnemyTargetAttacked.Key);
-            if (isEnemyTargetAttacked == true)
+            EntityRef previousTarget = bb->GetEntityRef(f, EnemyTargetRef.Key);
+            if (isEnemyTargetAttacked == true && f.Has<Tower>(previousTarget) == false)
             {
                 return;
             }
             
             var transform = f.Get<Transform2D>(e);
-            EntityRef previousTarget = bb->GetEntityRef(f, EnemyTargetRef.Key);
-            
             var attackable = f.Get<Attackable>(e);
             var actor = f.Get<Actor>(e);
             var hits = f.Physics2D.OverlapShape(transform, Shape2D.CreateCircle(attackable.SearchRange));
             var nearest = EntityRef.None;
             var nearestDistanceSquared = FP.MaxValue;
+            EntityRef tower = EntityRef.None;
             for (int i = 0; i < hits.Count; i++)
             {
-                if (hits[i].Entity == EntityRef.None)
+                var hitEntity = hits[i].Entity;
+                if (hitEntity == EntityRef.None)
                 {
                     continue;
                 }
 
-                if (f.Has<Hittable>(hits[i].Entity) == false)
+                if (f.Has<Hittable>(hitEntity) == false)
                 {
                     continue;
                 }
 
-                if (f.TryGet(hits[i].Entity, out Actor target))
+                if (f.TryGet(hitEntity, out Actor target))
                 {
                     if (actor.Team == target.Team)
                     {
@@ -47,6 +48,12 @@ namespace Quantum
                 }
                 else
                 {
+                    continue;
+                }
+
+                if (f.Has<Tower>(hitEntity))
+                {
+                    tower = hitEntity;
                     continue;
                 }
                 
@@ -60,10 +67,11 @@ namespace Quantum
                     }
                 }
             }
-            
-            if (nearest != previousTarget)
+
+            var selected = nearest != EntityRef.None ? nearest : tower; 
+            if (selected != previousTarget)
             {
-                bb->Set(f, EnemyTargetRef.Key, nearest)->TriggerDecorators(p);
+                bb->Set(f, EnemyTargetRef.Key, selected)->TriggerDecorators(p);
                 bb->Set(f, IsEnemyTargetAttacked.Key, false);
             }
         }
