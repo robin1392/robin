@@ -141,6 +141,7 @@ namespace ED
             if ((PhotonNetwork.Instance.Online && PhotonNetwork.Instance.LocalBalancingClient.InRoom) == false)
             {
                 UnityEngine.Debug.LogError($"연결이 끊어졌습니다.");
+                MoveToMainScene();
                 return;
             }
 
@@ -224,8 +225,6 @@ namespace ED
 
         async UniTask StartFakeGame()
         {
-            PhotonNetwork.Instance.Online = false;
-            
             if (TableManager.Get().Loaded == false)
             {
                 TableManager.Get().Init(Application.persistentDataPath + "/Resources/");

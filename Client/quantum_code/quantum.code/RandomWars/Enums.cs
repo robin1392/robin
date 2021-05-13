@@ -9,6 +9,7 @@ namespace Quantum
         Freeze = 1 << 1,
         Taunted = 1 << 2,
         Knockbacked = 1 << 3,
+        Shield = 1 << 4,
 
         CantAct = Freeze,
     }

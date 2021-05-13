@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6120581273621722440
+--- !u!114 &-8420649903564987435
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,51 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_2
+  m_Script: {fileID: 11500000, guid: c59219ea444c348568a9c0133cf15653, type: 3}
+  m_Name: HasTarget_3
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|BTSequence_2
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|HasTarget_3
       Guid:
-        Value: 575901233076333046
-    Label: BTSequence
-    Id: 5
-    Children:
-    - Id:
-        Value: 2055637970259901645
-    Services: []
-    TopmostDecorator:
+        Value: 4465680195895057365
+    Label: HasTarget
+    Id: 8
+    Child:
       Id:
-        Value: 1894823636204581667
-    CurrentChildIndex:
-      Index: 2
-    IsDynamic: 1
---- !u!114 &-5379317006148874735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
-  m_Name: SeekNearestEnemy_4
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|SeekNearestEnemy_4
-      Guid:
-        Value: 216935559092626465
-    IntervalInSec:
-      RawValue: 131072
-    Id: 0
-    EnemyTargetRef:
+        Value: 4021424356661412884
+    AbortType: 0
+    TargetRef:
       Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &-4891623797519490964
+--- !u!114 &-6657170862108947701
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,7 +56,230 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 1
     IsDynamic: 0
---- !u!114 &-4889032965851152955
+--- !u!114 &-3114120869472580341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
+  m_Name: IsTargetOutOfRange_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|IsTargetOutOfRange_2
+      Guid:
+        Value: 1894823636204581667
+    Label: IsTargetOutOfRange
+    Id: 6
+    Child:
+      Id:
+        Value: 575901233076333046
+    AbortType: 1
+    TargetRef:
+      Key: Target
+--- !u!114 &-2687897593304349507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 000c225a59171440cbfcf36978b277c7, type: 3}
+  m_Name: RangeAttack_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_2
+      Guid:
+        Value: 2938550178492902555
+    Label: RangeAttack
+    Id: 12
+    Services: []
+    Target:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+    StartTimeIndex:
+      Index: 6
+    HitIndex:
+      Index: 7
+    ProjectileModel: Ice_Bullet
+    HitEffect: Effect_ArrowHit
+    ProjectTileSpeed:
+      RawValue: 393216
+    Debuff: 0
+--- !u!114 &-1754574442212246036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
+  m_Name: BTSequence_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|BTSequence_2
+      Guid:
+        Value: 575901233076333046
+    Label: BTSequence
+    Id: 5
+    Children:
+    - Id:
+        Value: 2055637970259901645
+    Services: []
+    TopmostDecorator:
+      Id:
+        Value: 1894823636204581667
+    CurrentChildIndex:
+      Index: 2
+    IsDynamic: 1
+--- !u!114 &-1300673687082448653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
+  m_Name: SetNearestEnemyToTarget_3
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|SetNearestEnemyToTarget_3
+      Guid:
+        Value: 951847275674917040
+    Label: SetNearestEnemyToTarget
+    Id: 13
+    Services: []
+    EnemyTargetRef:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+--- !u!114 &-685119605873499926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
+  m_Name: ApproachToTarget_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|ApproachToTarget_0
+      Guid:
+        Value: 2055637970259901645
+    Label: ApproachToTarget
+    Id: 9
+    Services: []
+    Target:
+      Key: Target
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
+  m_Name: Minion_Ice
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice
+      Guid:
+        Value: 760111429443941598
+    Label: 
+    Id: 0
+    Child:
+      Id:
+        Value: 2106451978601681103
+    AbortType: 0
+    NodesAmount: 14
+--- !u!114 &1553104285619175476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 000c225a59171440cbfcf36978b277c7, type: 3}
+  m_Name: RangeAttack_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_1
+      Guid:
+        Value: 1206009083603143159
+    Label: RangeAttack
+    Id: 10
+    Services: []
+    Target:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+    StartTimeIndex:
+      Index: 4
+    HitIndex:
+      Index: 5
+    ProjectileModel: Ice_Bullet
+    HitEffect: Effect_Ice_Freeze
+    ProjectTileSpeed:
+      RawValue: 393216
+    Debuff: 0
+--- !u!114 &5088531390963723001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
+  m_Name: BTSelector_3
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|BTSelector_3
+      Guid:
+        Value: 4021424356661412884
+    Label: BTSelector
+    Id: 7
+    Children:
+    - Id:
+        Value: 1894823636204581667
+    - Id:
+        Value: 654433604544065307
+    Services:
+    - Id:
+        Value: 216935559092626465
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 3
+    IsDynamic: 0
+--- !u!114 &5165717054386832233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,138 +310,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 0
     IsDynamic: 0
---- !u!114 &-4883057589877957979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 000c225a59171440cbfcf36978b277c7, type: 3}
-  m_Name: RangeAttack_1
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_1
-      Guid:
-        Value: 2938550178492902555
-    Label: RangeAttack
-    Id: 10
-    Services: []
-    Target:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
-    StartTimeIndex:
-      Index: 4
-    HitIndex:
-      Index: 5
-    ProjectileModel: Ice_Bullet
-    HitEffect: Effect_ArrowHit
-    ProjectTileSpeed:
-      RawValue: 393216
-    Debuff: 0
---- !u!114 &-1606356468915453556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c59219ea444c348568a9c0133cf15653, type: 3}
-  m_Name: HasTarget_3
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|HasTarget_3
-      Guid:
-        Value: 4465680195895057365
-    Label: HasTarget
-    Id: 8
-    Child:
-      Id:
-        Value: 4021424356661412884
-    AbortType: 0
-    TargetRef:
-      Key: Target
---- !u!114 &-1502023933766161127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
-  m_Name: SetNearestEnemyToTarget_3
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|SetNearestEnemyToTarget_3
-      Guid:
-        Value: 951847275674917040
-    Label: SetNearestEnemyToTarget
-    Id: 13
-    Services: []
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
-  m_Name: Minion_Ice
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice
-      Guid:
-        Value: 1299308721302569786
-    Label: 
-    Id: 0
-    Child:
-      Id:
-        Value: 427207503626495621
-    AbortType: 0
-    NodesAmount: 14
---- !u!114 &292638515220199548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
-  m_Name: IsTargetOutOfRange_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|IsTargetOutOfRange_2
-      Guid:
-        Value: 1894823636204581667
-    Label: IsTargetOutOfRange
-    Id: 6
-    Child:
-      Id:
-        Value: 575901233076333046
-    AbortType: 1
-    TargetRef:
-      Key: Target
---- !u!114 &3260373130728380960
+--- !u!114 &6646205809489399852
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -262,7 +326,7 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|CanAct_1
       Guid:
-        Value: 427207503626495621
+        Value: 2106451978601681103
     Label: CanAct
     Id: 4
     Child:
@@ -271,7 +335,7 @@ MonoBehaviour:
     AbortType: 0
     CanActKey:
       Key: CanAct
---- !u!114 &3918090197660030758
+--- !u!114 &7083858047331928933
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,12 +353,12 @@ MonoBehaviour:
       Guid:
         Value: 1660945662931226357
     Label: EffectProbability
-    Id: 12
+    Id: 11
     Child:
       Id:
         Value: 1206009083603143159
     AbortType: 0
---- !u!114 &4753072325653316502
+--- !u!114 &7247906099091484432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,78 +367,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
-  m_Name: BTSelector_3
+  m_Script: {fileID: 11500000, guid: 3ae80e48ce05244768f90884ed39e046, type: 3}
+  m_Name: IsTargetInActorRange_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|BTSelector_3
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|IsTargetInActorRange_0
       Guid:
-        Value: 4021424356661412884
-    Label: BTSelector
-    Id: 7
-    Children:
-    - Id:
-        Value: 1894823636204581667
-    - Id:
-        Value: 3642749616621744315
-    Services:
-    - Id:
-        Value: 216935559092626465
-    TopmostDecorator:
-      Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 3
-    IsDynamic: 0
---- !u!114 &5557564626099622538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
-  m_Name: ApproachToTarget_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|ApproachToTarget_0
-      Guid:
-        Value: 2055637970259901645
-    Label: ApproachToTarget
-    Id: 9
-    Services: []
-    Target:
-      Key: Target
---- !u!114 &6379128302834688246
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c93a1c7480cb4c1fad188791e90021f, type: 3}
-  m_Name: IsTargetInRange_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|IsTargetInRange_0
-      Guid:
-        Value: 3642749616621744315
-    Label: IsTargetInRange
+        Value: 654433604544065307
+    Label: IsTargetInActorRange
     Id: 2
     Child:
       Id:
         Value: 3444822693064860666
-    AbortType: 3
+    AbortType: 0
     TargetRef:
       Key: Target
---- !u!114 &8612933696617844503
+--- !u!114 &7336533860394171798
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -383,27 +392,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 000c225a59171440cbfcf36978b277c7, type: 3}
-  m_Name: RangeAttack_2
+  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
+  m_Name: SeekNearestEnemy_4
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_2
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|SeekNearestEnemy_4
       Guid:
-        Value: 1206009083603143159
-    Label: RangeAttack
-    Id: 11
-    Services: []
-    Target:
+        Value: 216935559092626465
+    IntervalInSec:
+      RawValue: 131072
+    Id: 0
+    EnemyTargetRef:
       Key: Target
     IsEnemyTargetAttacked:
       Key: TargetAttacked
-    StartTimeIndex:
-      Index: 6
-    HitIndex:
-      Index: 7
-    ProjectileModel: Ice_Bullet
-    HitEffect: Effect_Ice_Freeze
-    ProjectTileSpeed:
-      RawValue: 393216
-    Debuff: 1

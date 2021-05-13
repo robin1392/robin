@@ -12,7 +12,8 @@ namespace Quantum {
           return Global->State != StateType.Ready;
       }
 
-      
+      public FP Now => DeltaTime * Number;
+
       public bool TryGetFieldDiceInfo(PlayerRef playerRef, int fieldIndex, out int diceId, out int diceScale)
       {
           int index = playerRef;

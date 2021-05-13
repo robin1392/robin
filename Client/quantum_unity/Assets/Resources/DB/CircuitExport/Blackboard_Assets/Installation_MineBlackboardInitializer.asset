@@ -16,9 +16,9 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboardInitializer
       Guid:
-        Value: 645885985248832243
+        Value: 4003492237325111467
     ReportMissingEntries: 1
     AIBlackboard:
       Id:
-        Value: 3232658773819375901
+        Value: 2891451593857935933
     InitialValues: []

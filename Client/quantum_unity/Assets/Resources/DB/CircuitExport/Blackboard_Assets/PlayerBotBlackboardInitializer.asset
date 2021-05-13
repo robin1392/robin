@@ -16,9 +16,9 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
       Guid:
-        Value: 1608803669783788075
+        Value: 636760191951267029
     ReportMissingEntries: 1
     AIBlackboard:
       Id:
-        Value: 200686742324295771
+        Value: 4413262433045660745
     InitialValues: []

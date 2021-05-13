@@ -1,6 +1,154 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3649656804765091696
+--- !u!114 &-4316278988960242360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
+  m_Name: SeekNearestEnemy_3
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|SeekNearestEnemy_3
+      Guid:
+        Value: 486196745100405963
+    IntervalInSec:
+      RawValue: 131072
+    Id: 0
+    EnemyTargetRef:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+--- !u!114 &-3033176123619023530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae80e48ce05244768f90884ed39e046, type: 3}
+  m_Name: IsTargetInActorRange_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetInActorRange_0
+      Guid:
+        Value: 2807300517252644946
+    Label: IsTargetInActorRange
+    Id: 2
+    Child:
+      Id:
+        Value: 105676668355601455
+    AbortType: 0
+    TargetRef:
+      Key: Target
+--- !u!114 &-1358949553893287213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82a76468a6c147ae863b501f69e3fc3, type: 3}
+  m_Name: CanAct_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|CanAct_1
+      Guid:
+        Value: 172476577345500237
+    Label: CanAct
+    Id: 4
+    Child:
+      Id:
+        Value: 4000871961613954582
+    AbortType: 0
+    CanActKey:
+      Key: CanAct
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
+  m_Name: Melee
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee
+      Guid:
+        Value: 1543656091219759397
+    Label: 
+    Id: 0
+    Child:
+      Id:
+        Value: 172476577345500237
+    AbortType: 0
+    NodesAmount: 12
+--- !u!114 &145127189400111860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
+  m_Name: ApproachToTarget_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_1
+      Guid:
+        Value: 2388248204481479766
+    Label: ApproachToTarget
+    Id: 10
+    Services: []
+    Target:
+      Key: Target
+--- !u!114 &3424308773142470579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d10cad3ab145947a8a1aa40c519b35c0, type: 3}
+  m_Name: Attack_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|Attack_0
+      Guid:
+        Value: 1011046490626826327
+    Label: Attack
+    Id: 9
+    Services: []
+    Target:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+    StartTimeIndex:
+      Index: 4
+    HitIndex:
+      Index: 5
+--- !u!114 &3854852400487994669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31,184 +179,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 1
     IsDynamic: 0
---- !u!114 &-2631511213197189531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
-  m_Name: BTSelector_3
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSelector_3
-      Guid:
-        Value: 1661211318170618849
-    Label: BTSelector
-    Id: 7
-    Children:
-    - Id:
-        Value: 822002564904267216
-    - Id:
-        Value: 4041013889495071996
-    Services:
-    - Id:
-        Value: 486196745100405963
-    TopmostDecorator:
-      Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 3
-    IsDynamic: 0
---- !u!114 &-1472523183990502230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
-  m_Name: IsTargetOutOfRange_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_2
-      Guid:
-        Value: 822002564904267216
-    Label: IsTargetOutOfRange
-    Id: 6
-    Child:
-      Id:
-        Value: 1660086907475674263
-    AbortType: 1
-    TargetRef:
-      Key: Target
---- !u!114 &-1213880444581563044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
-  m_Name: SeekNearestEnemy_3
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|SeekNearestEnemy_3
-      Guid:
-        Value: 486196745100405963
-    IntervalInSec:
-      RawValue: 131072
-    Id: 0
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
-  m_Name: Melee
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee
-      Guid:
-        Value: 2284955645581873129
-    Label: 
-    Id: 0
-    Child:
-      Id:
-        Value: 172476577345500237
-    AbortType: 0
-    NodesAmount: 12
---- !u!114 &724326576863513145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
-  m_Name: ApproachToTarget_1
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_1
-      Guid:
-        Value: 2388248204481479766
-    Label: ApproachToTarget
-    Id: 10
-    Services: []
-    Target:
-      Key: Target
---- !u!114 &2211954661459960619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f82a76468a6c147ae863b501f69e3fc3, type: 3}
-  m_Name: CanAct_1
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|CanAct_1
-      Guid:
-        Value: 172476577345500237
-    Label: CanAct
-    Id: 4
-    Child:
-      Id:
-        Value: 4000871961613954582
-    AbortType: 0
-    CanActKey:
-      Key: CanAct
---- !u!114 &2592109847819901515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
-  m_Name: SetNearestEnemyToTarget_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
-      Guid:
-        Value: 2781149729288231892
-    Label: SetNearestEnemyToTarget
-    Id: 11
-    Services: []
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &4290032716700853495
+--- !u!114 &4156804525971108224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,7 +208,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 2
     IsDynamic: 1
---- !u!114 &4462247065025254613
+--- !u!114 &5326454024937036092
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -266,7 +237,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 0
     IsDynamic: 0
---- !u!114 &5837156859701284762
+--- !u!114 &6726890333605053518
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -291,7 +262,7 @@ MonoBehaviour:
     AbortType: 0
     TargetRef:
       Key: Target
---- !u!114 &6971892418206358365
+--- !u!114 &7260065993829063605
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -300,47 +271,76 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c93a1c7480cb4c1fad188791e90021f, type: 3}
-  m_Name: IsTargetInRange_0
+  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
+  m_Name: SetNearestEnemyToTarget_2
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetInRange_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
       Guid:
-        Value: 4041013889495071996
-    Label: IsTargetInRange
-    Id: 2
-    Child:
-      Id:
-        Value: 105676668355601455
-    AbortType: 3
-    TargetRef:
-      Key: Target
---- !u!114 &8267859336839600419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d10cad3ab145947a8a1aa40c519b35c0, type: 3}
-  m_Name: Attack_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|Attack_0
-      Guid:
-        Value: 1011046490626826327
-    Label: Attack
-    Id: 9
+        Value: 2781149729288231892
+    Label: SetNearestEnemyToTarget
+    Id: 11
     Services: []
-    Target:
+    EnemyTargetRef:
       Key: Target
     IsEnemyTargetAttacked:
       Key: TargetAttacked
-    StartTimeIndex:
-      Index: 4
-    HitIndex:
-      Index: 5
+--- !u!114 &8905527542381563522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
+  m_Name: BTSelector_3
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSelector_3
+      Guid:
+        Value: 1661211318170618849
+    Label: BTSelector
+    Id: 7
+    Children:
+    - Id:
+        Value: 822002564904267216
+    - Id:
+        Value: 2807300517252644946
+    Services:
+    - Id:
+        Value: 486196745100405963
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 3
+    IsDynamic: 0
+--- !u!114 &9214868670502795284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
+  m_Name: IsTargetOutOfRange_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_2
+      Guid:
+        Value: 822002564904267216
+    Label: IsTargetOutOfRange
+    Id: 6
+    Child:
+      Id:
+        Value: 1660086907475674263
+    AbortType: 1
+    TargetRef:
+      Key: Target

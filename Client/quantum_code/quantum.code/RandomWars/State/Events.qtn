@@ -47,7 +47,7 @@ event OnSuddenDeathStarted {
 signal OnSpWave(Int32 wave, Int32 spWave);
 signal OnWave(Int32 wave);
 
-enum ActionStateType { Idle, Walk, Attack, Skill, Freeze }
+enum ActionStateType { Idle, Walk, Attack, Skill }
 
 event ActionChangedWithSpeed {
     entity_ref Entity;
@@ -64,6 +64,11 @@ event ActorHitted {
     entity_ref Attacker;
     entity_ref Victim;
     HitColor HitColor;
+}
+
+event AnimationTrigger {
+    entity_ref Actor;
+    QString<64> Trigger;
 }
 
 event PlayCasterEffect {

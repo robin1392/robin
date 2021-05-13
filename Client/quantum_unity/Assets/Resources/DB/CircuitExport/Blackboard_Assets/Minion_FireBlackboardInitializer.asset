@@ -16,9 +16,9 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
       Guid:
-        Value: 3293891577608515523
+        Value: 1409063875095374133
     ReportMissingEntries: 1
     AIBlackboard:
       Id:
-        Value: 2975742822843853561
+        Value: 1987742878303674108
     InitialValues: []

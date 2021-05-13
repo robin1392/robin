@@ -227,6 +227,7 @@ public class UI_MatchPopup : UI_Popup
 
     private IEnumerator AIMode(PLAY_TYPE playType)
     {
+        PhotonNetwork.Instance.Online = false;
         yield return new WaitForSeconds(1f);
 
         if (playType == PLAY_TYPE.BATTLE)

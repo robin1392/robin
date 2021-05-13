@@ -25,6 +25,11 @@ component Movable{
     FP MoveSpeed;
 }
 
+component Skill{
+    FP CoolTime;
+    FP AvailableTime;
+}
+
 component Hittable {
 }
 

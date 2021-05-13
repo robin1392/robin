@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7342220194569602568
+--- !u!114 &-660881092393992478
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -16,7 +16,7 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall|MoveStraight_0
       Guid:
-        Value: 3547178324254984714
+        Value: 114092261492750125
     Label: MoveStraight
     Id: 1
     Services: []
@@ -36,11 +36,11 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall
       Guid:
-        Value: 2066517629945788903
+        Value: 4173407930248057967
     Label: 
     Id: 0
     Child:
       Id:
-        Value: 3547178324254984714
+        Value: 114092261492750125
     AbortType: 0
     NodesAmount: 2

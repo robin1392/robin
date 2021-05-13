@@ -58,8 +58,10 @@ namespace _Scripts.Views
             QuantumEvent.Subscribe<EventPlayCasterEffect>(this, OnPlayCasterEffect);
             QuantumEvent.Subscribe<EventBuffStateChanged>(this, OnBuffStateChanged);
             QuantumEvent.Subscribe<EventPlaySound>(this, OnPlaySound);
+            QuantumEvent.Subscribe<EventAnimationTrigger>(this, OnAnimationTrigger);
         }
 
+      
         void Init(QuantumGame game)
         {
             var f = game.Frames.Verified;
@@ -144,6 +146,17 @@ namespace _Scripts.Views
             }
         }
         
+        private void OnAnimationTrigger(EventAnimationTrigger callback)
+        {
+            if (EntityView.EntityRef.Equals(callback.Actor))
+            {
+                if (ActorModel != null)
+                {
+                    ActorModel.Animator.SetTrigger(callback.Trigger);
+                }
+            }
+        }
+
         public void PlayRendererHitEffect()
         {
             var amount = 0.0f;
@@ -159,11 +172,11 @@ namespace _Scripts.Views
             if (EntityView.EntityRef.Equals(callback.Entity))
             {
                 var buffState = (BuffType) callback.BuffState;
-                // EnableBuffEffect((BuffType)callback.BuffState, BuffType.Shield, "Shield", EffectLocation.Bottom);
+                EnableBuffEffect((BuffType)callback.BuffState, BuffType.Shield, AssetNames.EffectHalfDamage, EffectLocation.Bottom);
                 // EnableBuffEffect(buffType, BuffType.Stun, "Effect_Sturn", EffectLocation.Top);
                 EnableFreezeEffect((buffState & BuffType.Freeze) != 0);
                 EnableBuffEffect(buffState, BuffType.Freeze, AssetNames.EffectIceState, EffectLocation.Bottom);
-                // EnableBuffEffect(buffType, BuffType.Taunted, "Effect_Taunted", EffectLocation.Top);
+                EnableBuffEffect(buffState, BuffType.Taunted, AssetNames.EffectTaunted, EffectLocation.Top);
             }
         }
         

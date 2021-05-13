@@ -40,8 +40,12 @@ namespace Quantum.Editor {
       public Quantum.CanAct[] CanAct = {};
       public Quantum.EffectProbability[] EffectProbability = {};
       public Quantum.HasTarget[] HasTarget = {};
+      public Quantum.IsSkillCool[] IsSkillCool = {};
+      public Quantum.IsTargetInActorRange[] IsTargetInActorRange = {};
       public Quantum.IsTargetInRange[] IsTargetInRange = {};
       public Quantum.IsTargetOutOfRange[] IsTargetOutOfRange = {};
+      public Quantum.TauntSkill[] TauntSkill = {};
+      public Quantum.AnimationTrigger[] AnimationTrigger = {};
       public Quantum.ApproachToTarget[] ApproachToTarget = {};
       public Quantum.Attack[] Attack = {};
       public Quantum.CreateFieldDice[] CreateFieldDice = {};
@@ -50,9 +54,11 @@ namespace Quantum.Editor {
       public Quantum.FindEnemy[] FindEnemy = {};
       public Quantum.FireAttack[] FireAttack = {};
       public Quantum.MoveMine[] MoveMine = {};
+      public Quantum.PlaySound[] PlaySound = {};
       public Quantum.RangeAttack[] RangeAttack = {};
       public Quantum.SetNearestEnemyToTarget[] SetNearestEnemyToTarget = {};
       public Quantum.MoveStraight[] MoveStraight = {};
+      public Quantum.Taunt[] Taunt = {};
       public Quantum.WaitForTrigger[] WaitForTrigger = {};
       public Quantum.SeekNearestEnemy[] SeekNearestEnemy = {};
       public Quantum.BTSelector[] BTSelector = {};

@@ -16,9 +16,9 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboardInitializer
       Guid:
-        Value: 894473088741763874
+        Value: 2868811892753393114
     ReportMissingEntries: 1
     AIBlackboard:
       Id:
-        Value: 1745736789203392993
+        Value: 769639252105255793
     InitialValues: []

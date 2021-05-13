@@ -1,8 +1,14 @@
 enum HitColor { None, Fire }
-enum DebuffType { None, Freeze }
-
+enum DebuffType { None, Frozen, Taunted }
 
 component Frozen {
+    FP EndTime;
+}
+component Taunted {
+    FP EndTime;
+}
+
+component Shield {
     FP EndTime;
 }
 

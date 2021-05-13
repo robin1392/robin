@@ -56,21 +56,21 @@ public static class ResourceManager
 
 public static class PreloadedResourceManager
 {
-    private static Dictionary<string, GameObject> _pool = new Dictionary<string, GameObject>();
+    private static Dictionary<string, GameObject> _poolPreload = new Dictionary<string, GameObject>();
 
     public static async UniTask Preload(IEnumerable<string> assetNames)
     {
-        _pool.Clear();
+        _poolPreload.Clear();
         var root = new GameObject("Preloaded");
         foreach (var assetName in assetNames)
         {
-            if (_pool.ContainsKey(assetName))
+            if (_poolPreload.ContainsKey(assetName))
             {
                 continue;
             }
             
             var go = await ResourceManager.LoadGameObjectAsync(assetName, Vector3.zero, quaternion.identity);
-            _pool.Add(assetName, go);
+            _poolPreload.Add(assetName, go);
             var actorModel = go.GetComponent<ActorModel>();
             if (actorModel != null)
             {
@@ -106,7 +106,7 @@ public static class PreloadedResourceManager
             return go;
         }
 
-        if (_pool.TryGetValue(assetName, out var goOrigin) == false)
+        if (_poolPreload.TryGetValue(assetName, out var goOrigin) == false)
         {
             return null;
         }

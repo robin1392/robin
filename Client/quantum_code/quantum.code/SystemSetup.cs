@@ -57,6 +57,7 @@ namespace Quantum
                 new ActorSystem(),
                 new ProjectileSystem(),
                 new UpdateFronzenSystem(),
+                new UpdateTauntedSystem(),
                 new UpdateBuffStateSystem(),
                 new MineSystem(),
                 new DamagePerSecSystem(),
@@ -75,6 +76,7 @@ namespace Quantum
                 new BotSDKSystem(),
                 new PlayerInitSystem(),
                 new StoneBallTriggerSystem(),
+                new UpdateShieldSystem(),
             };
             
             var gameStateSignal = new List<SystemBase>()

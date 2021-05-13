@@ -16,9 +16,9 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
       Guid:
-        Value: 4404364094948517683
+        Value: 1566900374658816007
     ReportMissingEntries: 1
     AIBlackboard:
       Id:
-        Value: 166150590514848313
+        Value: 3132346434100704555
     InitialValues: []

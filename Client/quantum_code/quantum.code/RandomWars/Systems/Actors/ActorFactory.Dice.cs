@@ -95,23 +95,7 @@ namespace Quantum.Actors
                     scale = FPMath.Lerp(FP._1, FP._1_50, (diceScale - FP._1) / FP._5);
                 }
                 collider2D.Shape.Circle.Radius = scale * diceInfo.colliderRadius;
-                
-                //TODO: 프로토타입을 분리한다.
-                if ((DiceType) diceInfo.castType == DiceType.Minion)
-                {
-                    f.Add<Hittable>(entity);
-                    f.Add<Health>(entity);
-                    var health = f.Unsafe.GetPointer<Health>(entity);
-                    health->MaxValue = stat.maxHealth;
-                    health->Value = stat.maxHealth;
-                    
-                    f.Add<Buff>(entity);
-                    var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
-                    body->FreezeRotation = false;
-                    var steering = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
-                    steering->MaxSpeed = movable->MoveSpeed;
-                }
-                
+
                 if ((DiceType) diceInfo.castType == DiceType.Installation)
                 {
                     if (diceInfo.id != 1013)
@@ -142,10 +126,30 @@ namespace Quantum.Actors
                 {
                     attackable->Range = diceInfo.range * MathUtil.Pow(FP._1_50, diceScale - 1);
                 }
-                
+
                 attackable->EffectRangeValue = diceInfo.effectRangeValue;
                 attackable->AttackHitEvent = diceInfo.attackHitEvent;
                 attackable->AttackAniLength = diceInfo.attackAniLength;
+                
+                //TODO: 프로토타입을 분리한다.
+                if ((DiceType) diceInfo.castType == DiceType.Minion)
+                {
+                    f.Add<Skill>(entity);
+                    var skill = f.Unsafe.GetPointer<Skill>(entity);
+                    skill->CoolTime = attackable->EffectDurationTime;
+                    
+                    f.Add<Hittable>(entity);
+                    f.Add<Health>(entity);
+                    var health = f.Unsafe.GetPointer<Health>(entity);
+                    health->MaxValue = stat.maxHealth;
+                    health->Value = stat.maxHealth;
+                    
+                    f.Add<Buff>(entity);
+                    var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
+                    body->FreezeRotation = false;
+                    var steering = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
+                    steering->MaxSpeed = movable->MoveSpeed;
+                }
 
                 var transform = f.Unsafe.GetPointer<Transform2D>(entity);
                 transform->Position = spawnPosition;

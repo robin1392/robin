@@ -41,11 +41,6 @@ MonoBehaviour:
         Id:
           Value: 5
       ResourcePath: DB/Configs/SimulationConfig
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|FireAttack_0
-      AssetRef:
-        Id:
-          Value: 50499323534730128
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSelector_0
       AssetRef:
         Id:
@@ -56,36 +51,31 @@ MonoBehaviour:
         Id:
           Value: 113376184449356048
       ResourcePath: DB/EntityPrototypes/TowerActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|SeekNearestEnemy_4
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|SeekNearestEnemy_7
       AssetRef:
         Id:
           Value: 113756611079391139
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall|MoveStraight_0
       AssetRef:
         Id:
-          Value: 166150590514848313
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
+          Value: 114092261492750125
+      ResourcePath: DB/CircuitExport/BT_Assets/Magic_StoneBall
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|CanAct_1
       AssetRef:
         Id:
           Value: 172476577345500237
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetOutOfRange_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|IsTargetOutOfRange_4
       AssetRef:
         Id:
           Value: 186149603261161770
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|AnimationTrigger_3
       AssetRef:
         Id:
-          Value: 200686742324295771
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboard
-      AssetRef:
-        Id:
-          Value: 201264465019534553
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboard
+          Value: 203631727925407910
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|SeekNearestEnemy_4
       AssetRef:
         Id:
@@ -96,31 +86,31 @@ MonoBehaviour:
         Id:
           Value: 226039107891284717
       ResourcePath: DB/EntityPrototypes/Projectile
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSelector_3
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|IsTargetInRange_2
+      AssetRef:
+        Id:
+          Value: 236680130590506709
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|BTSelector_4
       AssetRef:
         Id:
           Value: 301900458844393858
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|SeekNearestEnemy_4
       AssetRef:
         Id:
-          Value: 322710427199495734
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetInRange_0
+          Value: 347359295052000255
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|Taunt_6
       AssetRef:
         Id:
-          Value: 343914648661603259
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+          Value: 402962454365245509
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSequence_2
       AssetRef:
         Id:
           Value: 426341838882919159
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|CanAct_1
-      AssetRef:
-        Id:
-          Value: 427207503626495621
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SeekNearestEnemy_3
       AssetRef:
         Id:
@@ -131,41 +121,56 @@ MonoBehaviour:
         Id:
           Value: 575901233076333046
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
       AssetRef:
         Id:
-          Value: 645885985248832243
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|CreateFieldDice_1
+          Value: 636760191951267029
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|IsSkillCool_1
       AssetRef:
         Id:
-          Value: 721558538462694544
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
+          Value: 645125206774404088
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetInActorRange_0
+      AssetRef:
+        Id:
+          Value: 646075706905895118
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|IsTargetInActorRange_0
+      AssetRef:
+        Id:
+          Value: 654433604544065307
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice
+      AssetRef:
+        Id:
+          Value: 760111429443941598
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboard
+      AssetRef:
+        Id:
+          Value: 769639252105255793
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboard
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_2
       AssetRef:
         Id:
           Value: 822002564904267216
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSequence_1
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|BTSequence_2
       AssetRef:
         Id:
           Value: 830595558268387437
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind
-      AssetRef:
-        Id:
-          Value: 838963823278018937
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboardInitializer
-      AssetRef:
-        Id:
-          Value: 894473088741763874
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboardInitializer
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|SetNearestEnemyToTarget_3
       AssetRef:
         Id:
           Value: 951847275674917040
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSequence_2
+      AssetRef:
+        Id:
+          Value: 957412475550509966
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetOutOfRange_2
       AssetRef:
         Id:
@@ -176,7 +181,12 @@ MonoBehaviour:
         Id:
           Value: 1011046490626826327
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|IsTargetInActorRange_0
+      AssetRef:
+        Id:
+          Value: 1191149934942414102
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_1
       AssetRef:
         Id:
           Value: 1206009083603143159
@@ -186,30 +196,30 @@ MonoBehaviour:
         Id:
           Value: 1238589939366458485
       ResourcePath: DB/EntityPrototypes/TowerActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice
-      AssetRef:
-        Id:
-          Value: 1299308721302569786
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|EffectProbability_4
-      AssetRef:
-        Id:
-          Value: 1306239846853971212
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/BattleMap_Navmesh_data
       AssetRef:
         Id:
           Value: 1312001000283887444
       ResourcePath: DB/BattleMap_Navmesh_data
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 1409063875095374133
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|SetNearestEnemyToTarget_2
       AssetRef:
         Id:
           Value: 1412076072408785232
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|ApproachToTarget_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|ApproachToTarget_2
       AssetRef:
         Id:
           Value: 1457647519061093016
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetOutOfRange_2
+      AssetRef:
+        Id:
+          Value: 1471349924129381268
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/EntityPrototypes/Projectile|EntityPrototype
       AssetRef:
@@ -221,11 +231,41 @@ MonoBehaviour:
         Id:
           Value: 1503973497553889358
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee
       AssetRef:
         Id:
-          Value: 1608803669783788075
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
+          Value: 1543656091219759397
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetInActorRange_0
+      AssetRef:
+        Id:
+          Value: 1561779972367253375
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 1566900374658816007
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|WaitLeaf_0
+      AssetRef:
+        Id:
+          Value: 1606085007531471595
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_ShieldBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 1615715320754955282
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_ShieldBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSelector_3
+      AssetRef:
+        Id:
+          Value: 1646150938611257070
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 1652006307270390562
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboardInitializer
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_2
       AssetRef:
         Id:
@@ -241,46 +281,56 @@ MonoBehaviour:
         Id:
           Value: 1661211318170618849
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|CreateFieldDice_1
       AssetRef:
         Id:
-          Value: 1745736789203392993
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboard
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|CanAct_1
+          Value: 1821147051197822495
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
       AssetRef:
         Id:
-          Value: 1867242425498243763
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+          Value: 1839500993984898281
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_3
       AssetRef:
         Id:
           Value: 1879367417165151363
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|EffectProbability_4
+      AssetRef:
+        Id:
+          Value: 1888356176552799212
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|IsTargetOutOfRange_2
       AssetRef:
         Id:
           Value: 1894823636204581667
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|HasTarget_3
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|HasTarget_5
       AssetRef:
         Id:
           Value: 1905314721143351809
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/EntityPrototypes/DiceInstallationActor|EntityView
       AssetRef:
         Id:
           Value: 1967860521826230807
       ResourcePath: DB/EntityPrototypes/DiceInstallationActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|CanAct_1
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboard
+      AssetRef:
+        Id:
+          Value: 1987742878303674108
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|CanAct_3
       AssetRef:
         Id:
           Value: 2001141529029422080
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboardInitializer
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_ShieldBlackboard
       AssetRef:
         Id:
-          Value: 2020787523344457074
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboardInitializer
+          Value: 2001870282776523780
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_ShieldBlackboard
     - Path: Resources/DB/EntityPrototypes/DiceMinionActor|EntityPrototype
       AssetRef:
         Id:
@@ -291,42 +341,57 @@ MonoBehaviour:
         Id:
           Value: 2055637970259901645
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall
-      AssetRef:
-        Id:
-          Value: 2066517629945788903
-      ResourcePath: DB/CircuitExport/BT_Assets/Magic_StoneBall
     - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitForTrigger_3
       AssetRef:
         Id:
           Value: 2070988460870852486
       ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|Attack_1
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|Attack_1
       AssetRef:
         Id:
           Value: 2084590921785036322
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|CanAct_1
       AssetRef:
         Id:
-          Value: 2284955645581873129
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+          Value: 2106451978601681103
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSequence_1
+      AssetRef:
+        Id:
+          Value: 2112528087177487052
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine
+      AssetRef:
+        Id:
+          Value: 2151984949811252997
+      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|CanAct_1
+      AssetRef:
+        Id:
+          Value: 2245392853072829668
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|BTSequence_0
       AssetRef:
         Id:
           Value: 2296163346662546189
       ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSequence_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|ApproachToTarget_2
+      AssetRef:
+        Id:
+          Value: 2297899440019674500
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|BTSequence_3
       AssetRef:
         Id:
           Value: 2327373505096431118
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/EntityPrototypes/RWPlayer|EntityView
       AssetRef:
         Id:
           Value: 2341071469025545075
       ResourcePath: DB/EntityPrototypes/RWPlayer
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MineBomb_1
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MineBomb_0
       AssetRef:
         Id:
           Value: 2352424855132428427
@@ -351,21 +416,26 @@ MonoBehaviour:
         Id:
           Value: 2454367831045438101
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_0
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 2497005626554787024
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|MoveMine_2
       AssetRef:
         Id:
           Value: 2528243776276982912
       ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind
+      AssetRef:
+        Id:
+          Value: 2567751775388955138
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
     - Path: Resources/DB/BattleMap_Navmesh
       AssetRef:
         Id:
           Value: 2600365732021726587
       ResourcePath: DB/BattleMap_Navmesh
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSelector_0
-      AssetRef:
-        Id:
-          Value: 2616973255297814896
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/EntityPrototypes/DiceMagicActor|EntityPrototype
       AssetRef:
         Id:
@@ -376,57 +446,67 @@ MonoBehaviour:
         Id:
           Value: 2690460861351613777
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|HasTarget_3
+      AssetRef:
+        Id:
+          Value: 2750729009283403891
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSelector_0
+      AssetRef:
+        Id:
+          Value: 2757921175002849791
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
       AssetRef:
         Id:
           Value: 2781149729288231892
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|MergeFieldDiceRandom_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetInActorRange_0
       AssetRef:
         Id:
-          Value: 2845381998208219777
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_1
+          Value: 2807300517252644946
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 2868811892753393114
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_WindBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboard
+      AssetRef:
+        Id:
+          Value: 2891451593857935933
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|Attack_1
+      AssetRef:
+        Id:
+          Value: 2902125901200131512
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|RangeAttack_2
       AssetRef:
         Id:
           Value: 2938550178492902555
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboard
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
       AssetRef:
         Id:
-          Value: 2975742822843853561
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboard
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetInRange_0
-      AssetRef:
-        Id:
-          Value: 3110016430136344404
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+          Value: 3132346434100704555
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|HasTarget_3
       AssetRef:
         Id:
           Value: 3150720842673815311
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSelector_0
       AssetRef:
         Id:
-          Value: 3232658773819375901
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboard
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
-      AssetRef:
-        Id:
-          Value: 3293891577608515523
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_1
-      AssetRef:
-        Id:
-          Value: 3348043989919191723
+          Value: 3256338858533823924
       ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/EntityPrototypes/DiceInstallationActor|EntityPrototype
       AssetRef:
         Id:
           Value: 3367442980822169298
       ResourcePath: DB/EntityPrototypes/DiceInstallationActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitLeaf_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine|WaitLeaf_1
       AssetRef:
         Id:
           Value: 3375310294725425253
@@ -436,26 +516,21 @@ MonoBehaviour:
         Id:
           Value: 3377154048910103621
       ResourcePath: DB/BattleMap
-    - Path: Resources/DB/CircuitExport/BT_Assets/Installation_Mine
-      AssetRef:
-        Id:
-          Value: 3385944508653499760
-      ResourcePath: DB/CircuitExport/BT_Assets/Installation_Mine
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|BTSelector_0
       AssetRef:
         Id:
           Value: 3444822693064860666
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
-    - Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall|MoveStraight_0
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboard
       AssetRef:
         Id:
-          Value: 3547178324254984714
-      ResourcePath: DB/CircuitExport/BT_Assets/Magic_StoneBall
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|IsTargetInRange_0
+          Value: 3571896515444896730
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield
       AssetRef:
         Id:
-          Value: 3642749616621744315
-      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Ice
+          Value: 3668853487962573136
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSequence_1
       AssetRef:
         Id:
@@ -471,11 +546,31 @@ MonoBehaviour:
         Id:
           Value: 3778242397429002653
       ResourcePath: DB/EntityPrototypes/DiceMagicActor
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_1
+      AssetRef:
+        Id:
+          Value: 3795293115535838493
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|PlaySound_4
+      AssetRef:
+        Id:
+          Value: 3939517210785006039
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|BTSequence_1
+      AssetRef:
+        Id:
+          Value: 3985731069558691913
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_1
       AssetRef:
         Id:
           Value: 4000871961613954582
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 4003492237325111467
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Installation_MineBlackboardInitializer
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|BTSelector_3
       AssetRef:
         Id:
@@ -486,50 +581,65 @@ MonoBehaviour:
         Id:
           Value: 4022184980103098919
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetInRange_0
-      AssetRef:
-        Id:
-          Value: 4041013889495071996
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/EntityPrototypes/DiceMinionActor|EntityView
       AssetRef:
         Id:
           Value: 4050719712139043392
       ResourcePath: DB/EntityPrototypes/DiceMinionActor
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboard
+      AssetRef:
+        Id:
+          Value: 4092123739929950232
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|MergeFieldDiceRandom_2
+      AssetRef:
+        Id:
+          Value: 4172828294282273309
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
+    - Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall
+      AssetRef:
+        Id:
+          Value: 4173407930248057967
+      ResourcePath: DB/CircuitExport/BT_Assets/Magic_StoneBall
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|SetNearestEnemyToTarget_5
+      AssetRef:
+        Id:
+          Value: 4328589522679660744
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
     - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
       AssetRef:
         Id:
-          Value: 4112369645216673158
+          Value: 4333601333403803484
       ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|FireAttack_0
       AssetRef:
         Id:
-          Value: 4116708495083284382
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Minion_IceBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire
-      AssetRef:
-        Id:
-          Value: 4208829287707262088
+          Value: 4347783281627679972
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|SetNearestEnemyToTarget_3
       AssetRef:
         Id:
-          Value: 4328589522679660744
+          Value: 4373578459568033059
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|CanAct_1
       AssetRef:
         Id:
-          Value: 4333070302020022688
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/Magic_StoneBallBlackboard
-    - Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
+          Value: 4412561427196570041
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Wind
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
       AssetRef:
         Id:
-          Value: 4404364094948517683
-      ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSelector_0
+          Value: 4413262433045660745
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Shield|BTSelector_0
       AssetRef:
         Id:
           Value: 4451639304293521007
+      ResourcePath: DB/CircuitExport/BT_Assets/Minion_Shield
+    - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire
+      AssetRef:
+        Id:
+          Value: 4458398274171062685
       ResourcePath: DB/CircuitExport/BT_Assets/Minion_Fire
     - Path: Resources/DB/CircuitExport/BT_Assets/Minion_Ice|HasTarget_3
       AssetRef:

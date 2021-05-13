@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6286285625469083323
+--- !u!114 &-7545966441953529063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,180 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
-  m_Name: BTSelector_0
+  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
+  m_Name: BTSequence_1
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSelector_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSequence_1
       Guid:
-        Value: 3701004514816895721
-    Label: BTSelector
-    Id: 1
-    Children:
-    - Id:
-        Value: 4602530310962493434
-    Services: []
-    TopmostDecorator:
-      Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 0
-    IsDynamic: 0
---- !u!114 &-4918610754687485638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
-  m_Name: SetNearestEnemyToTarget_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|SetNearestEnemyToTarget_2
-      Guid:
-        Value: 1412076072408785232
-    Label: SetNearestEnemyToTarget
-    Id: 11
-    Services: []
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &-3367689863524254853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
-  m_Name: ApproachToTarget_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|ApproachToTarget_0
-      Guid:
-        Value: 2690460861351613777
-    Label: ApproachToTarget
-    Id: 9
-    Services: []
-    Target:
-      Key: Target
---- !u!114 &-2174883343209608038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f82a76468a6c147ae863b501f69e3fc3, type: 3}
-  m_Name: CanAct_1
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|CanAct_1
-      Guid:
-        Value: 1867242425498243763
-    Label: CanAct
-    Id: 4
-    Child:
-      Id:
         Value: 3699855615911936682
-    AbortType: 0
-    CanActKey:
-      Key: CanAct
---- !u!114 &-2109049488958954122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
-  m_Name: IsTargetOutOfRange_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetOutOfRange_2
-      Guid:
-        Value: 1010022284177321762
-    Label: IsTargetOutOfRange
-    Id: 6
-    Child:
-      Id:
-        Value: 426341838882919159
-    AbortType: 1
-    TargetRef:
-      Key: Target
---- !u!114 &-430331695976178786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
-  m_Name: BTSelector_3
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSelector_3
-      Guid:
-        Value: 1503973497553889358
-    Label: BTSelector
-    Id: 7
+    Label: BTSequence
+    Id: 3
     Children:
     - Id:
-        Value: 1010022284177321762
+        Value: 1412076072408785232
     - Id:
-        Value: 3110016430136344404
-    Services:
-    - Id:
-        Value: 4022184980103098919
+        Value: 3150720842673815311
+    Services: []
     TopmostDecorator:
       Id:
         Value: 0
     CurrentChildIndex:
-      Index: 3
+      Index: 1
     IsDynamic: 0
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
-  m_Name: Minion_Wind
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind
-      Guid:
-        Value: 838963823278018937
-    Label: 
-    Id: 0
-    Child:
-      Id:
-        Value: 1867242425498243763
-    AbortType: 0
-    NodesAmount: 12
---- !u!114 &1101916517841547871
+--- !u!114 &-6611260374235997686
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,7 +56,7 @@ MonoBehaviour:
     AbortType: 0
     TargetRef:
       Key: Target
---- !u!114 &2289253293901483063
+--- !u!114 &-6592753787509583351
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -216,23 +65,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c93a1c7480cb4c1fad188791e90021f, type: 3}
-  m_Name: IsTargetInRange_0
+  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
+  m_Name: SeekNearestEnemy_3
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetInRange_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|SeekNearestEnemy_3
       Guid:
-        Value: 3110016430136344404
-    Label: IsTargetInRange
-    Id: 2
-    Child:
-      Id:
-        Value: 3701004514816895721
-    AbortType: 3
-    TargetRef:
+        Value: 4022184980103098919
+    IntervalInSec:
+      RawValue: 131072
+    Id: 0
+    EnemyTargetRef:
       Key: Target
---- !u!114 &3130817296786897091
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+--- !u!114 &-5505498348111994887
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,7 +113,192 @@ MonoBehaviour:
     ProjectTileSpeed:
       RawValue: 393216
     Debuff: 0
---- !u!114 &7581427307372849421
+--- !u!114 &-4317996642089838353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82a76468a6c147ae863b501f69e3fc3, type: 3}
+  m_Name: CanAct_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|CanAct_1
+      Guid:
+        Value: 4412561427196570041
+    Label: CanAct
+    Id: 4
+    Child:
+      Id:
+        Value: 3699855615911936682
+    AbortType: 0
+    CanActKey:
+      Key: CanAct
+--- !u!114 &-3967120255433839690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
+  m_Name: BTSelector_3
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSelector_3
+      Guid:
+        Value: 1503973497553889358
+    Label: BTSelector
+    Id: 7
+    Children:
+    - Id:
+        Value: 1010022284177321762
+    - Id:
+        Value: 646075706905895118
+    Services:
+    - Id:
+        Value: 4022184980103098919
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 3
+    IsDynamic: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
+  m_Name: Minion_Wind
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind
+      Guid:
+        Value: 2567751775388955138
+    Label: 
+    Id: 0
+    Child:
+      Id:
+        Value: 4412561427196570041
+    AbortType: 0
+    NodesAmount: 12
+--- !u!114 &176211718605883309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
+  m_Name: BTSelector_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSelector_0
+      Guid:
+        Value: 3701004514816895721
+    Label: BTSelector
+    Id: 1
+    Children:
+    - Id:
+        Value: 4602530310962493434
+    Services: []
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 0
+    IsDynamic: 0
+--- !u!114 &2733409614456761674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
+  m_Name: SetNearestEnemyToTarget_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|SetNearestEnemyToTarget_2
+      Guid:
+        Value: 1412076072408785232
+    Label: SetNearestEnemyToTarget
+    Id: 11
+    Services: []
+    EnemyTargetRef:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+--- !u!114 &3220482850568651905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae80e48ce05244768f90884ed39e046, type: 3}
+  m_Name: IsTargetInActorRange_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetInActorRange_0
+      Guid:
+        Value: 646075706905895118
+    Label: IsTargetInActorRange
+    Id: 2
+    Child:
+      Id:
+        Value: 3701004514816895721
+    AbortType: 0
+    TargetRef:
+      Key: Target
+--- !u!114 &5106340333306874646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
+  m_Name: IsTargetOutOfRange_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|IsTargetOutOfRange_2
+      Guid:
+        Value: 1010022284177321762
+    Label: IsTargetOutOfRange
+    Id: 6
+    Child:
+      Id:
+        Value: 426341838882919159
+    AbortType: 1
+    TargetRef:
+      Key: Target
+--- !u!114 &5442045342745505235
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -294,7 +327,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 2
     IsDynamic: 1
---- !u!114 &8311396063866206133
+--- !u!114 &5882508421711311385
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,49 +336,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
-  m_Name: SeekNearestEnemy_3
+  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
+  m_Name: ApproachToTarget_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|SeekNearestEnemy_3
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|ApproachToTarget_0
       Guid:
-        Value: 4022184980103098919
-    IntervalInSec:
-      RawValue: 131072
-    Id: 0
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &9214709005463603501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_1
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Wind|BTSequence_1
-      Guid:
-        Value: 3699855615911936682
-    Label: BTSequence
-    Id: 3
-    Children:
-    - Id:
-        Value: 1412076072408785232
-    - Id:
-        Value: 3150720842673815311
+        Value: 2690460861351613777
+    Label: ApproachToTarget
+    Id: 9
     Services: []
-    TopmostDecorator:
-      Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 1
-    IsDynamic: 0
+    Target:
+      Key: Target

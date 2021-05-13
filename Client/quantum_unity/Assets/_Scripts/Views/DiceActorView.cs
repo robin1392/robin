@@ -106,16 +106,18 @@ namespace _Scripts.Views
 
             var assetName = AssetNames.EffectSpawnLine;
             var lrGo = PreloadedResourceManager.LoadGameObject(assetName, Vector3.zero, Quaternion.identity);
-            var poolable = lrGo.GetComponent<PoolableObject>();
-            poolable.AssetName = assetName;
-            poolable.ReservePushBack();
-        
-            var lr = lrGo.GetComponent<LineRenderer>();
-            if (lr != null)
+            if (lrGo != null)
             {
-                lr.SetPositions(new Vector3[2] {dicePos, actorModel.HitPosition.position});
-                lr.startColor = FileHelper.GetColor(diceInfo.color);
-                lr.endColor = FileHelper.GetColor(diceInfo.color);
+                var poolable = lrGo.GetComponent<PoolableObject>();
+                poolable.AssetName = assetName;
+                poolable.ReservePushBack();   
+                var lr = lrGo.GetComponent<LineRenderer>();
+                if (lr != null)
+                {
+                    lr.SetPositions(new Vector3[2] {dicePos, actorModel.HitPosition.position});
+                    lr.startColor = FileHelper.GetColor(diceInfo.color);
+                    lr.endColor = FileHelper.GetColor(diceInfo.color);
+                }
             }
         }
         

@@ -24,7 +24,7 @@ namespace Quantum
                     var defender = f.Unsafe.GetPointer<Health>(defenderEntity);
                     defender->Value -= filter.Spec->Power;
                     if (f.Has<NoCC>(defenderEntity) == false &&
-                        projectile->Debuff == DebuffType.Freeze)
+                        projectile->Debuff == DebuffType.Frozen)
                     {
                         if (f.Has<Frozen>(defenderEntity) == false)
                         {

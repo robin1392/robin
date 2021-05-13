@@ -7,6 +7,7 @@ namespace Quantum
     public unsafe partial class IsTargetInRange : BTDecorator
     {
         public AIBlackboardValueKey TargetRef;
+        public FP Range = 1;
         
         public override void OnEnterRunning(BTParams p)
         {
@@ -39,7 +40,7 @@ namespace Quantum
             var transform = f.Get<Transform2D>(e);
             var targetTransform = f.Get<Transform2D>(enemy);
 
-            var range = actor.Range + col2d.Shape.Circle.Radius + targetCol2d.Shape.Circle.Radius;
+            var range = Range + col2d.Shape.Circle.Radius + targetCol2d.Shape.Circle.Radius;
             if (FPVector2.DistanceSquared(transform.Position, targetTransform.Position) < range * range)
             {
                 return true;
