@@ -41,7 +41,7 @@ MonoBehaviour:
     Speed:
       RawValue: 229376
     AngularSpeed:
-      RawValue: 655360
+      RawValue: 262144
     Acceleration:
       RawValue: 1310720
     StoppingDistance:
@@ -53,10 +53,10 @@ MonoBehaviour:
     ClampAgentToNavmeshCorrection:
       RawValue: 16384
     AvoidanceType: 2
-    AvoidanceQuality: 1
+    AvoidanceQuality: 4
     Priority: 50
     AvoidanceRadius:
-      RawValue: 13107
+      RawValue: 19005
     AvoidanceLayer: 0
     AvoidanceMask:
       BitMask: 55
