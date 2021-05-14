@@ -95,15 +95,7 @@ public class UserInfo
         private set => _arrDeck = value;
     }
 
-    public int[] GetActiveDeck => new int[]
-    {
-        1007,
-        1008,
-        1009,
-        1011,
-        1013,
-        5001
-    };//arrDeck[activateDeckIndex];
+    public int[] GetActiveDeck => arrDeck[activateDeckIndex];
 
     /// <summary>
     /// second array

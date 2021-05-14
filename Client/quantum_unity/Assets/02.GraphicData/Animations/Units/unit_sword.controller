@@ -11,13 +11,13 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 5120373493118240290}
-    m_Position: {x: 140, y: 30, z: 0}
+    m_Position: {x: 90, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3171874226934579446}
-    m_Position: {x: 380, y: 30, z: 0}
+    m_Position: {x: 260, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1448430763069617145}
-    m_Position: {x: 260, y: -50, z: 0}
+    m_Position: {x: 180, y: -90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4328633768404116974}
     m_Position: {x: 630, y: 30, z: 0}
@@ -233,8 +233,7 @@ AnimatorState:
   m_Name: Skill
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions:
-  - {fileID: 6408606978743769111}
+  m_Transitions: []
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -282,8 +281,7 @@ AnimatorState:
   m_Name: Attack2
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions:
-  - {fileID: -8884242957868118154}
+  m_Transitions: []
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -662,8 +660,7 @@ AnimatorState:
   m_Name: Attack1
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions:
-  - {fileID: -7211344081059084830}
+  m_Transitions: []
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0

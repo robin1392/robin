@@ -299,10 +299,12 @@ namespace _Scripts.Views
             if (trigger == "Walk")
             {
                 ActorModel.Animator.SetFloat("MoveSpeed", 1.0f);
+                ActorModel.Animator.SetTrigger("Idle");
             }
             else if(trigger == "Idle")
             {
                 ActorModel.Animator.SetFloat("MoveSpeed", 0.0f);
+                ActorModel.Animator.SetTrigger("Idle");
             }
             else
             {
