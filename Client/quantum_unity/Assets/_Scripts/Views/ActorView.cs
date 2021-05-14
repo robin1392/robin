@@ -296,6 +296,7 @@ namespace _Scripts.Views
                 return;
             }
 
+            ActorModel.Animator.ResetTrigger("Idle");
             if (trigger == "Walk")
             {
                 ActorModel.Animator.SetFloat("MoveSpeed", 1.0f);
