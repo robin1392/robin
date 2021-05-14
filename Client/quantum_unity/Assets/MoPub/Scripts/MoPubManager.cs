@@ -86,7 +86,7 @@ public class MoPubManager : MonoBehaviour
 #if mopub_native_beta
 
     // Fired when a native ad is loaded
-    public static event Action<string, AbstractNativeAd.Data> OnNativeLoadEvent;
+    public static event Action<string, MoPubAbstractNativeAd.Data> OnNativeLoadEvent;
 
     // Fired when a native ad is shown
     public static event Action<string> OnNativeImpressionEvent;
@@ -114,11 +114,17 @@ public class MoPubManager : MonoBehaviour
     // Fired when the MoPub consent dialog has been dismissed.
     public static event Action OnConsentDialogDismissedEvent;
 
-    // Fired when the ad is shown, but after a fullscreen ad is dismissed.
+    // Fired generally when the ad is dismissed, specifically when the Unity Player resumes after an impression is made.
+    // This may happen at other times however, such as when the user taps the ad. In some environments, tapping an ad
+    // momentarily resumes the Unity Player before opening the browser, which triggers the impression callback before
+    // the ad is explicitly dismissed. For more predictable behavior across platforms, see OnImpressionTrackedEventBg.
+    //
     // NOTE: ImpressionData will be empty when also subscribed to OnImpressionTrackedEventBg.
     public static event Action<string, MoPub.ImpressionData> OnImpressionTrackedEvent;
 
-    // Fired immediately when the ad is shown, potentially in a background thread.
+    // Fired immediately when the ad is shown, potentially in a background thread. Unlike OnImpressionTrackedEvent
+    // which is triggered on the Unity layer, OnImpressionTrackedEventBg is fired natively from Android and iOS.
+    //
     // NOTE: Subscribing to this event will cause ImpressionData to be empty on OnImpressionTrackedEvent.
     public static event Action<string, MoPub.ImpressionData> OnImpressionTrackedEventBg;
 
@@ -629,7 +635,7 @@ public class MoPubManager : MonoBehaviour
     {
         var args = MoPubUtils.DecodeArgs(argsJson, min: 2);
         var adUnitId = args[0];
-        var data = AbstractNativeAd.Data.FromJson(args[1]);
+        var data = MoPubAbstractNativeAd.Data.FromJson(args[1]);
 
         MoPubLog.Log("EmitNativeLoadEvent", MoPubLog.AdLogEvent.LoadSuccess);
         EmitNativeLoadEvent(adUnitId, data);
@@ -648,7 +654,7 @@ public class MoPubManager : MonoBehaviour
     }
 
 
-    public void EmitNativeLoadEvent(string adUnitId, AbstractNativeAd.Data nativeAdData)
+    public void EmitNativeLoadEvent(string adUnitId, MoPubAbstractNativeAd.Data nativeAdData)
     {
         var evt = OnNativeLoadEvent;
         if (evt != null) evt(adUnitId, nativeAdData);

@@ -27,6 +27,15 @@ static char* moPubcStringCopy(NSString* input)
     return string ? strdup(string) : NULL;
 }
 
+// Ensures cross-platform compatiblity (specifically, in simulators) via explicit casting
+static bool moPubExplicitBool(BOOL objcBool)
+{
+#if TARGET_OS_SIMULATOR
+    NSLog(@"Preventing compiler optimizations on simulators from ignoring explicit casting by printing value: %d", objcBool);
+#endif
+    return (objcBool ? true : false);
+}
+
 static NSArray<Class<MPAdapterConfiguration>>* moPubExtractNetworkClasses(const char* networkClassesString) {
     NSString* networksString = GetStringParam(networkClassesString);
     if (networksString.length == 0)
@@ -147,7 +156,7 @@ void _moPubInitializeSdk(const char* adUnitIdString,
 
 bool _moPubIsSdkInitialized()
 {
-    return MoPub.sharedInstance.isSdkInitialized;
+    return moPubExplicitBool(MoPub.sharedInstance.isSdkInitialized);
 }
 
 const char* _moPubGetSDKVersion()
@@ -162,7 +171,7 @@ void _moPubSetAllowLegitimateInterest(bool allowLegitimateInterest)
 
 bool _moPubAllowLegitimateInterest()
 {
-    return MoPub.sharedInstance.allowLegitimateInterest;
+    return moPubExplicitBool(MoPub.sharedInstance.allowLegitimateInterest);
 }
 
 void _moPubSetLogLevel(MPBLogLevel logLevel)
@@ -182,7 +191,7 @@ void _moPubEnableLocationSupport(bool shouldUseLocation)
 
 void _moPubSetEngineInformation(const char* name, const char* version)
 {
-    [[MoPub sharedInstance] setEngineInformation:[MPEngineInfo named:GetStringParam(name) version:GetStringParam(version)]];
+    [[MoPub sharedInstance] setEngineName:GetStringParam(name) version:GetStringParam(version)];
 }
 
 void _moPubReportApplicationOpen(const char* iTunesAppId)
@@ -312,7 +321,7 @@ void _moPubRequestRewardedVideo(const char* adUnitIdStr, const char* json, const
 
 bool _mopubHasRewardedVideo(const char* adUnitId)
 {
-    return [MPRewardedVideo hasAdAvailableForAdUnitID:GetStringParam(adUnitId)];
+    return moPubExplicitBool([MPRewardedVideo hasAdAvailableForAdUnitID:GetStringParam(adUnitId)]);
 }
 
 const char* _mopubGetAvailableRewards(const char* adUnitId)
@@ -363,7 +372,7 @@ void _moPubShowRewardedVideo(const char* adUnitId, const char* currencyName, int
 
 bool _moPubCanCollectPersonalInfo()
 {
-	return [[MoPub sharedInstance] canCollectPersonalInfo];
+	return moPubExplicitBool([[MoPub sharedInstance] canCollectPersonalInfo]);
 }
 
 int _moPubCurrentConsentStatus()
@@ -383,12 +392,12 @@ void _moPubForceGDPRApplicable()
 
 bool _moPubShouldShowConsentDialog()
 {
-    return [[MoPub sharedInstance] shouldShowConsentDialog];
+    return moPubExplicitBool([[MoPub sharedInstance] shouldShowConsentDialog]);
 }
 
 bool _moPubIsConsentDialogReady()
 {
-    return [[MoPub sharedInstance] isConsentDialogReady];
+    return moPubExplicitBool([[MoPub sharedInstance] isConsentDialogReady]);
 }
 
 void _moPubLoadConsentDialog()

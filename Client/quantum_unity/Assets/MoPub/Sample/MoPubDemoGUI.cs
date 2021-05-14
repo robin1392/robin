@@ -5,7 +5,7 @@ using UnityEngine;
 #if mopub_native_beta
 
 // This feature is still in Beta! If you're interested in our Beta Program, please contact support@mopub.com
-using NativeAdData = AbstractNativeAd.Data;
+using NativeAdData = MoPubAbstractNativeAd.Data;
 
 #endif
 
@@ -34,7 +34,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
     private readonly string[] _rewardedAdUnits =
         { "8f000bd5e00246de9c789eed39ff6096", "98c29e015e7346bd9c380b1467b33850" };
-#else
+#elif UNITY_ANDROID || UNITY_EDITOR
     private readonly string[] _bannerAdUnits = { "b195f8dd8ded45fe847ad89ed1d016da" };
     private readonly string[] _interstitialAdUnits = { "24534e1901884e398f1253216226017e" };
     private readonly string[] _rewardedAdUnits =
@@ -244,7 +244,7 @@ public class MoPubDemoGUI : MonoBehaviour
     private void Start()
     {
         // The SdkInitialize() call is handled by the MoPubManager prefab now. Please see:
-        // https://developers.mopub.com/publishers/unity/initialize/#option-1-use-the-mopub-manager-recommended
+        // https://developers.mopub.com/publishers/unity/initialize/#option-1-initialize-using-the-mopub-manager-recommended
 
         MoPub.LoadBannerPluginsForAdUnits(_bannerAdUnits);
         MoPub.LoadInterstitialPluginsForAdUnits(_interstitialAdUnits);
@@ -291,7 +291,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
 
 #if mopub_native_beta
-    private void HideNativeAd(AbstractNativeAd nativeAd)
+    private void HideNativeAd(MoPubAbstractNativeAd nativeAd)
     {
         nativeAd.GetComponent<Rigidbody>().useGravity = false;
         nativeAd.Hide();
@@ -299,7 +299,7 @@ public class MoPubDemoGUI : MonoBehaviour
     }
 
 
-    private void ShowNativeAd(AbstractNativeAd nativeAd)
+    private void ShowNativeAd(MoPubAbstractNativeAd nativeAd)
     {
         nativeAd.transform.localPosition = new Vector3(0, 700, 115);
         nativeAd.transform.rotation = Quaternion.Euler(Vector3.up);
@@ -348,7 +348,8 @@ public class MoPubDemoGUI : MonoBehaviour
         // App title including Plugin and SDK versions
         var prevFontSize = _centeredStyle.fontSize;
         _centeredStyle.fontSize = 48;
-        GUI.Label(new Rect(0, 10, Screen.width, 60), MoPub.PluginName, _centeredStyle);
+        GUI.Label(new Rect(0, 10, Screen.width, 60), "MoPub Unity Plugin v" + MoPub.MoPubSdkVersion,
+            _centeredStyle);
         _centeredStyle.fontSize = prevFontSize;
         GUI.Label(new Rect(0, 70, Screen.width, 60), "with " + MoPub.SdkName, _centeredStyle);
     }
@@ -467,9 +468,8 @@ public class MoPubDemoGUI : MonoBehaviour
 
                 GUILayout.EndHorizontal();
 
-
                 // Display rewards if there's a rewarded video loaded and there are multiple rewards available
-                if (!MoPub.HasRewardedVideo(rewardedAdUnit)
+                if (!_adUnitToLoadedMapping[rewardedAdUnit]
                     || !_adUnitToRewardsMapping.ContainsKey(rewardedAdUnit)
                     || _adUnitToRewardsMapping[rewardedAdUnit].Count <= 1) continue;
 
@@ -480,6 +480,7 @@ public class MoPubDemoGUI : MonoBehaviour
                 foreach (var reward in _adUnitToRewardsMapping[rewardedAdUnit]) {
                     if (GUILayout.Button(reward.ToString())) {
                         MoPub.SelectReward(rewardedAdUnit, reward);
+                        UpdateStatusLabel($"Selected reward: {reward}");
                     }
                 }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,7 +12,7 @@ using UnityEngine;
 /// For platform-specific implementations, see
 /// <see cref="MoPubUnityEditorAdUnit"/>, <see cref="MoPubAndroidAdUnit"/>, and <see cref="MoPubiOSAdUnit"/>.
 /// </para>
-internal class MoPubAdUnit
+public class MoPubAdUnit
 {
     public static readonly MoPubAdUnit NullMoPubAdUnit = new MoPubAdUnit(null);
 

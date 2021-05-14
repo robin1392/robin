@@ -159,7 +159,7 @@ internal class MoPubUnityEditorAdUnit : MoPubAdUnit
                 Debug.Log("Native ad unit was requested: " + AdUnitId);
                 return;
             }
-            MoPubManager.Instance.EmitNativeLoadEvent(AdUnitId, new AbstractNativeAd.Data {
+            MoPubManager.Instance.EmitNativeLoadEvent(AdUnitId, new MoPubAbstractNativeAd.Data {
                 MainImageUrl =
                     new Uri("https://d30x8mtr3hjnzo.cloudfront.net/creatives/8d0a2ba02b2b485f97e1867366762951"),
                 IconImageUrl =

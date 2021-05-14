@@ -2,7 +2,7 @@
 
 using MaxAdSize = MoPub.MaxAdSize;
 
-public static class AdSizeMapping
+public static class MoPubAdSizeMapping
 {
     public static float Width(this MaxAdSize adSize)
     {
@@ -25,12 +25,20 @@ public static class AdSizeMapping
             case MaxAdSize.ScreenWidthHeight90:
             case MaxAdSize.ScreenWidthHeight250:
             case MaxAdSize.ScreenWidthHeight280:
+// screen width sizing is handled differently between the MoPub SDKs:
+// > Android expects the LinearLayout.LayoutParams.MATCH_PARENT constant (-1)
+// > iOS expects an explicit width in device-independent pixels (dips)
+// more internal context at ADF-5729 and ADF-5945
+#if UNITY_ANDROID
+                return -1;
+#else
+                var mdpi = 160.0f; // standard baseline density
                 var pixels = Screen.width;
                 var dpi = Screen.dpi;
-                var dips = pixels / (dpi / 160.0f);
+                var dips = pixels / (dpi / mdpi);
                 return dips;
+#endif
             default:
-
                 // fallback to default size: Width320Height50
                 return 300;
         }

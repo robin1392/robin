@@ -1,4 +1,4 @@
-﻿public class MoPubStaticNativeAd : AbstractNativeAd
+﻿public class MoPubStaticNativeAd : MoPubAbstractNativeAd
 {
 #if mopub_native_beta
     protected override void AddEventHandlers()

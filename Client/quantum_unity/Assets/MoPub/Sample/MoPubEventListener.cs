@@ -145,7 +145,7 @@ public class MoPubEventListener : MonoBehaviour
 
 
 #if mopub_native_beta
-    private void OnNativeLoadEvent(string adUnitId, AbstractNativeAd.Data nativeAdData)
+    private void OnNativeLoadEvent(string adUnitId, MoPubAbstractNativeAd.Data nativeAdData)
     {
         _demoGUI.NativeAdLoaded(adUnitId, nativeAdData);
     }
