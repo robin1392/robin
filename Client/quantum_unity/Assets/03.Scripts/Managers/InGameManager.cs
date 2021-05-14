@@ -215,18 +215,7 @@ namespace ED
             var userInfo = UserInfoManager.Get().GetUserInfo();
             
             var userDeck = userInfo.GetActiveDeck;
-            var avaialbleSet = new HashSet<int>(){1007, 1008, 1009, 1010, 1013, 1014};
-            var availableNotHave = avaialbleSet.Except(userDeck).ToArray();
-             
-            var diceDeck = userDeck.Take(5).Select(id =>
-            {
-                if (avaialbleSet.Contains(id) == false)
-                {
-                    return availableNotHave[Random.Range(0, availableNotHave.Length)];
-                }
-
-                return id;
-            }).ToArray();
+            var diceDeck = userDeck.Take(5).ToArray();
             var guadianId = userDeck[5];
             
             var localMatchPlayer = new MatchPlayer()
