@@ -24,6 +24,7 @@ using UnityEngine.Networking;
 using DeckInfo = _Scripts.DeckInfo;
 using MatchData = _Scripts.MatchData;
 using MatchPlayer = _Scripts.MatchPlayer;
+using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -131,12 +132,6 @@ namespace ED
             }
             
             CameraController.Get().UpdateCameraRotation(true);
-            
-            var userInfo = UserInfoManager.Get().GetUserInfo();
-
-            var userDeck = userInfo.GetActiveDeck;
-            var diceDeck = userDeck.Take(5).ToArray();
-            var guadianId = userDeck[5];
 
             if ((PhotonNetwork.Instance.Online && PhotonNetwork.Instance.LocalBalancingClient.InRoom) == false)
             {
@@ -145,15 +140,7 @@ namespace ED
                 return;
             }
 
-            var localMatchPlayer = new MatchPlayer()
-            {
-                UserId = userInfo.userID,
-                NickName = userInfo.userNickName,
-                Trophy = 0,
-                WinStreak = 0,
-                Deck = new DeckInfo(guadianId, diceDeck, userInfo.GetOutGameLevels(diceDeck)),
-                EnableAI = false
-            };
+            var localMatchPlayer = GetLocalPlayerInfo();
 
             var other = PhotonNetwork.Instance.LocalBalancingClient.CurrentRoom.Players.First(p => p.Value.IsLocal == false);
             var otherMatchPlayer = MatchPlayer.CreateFromPlayerCustomProperty(other.Value.CustomProperties);
@@ -223,29 +210,23 @@ namespace ED
             Debug.LogFormat("### Starting game using map '{0}'", config.Map.Id);
         }
 
-        async UniTask StartFakeGame()
+        MatchPlayer GetLocalPlayerInfo()
         {
-            if (TableManager.Get().Loaded == false)
-            {
-                TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
-            }
-            
-            CameraController.Get().UpdateCameraRotation(true);
-            
             var userInfo = UserInfoManager.Get().GetUserInfo();
 
+            var avaialble = new int[] {1007, 1008, 1009, 1010, 1013, 1014};
             var userDeck = userInfo.GetActiveDeck;
-            var diceDeck = userDeck.Take(5).ToArray();
+            var diceDeck = userDeck.Take(5).Select(id =>
+            {
+                if (avaialble.Contains(id) == false)
+                {
+                    return avaialble[Random.Range(0, avaialble.Length)];
+                }
+
+                return id;
+            }).ToArray();
             var guadianId = userDeck[5];
             
-            if (TutorialManager.isTutorial)
-            {
-            }
-            else
-            {
-                
-            }
-
             var localMatchPlayer = new MatchPlayer()
             {
                 NickName = userInfo.userNickName,
@@ -255,6 +236,30 @@ namespace ED
                 EnableAI = false
             };
             
+            return localMatchPlayer;
+        }
+        
+        async UniTask StartFakeGame()
+        {
+            if (TableManager.Get().Loaded == false)
+            {
+                TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
+            }
+            
+            CameraController.Get().UpdateCameraRotation(true);
+            
+            
+            
+            if (TutorialManager.isTutorial)
+            {
+            }
+            else
+            {
+                
+            }
+
+
+            var localMatchPlayer = GetLocalPlayerInfo();
             var aiMatchPlayer = GetAIMatchPlayer(localMatchPlayer, TutorialManager.isTutorial);
 
             MatchData = new MatchData(localMatchPlayer, aiMatchPlayer);
