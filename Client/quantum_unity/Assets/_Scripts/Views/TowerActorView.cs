@@ -39,9 +39,9 @@ namespace _Scripts.Views
             ActorModel.transform.SetParent(transform, false);
         }
 
-        protected override void OnUpdateViewAfterInit(QuantumGame game)
+        protected unsafe override void OnUpdateViewAfterInit(QuantumGame game)
         {
-            var f = game.Frames.Predicted;
+            var f = game.Frames.PredictedPrevious;
             var e = EntityView.EntityRef;
             if(f.TryGet(e, out Health health) == false)
             {
@@ -73,8 +73,15 @@ namespace _Scripts.Views
             {
                 return;
             }
-            
-            UI_InGamePopup.Get().ShowLowHPEffect(true);
+
+            if (f.Global->State == StateType.GameOver)
+            {
+                UI_InGamePopup.Get().ShowLowHPEffect(false);
+            }
+            else
+            {
+                UI_InGamePopup.Get().ShowLowHPEffect(true);    
+            }
         }
 
         protected override void OnEntityDestroyedInternal(QuantumGame game)

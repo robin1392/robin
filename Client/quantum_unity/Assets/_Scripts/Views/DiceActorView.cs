@@ -214,7 +214,7 @@ namespace _Scripts.Views
 
         protected override void OnUpdateViewAfterInit(QuantumGame game)
         {
-            var f = game.Frames.Predicted;
+            var f = game.Frames.PredictedPrevious;
             var e = EntityView.EntityRef;
 
             if (f.TryGet(e, out Health health))
