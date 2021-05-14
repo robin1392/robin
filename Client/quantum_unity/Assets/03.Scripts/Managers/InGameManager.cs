@@ -372,7 +372,6 @@ namespace ED
         // 내자신이 나간다고 눌럿을때 응답 받은것
         public void OnClickExit()
         {
-            DisconnectGameServer();
             MoveToMainScene();
         }
 
@@ -383,17 +382,6 @@ namespace ED
             PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
             GameStateManager.Get().MoveMainScene();
             Time.timeScale = 1f;
-        }
-
-        public void DisconnectGameServer()
-        {
-            if (PhotonNetwork.Instance.LocalBalancingClient.IsConnected)
-            {
-                QuantumRunner.Default.Shutdown();
-                PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
-            }
-            
-            MoveToMainScene();
         }
 
 

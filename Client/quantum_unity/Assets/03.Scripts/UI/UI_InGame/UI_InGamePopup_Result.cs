@@ -498,7 +498,6 @@ public class UI_InGamePopup_Result : MonoBehaviour
     
     void ShowAdd()
     {
-        InGameManager.Get().DisconnectGameServer();
         MopubCommunicator.Instance.showVideo(ADCallback);
     }
     
