@@ -213,14 +213,16 @@ namespace ED
         MatchPlayer GetLocalPlayerInfo()
         {
             var userInfo = UserInfoManager.Get().GetUserInfo();
-
-            var avaialble = new int[] {1007, 1008, 1009, 1010, 1013, 1014};
+            
             var userDeck = userInfo.GetActiveDeck;
+            var avaialbleSet = new HashSet<int>(){1007, 1008, 1009, 1010, 1013, 1014};
+            var availableNotHave = avaialbleSet.Except(userDeck).ToArray();
+             
             var diceDeck = userDeck.Take(5).Select(id =>
             {
-                if (avaialble.Contains(id) == false)
+                if (avaialbleSet.Contains(id) == false)
                 {
-                    return avaialble[Random.Range(0, avaialble.Length)];
+                    return availableNotHave[Random.Range(0, availableNotHave.Length)];
                 }
 
                 return id;
