@@ -361,8 +361,6 @@ namespace ED
 
         public void OnClickGiveUp()
         {
-            QuantumRunner.Default.Shutdown();
-            PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
             MoveToMainScene();
         }
 
@@ -376,6 +374,8 @@ namespace ED
         public void MoveToMainScene()
         {
             global::Pool.Disable();
+            QuantumRunner.Default.Shutdown();
+            PhotonNetwork.Instance.LocalBalancingClient.Disconnect();
             GameStateManager.Get().MoveMainScene();
             Time.timeScale = 1f;
         }
